@@ -1,4 +1,4 @@
-const CACHE_NAME = "mafija-v1";
+const CACHE_NAME = "mafija-v1.3";
 const urlsToCache = [
   "/",
   "/index.html",
@@ -17,4 +17,5 @@ self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(response => response || fetch(event.request))
   );
+
 });
