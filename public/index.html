@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mafija Igra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#f01818">
+</head>
+<body>
+
+    <div id="home" class="screen">
+        <h1>MAFIJA</h1>
+        <input type="text" id="playerName" placeholder="Tvoje ime">
+        <button id="createBtn">NAPRAVI SOBU</button>
+        <div style="margin: 15px 0;">ILI</div>
+        <input type="text" id="roomInput" placeholder="Kod sobe">
+        <button id="joinBtn">UĐI U SOBU</button>
+    </div>
+
+    <div id="hostScreen" class="screen" style="display:none;">
+        <h1>Soba: <span id="roomCodeText"></span></h1>
+        <div class="settings">
+            <p>Mafija: <input type="number" id="mafija" value="1" min="1"></p>
+            <p>Doktor: <input type="number" id="doktor" value="1" min="0"></p>
+            <p>Policajac: <input type="number" id="policajac" value="1" min="0"></p>
+        </div>
+        <button id="startGameBtn" style="background: #32cd32;">PODELI ROLE</button>
+        <h3>Igrači u sobi:</h3>
+        <ul id="playerList"></ul>
+    </div>
+
+    <div id="reveal" class="screen" style="display:none;">
+        <h1>Tvoja Uloga</h1>
+        <div id="cardContainer"></div>
+        <p>Nemoj nikome pokazivati ekran!</p>
+    </div>
+
+    <div id="roomCodeModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Kod tvoje sobe:</h2>
+            <h1 id="roomCodeTextModal" style="color: #f01818; font-size: 3em; margin: 10px 0;"></h1>
+            <p>Podeli ovaj kod sa prijateljima.</p>
+            <button id="closeModal">OK, SPREMAN SAM</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>
