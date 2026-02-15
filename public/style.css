@@ -26,4 +26,10 @@ h3{
     font-size: medium;
     text-align: left;
     background-color: crimson;
+
+}
+.role-dama {
+    background: linear-gradient(135deg, #ff69b4, #ff1493) !important;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
