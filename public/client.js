@@ -34,23 +34,24 @@ document.getElementById("joinBtn").onclick = () => {
 };
 
 socket.on('updatePlayers', (players) => {
-    // Ažuriramo listu na host ekranu
     const list = document.getElementById("playerList");
     if(list) list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
 });
 
 document.getElementById("startGameBtn").onclick = () => {
-    // Provera broja igrača (npr. minimum 4)
     const currentCount = document.getElementById("playerList").children.length;
+    
+    // Smanjio sam na 3 ako testiraš sa manje ljudi, vrati na 4 za pravu igru
     if (currentCount < 4) {
         alert("Potrebno je bar 4 igrača!");
         return;
     }
 
     const config = {
-        mafija: parseInt(document.getElementById("mafija").value) || 1,
+        mafija: parseInt(document.getElementById("mafija").value) || 0,
         doktor: parseInt(document.getElementById("doktor").value) || 0,
-        policajac: parseInt(document.getElementById("policajac").value) || 0
+        policajac: parseInt(document.getElementById("policajac").value) || 0,
+        dama: parseInt(document.getElementById("dama").value) || 0 // DODATO
     };
     socket.emit('startGame', { roomID: currentRoom, config });
 };
@@ -60,10 +61,11 @@ socket.on('yourRole', (data) => {
     const container = document.getElementById("cardContainer");
     
     // Mapiranje uloge na CSS klasu
-    let roleClass = "role-civil"; // Default za Gradjanin
+    let roleClass = "role-civil"; 
     if (data.role === "Mafija") roleClass = "role-mafija";
     if (data.role === "Doktor") roleClass = "role-doktor";
     if (data.role === "Policajac") roleClass = "role-policajac";
+    if (data.role === "Dama") roleClass = "role-dama"; // DODATO
 
     container.innerHTML = `
         <div class="card" onclick="this.classList.toggle('flipped')">
@@ -79,6 +81,7 @@ socket.on('error', (m) => alert(m));
 // PWA Service Worker registracija
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    // Svaki put kad menjaš ikonice ili uloge, promeni verziju u sw.js!
     navigator.serviceWorker.register('/sw.js')
       .then(reg => console.log('Aplikacija spremna!'))
       .catch(err => console.log('Greška kod SW:', err));
