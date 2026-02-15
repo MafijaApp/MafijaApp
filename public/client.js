@@ -1,65 +1,71 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const path = require('path');
+const socket = io();
+let currentRoom = null;
 
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'flex';
+}
 
-app.use(express.static(path.join(__dirname, 'public')));
+document.getElementById("createBtn").onclick = () => socket.emit('createRoom');
 
-const rooms = {};
-
-io.on('connection', (socket) => {
-    socket.on('createRoom', () => {
-        const roomID = Math.random().toString(36).substring(2, 7).toUpperCase();
-        rooms[roomID] = { host: socket.id, players: [] };
-        socket.join(roomID);
-        socket.emit('roomCreated', roomID);
-    });
-
-    socket.on('joinRoom', ({ roomID, name }) => {
-        const id = roomID.toUpperCase();
-        if (rooms[id]) {
-            rooms[id].players.push({ id: socket.id, name });
-            socket.join(id);
-            const names = rooms[id].players.map(p => p.name);
-            io.to(id).emit('updatePlayers', names);
-        } else {
-            socket.emit('error', 'Soba ne postoji!');
-        }
-    });
-
-    socket.on('startGame', ({ roomID, config }) => {
-        const room = rooms[roomID];
-        if (!room) return;
-
-        let players = room.players;
-        let roles = [];
-
-        // Dodavanje uloga iz config-a (uključujući Damu)
-        for (let i = 0; i < config.mafija; i++) roles.push('Mafija');
-        for (let i = 0; i < config.doktor; i++) roles.push('Doktor');
-        for (let i = 0; i < config.policajac; i++) roles.push('Policajac');
-        for (let i = 0; i < config.dama; i++) roles.push('Dama');
-
-        // Ostatak su građani
-        while (roles.length < players.length) {
-            roles.push('Gradjanin');
-        }
-
-        roles.sort(() => Math.random() - 0.5);
-
-        players.forEach((p, i) => {
-            io.to(p.id).emit('yourRole', { role: roles[i] });
-        });
-    });
-
-    socket.on('disconnect', () => {
-        // Logika za izlazak (opciono)
-    });
+socket.on('roomCreated', (roomID) => {
+    currentRoom = roomID;
+    document.getElementById("roomCodeText").textContent = roomID;
+    document.getElementById("roomCodeTextModal").textContent = roomID;
+    document.getElementById("roomCodeModal").style.display = "flex";
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => console.log(`Server na portu ${PORT}`));
+document.getElementById("closeModal").onclick = () => {
+    document.getElementById("roomCodeModal").style.display = "none";
+    showScreen('hostScreen');
+};
+
+document.getElementById("joinBtn").onclick = () => {
+    const name = document.getElementById("playerName").value.trim();
+    const roomID = document.getElementById("roomInput").value.trim().toUpperCase();
+    if(name && roomID) {
+        currentRoom = roomID;
+        socket.emit('joinRoom', { roomID, name });
+        showScreen('reveal');
+    }
+};
+
+socket.on('updatePlayers', (players) => {
+    const list = document.getElementById("playerList");
+    if(list) list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
+});
+
+document.getElementById("startGameBtn").onclick = () => {
+    const config = {
+        mafija: parseInt(document.getElementById("mafija").value) || 0,
+        doktor: parseInt(document.getElementById("doktor").value) || 0,
+        policajac: parseInt(document.getElementById("policajac").value) || 0,
+        dama: parseInt(document.getElementById("dama").value) || 0
+    };
+    socket.emit('startGame', { roomID: currentRoom, config });
+};
+
+socket.on('yourRole', (data) => {
+    showScreen('reveal');
+    const container = document.getElementById("cardContainer");
+    
+    let roleClass = "role-civil"; 
+    if (data.role === "Mafija") roleClass = "role-mafija";
+    if (data.role === "Doktor") roleClass = "role-doktor";
+    if (data.role === "Policajac") roleClass = "role-policajac";
+    if (data.role === "Dama") roleClass = "role-dama";
+
+    container.innerHTML = `
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">DOTAKNI KARTU</div>
+                <div class="card-back ${roleClass}">${data.role}</div>
+            </div>
+        </div>`;
+});
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+    });
+}
