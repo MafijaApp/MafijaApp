@@ -4,12 +4,12 @@
   "description": "Igraj Mafiju sa prijateljima uživo!",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/1022/1022313.png",
+      "src": "/icon-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/1022/1022313.png",
+      "src": "/icon-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
@@ -19,4 +19,5 @@
   "display": "standalone",
   "theme_color": "#f01818",
   "orientation": "portrait"
+
 }
