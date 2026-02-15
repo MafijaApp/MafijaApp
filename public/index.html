@@ -3,51 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mafija Igra</title>
+    <title>Mafija</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#f01818">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <h3>App napravio Marko Veljović</h3>
     <div id="home" class="screen">
         <h1>MAFIJA</h1>
         <input type="text" id="playerName" placeholder="Tvoje ime">
         <button id="createBtn">NAPRAVI SOBU</button>
-        <div style="margin: 15px 0;">ILI</div>
+        <p>ili</p>
         <input type="text" id="roomInput" placeholder="Kod sobe">
         <button id="joinBtn">UĐI U SOBU</button>
     </div>
 
     <div id="hostScreen" class="screen" style="display:none;">
-        <h1>Soba: <span id="roomCodeText"></span></h1>
+        <h2>Soba: <span id="roomCodeText"></span></h2>
         <div class="settings">
-            <p>Mafija: <input type="number" id="mafija" value="1" min="1"></p>
-            <p>Doktor: <input type="number" id="doktor" value="1" min="0"></p>
-            <p>Policajac: <input type="number" id="policajac" value="1" min="0"></p>
+            <label>Mafija: <input type="number" id="mafija" value="1"></label>
+            <label>Doktor: <input type="number" id="doktor" value="1"></label>
+            <label>Policajac: <input type="number" id="policajac" value="1"></label>
+            <label>Dama: <input type="number" id="dama" value="1"></label>
         </div>
-        <button id="startGameBtn" style="background: #32cd32;">PODELI ROLE</button>
-        <h3>Igrači u sobi:</h3>
+        <button id="startGameBtn">PODELI ROLE</button>
         <ul id="playerList"></ul>
     </div>
 
     <div id="reveal" class="screen" style="display:none;">
-        <h1>Tvoja Uloga</h1>
         <div id="cardContainer"></div>
-        <p>Nemoj nikome pokazivati ekran!</p>
     </div>
 
     <div id="roomCodeModal" class="modal" style="display:none;">
         <div class="modal-content">
-            <h2>Kod tvoje sobe:</h2>
-            <h1 id="roomCodeTextModal" style="color: #f01818; font-size: 3em; margin: 10px 0;"></h1>
-            <p>Podeli ovaj kod sa prijateljima.</p>
-            <button id="closeModal">OK, SPREMAN SAM</button>
+            <h3>Kod sobe:</h3>
+            <h1 id="roomCodeTextModal"></h1>
+            <button id="closeModal">OK</button>
         </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
 </body>
-
 </html>
