@@ -1,7 +1,7 @@
-const CACHE_NAME = 'mafija-v-' + Date.now(); // Svaki put unikatno ime
+const CACHE_NAME = 'mafija-cache-' + Date.now(); // Menja ime svaki put za novi update
 
 self.addEventListener('install', (event) => {
-    self.skipWaiting(); // Forsiraj instalaciju odmah
+    self.skipWaiting(); // Forsira novu verziju da postane aktivna odmah
 });
 
 self.addEventListener('activate', (event) => {
@@ -9,15 +9,18 @@ self.addEventListener('activate', (event) => {
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cache) => {
-                    return caches.delete(cache); // Briše apsolutno sav stari keš
+                    if (cache !== CACHE_NAME) {
+                        console.log('Brišem stari keš:', cache);
+                        return caches.delete(cache);
+                    }
                 })
             );
-        }).then(() => self.clients.claim()) // Preuzmi kontrolu odmah
+        }).then(() => self.clients.claim())
     );
 });
 
 self.addEventListener('fetch', (event) => {
-    // Strategija: Mreža prvo, ako nema interneta onda keš
+    // Uvek pokušaj prvo sa interneta, nemoj da koristiš stari keš ako ima mreže
     event.respondWith(
         fetch(event.request).catch(() => caches.match(event.request))
     );
