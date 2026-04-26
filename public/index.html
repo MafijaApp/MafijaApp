@@ -16,6 +16,7 @@
     <h1>MAFIJA</h1>
 
     <input id="playerName" placeholder="Tvoje ime">
+
     <button id="createBtn">NAPRAVI SOBU</button>
 
     <p>ili</p>
@@ -29,10 +30,10 @@
     <h2>Soba: <span id="roomCodeText"></span></h2>
 
     <div class="settings">
-        <label>Mafija <input id="mafija" type="number" value="1" min="0" max="2"></label>
-        <label>Doktor <input id="doktor" type="number" value="1" min="0" max="1"></label>
-        <label>Policajac <input id="policajac" type="number" value="1" min="0" max="1"></label>
-        <label>Dama <input id="dama" type="number" value="1" min="0" max="1"></label>
+        <label>Mafija <input id="mafija" type="number" min="0" max="2" value="1"></label>
+        <label>Doktor <input id="doktor" type="number" min="0" max="1" value="1"></label>
+        <label>Policajac <input id="policajac" type="number" min="0" max="1" value="1"></label>
+        <label>Dama <input id="dama" type="number" min="0" max="1" value="1"></label>
     </div>
 
     <button id="startGameBtn">PODELI ROLE</button>
@@ -42,7 +43,7 @@
     <ul id="playerList"></ul>
 </div>
 
-<!-- PLAYER VIEW -->
+<!-- PLAYER -->
 <div id="reveal" class="screen" style="display:none;">
     <div id="cardContainer"></div>
 </div>
