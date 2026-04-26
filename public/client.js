@@ -7,10 +7,10 @@ function showScreen(id) {
     document.getElementById(id).style.display = 'flex';
 }
 
-// CREATE
+// CREATE ROOM
 document.getElementById("createBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
-    if (!name) return alert("Unesi ime");
+    if (!name) return alert("Unesi ime!");
 
     isHost = true;
     socket.emit('createRoom', name);
@@ -19,7 +19,10 @@ document.getElementById("createBtn").onclick = () => {
 // ROOM CREATED
 socket.on('roomCreated', (roomID) => {
     currentRoom = roomID;
+
     document.getElementById("roomCodeText").textContent = roomID;
+    document.getElementById("roomCodeTextModal").textContent = roomID;
+
     document.getElementById("roomCodeModal").style.display = "flex";
 });
 
@@ -34,7 +37,7 @@ document.getElementById("joinBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     const roomID = document.getElementById("roomInput").value.trim().toUpperCase();
 
-    if (!name || !roomID) return alert("Unesi sve");
+    if (!name || !roomID) return alert("Popuni sve!");
 
     currentRoom = roomID;
     socket.emit('joinRoom', { roomID, name });
@@ -42,12 +45,18 @@ document.getElementById("joinBtn").onclick = () => {
     showScreen('reveal');
 };
 
-// PLAYERS
+// PLAYERS LIST
 socket.on('updatePlayers', (players) => {
     const list = document.getElementById("playerList");
-    if (!list) return;
+    if (list) list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
+});
 
-    list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
+// ADMIN ROLES
+socket.on('adminRoles', (data) => {
+    const list = document.getElementById("adminList");
+    list.innerHTML = data.players.map(p =>
+        `<li>${p.name} - ${p.role}</li>`
+    ).join("");
 });
 
 // START GAME
@@ -63,44 +72,33 @@ document.getElementById("startGameBtn").onclick = () => {
     socket.emit('startGame', { roomID: currentRoom, config });
 };
 
-// ROLE
-socket.on('yourRole', (data) => {
-    const container = document.getElementById("cardContainer");
-
-    container.innerHTML = `
-        <div class="card" onclick="this.classList.toggle('flipped')">
-            <div class="card-inner">
-                <div class="card-front">DOTAKNI</div>
-                <div class="card-back">${data.role}</div>
-            </div>
-        </div>
-    `;
-
-    showScreen('reveal');
-});
-
-// ADMIN PANEL
-socket.on('adminPanel', (players) => {
-    if (!isHost) return;
-
-    let panel = players.map(p =>
-        `${p.name} - ${p.role || '---'}`
-    ).join("\n");
-
-    alert("ADMIN PANEL:\n\n" + panel);
-});
-
-// NEW GAME
+// NEW GAME FIX
 document.getElementById("newGameBtn").onclick = () => {
     socket.emit('newGame', currentRoom);
 };
 
 // RESET
 socket.on('resetGame', () => {
-    document.getElementById("startGameBtn").disabled = false;
-    document.getElementById("cardContainer").innerHTML = "";
     showScreen('hostScreen');
 });
 
-// ERROR
-socket.on('error', msg => alert(msg));
+// ROLE
+socket.on('yourRole', (data) => {
+
+    showScreen('reveal');
+
+    let roleClass = "role-civil";
+    if (data.role === "Mafija") roleClass = "role-mafija";
+    if (data.role === "Doktor") roleClass = "role-doktor";
+    if (data.role === "Policajac") roleClass = "role-policajac";
+    if (data.role === "Dama") roleClass = "role-dama";
+
+    document.getElementById("cardContainer").innerHTML = `
+        <div class="card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">DOTAKNI</div>
+                <div class="card-back ${roleClass}">${data.role}</div>
+            </div>
+        </div>
+    `;
+});
