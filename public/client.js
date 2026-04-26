@@ -1,12 +1,16 @@
 const socket = io();
 let currentRoom = null;
 
+// SCREEN SWITCH (STABLE)
 function showScreen(id) {
-    document.querySelectorAll(".screen").forEach(s => s.style.display = "none");
+    document.querySelectorAll(".screen").forEach(s => {
+        s.style.display = "none";
+    });
+
     document.getElementById(id).style.display = "flex";
 }
 
-// CREATE
+// CREATE ROOM
 document.getElementById("createBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     if (!name) return alert("Unesi ime!");
@@ -21,7 +25,7 @@ socket.on("roomCreated", (roomID) => {
     showScreen("hostScreen");
 });
 
-// JOIN
+// JOIN ROOM
 document.getElementById("joinBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     const roomID = document.getElementById("roomInput").value.trim().toUpperCase();
@@ -52,7 +56,7 @@ document.getElementById("startGameBtn").onclick = () => {
     socket.emit("startGame", { roomID: currentRoom, config });
 };
 
-// ROLE
+// ROLE SHOW
 socket.on("yourRole", (data) => {
     showScreen("reveal");
 
@@ -66,7 +70,7 @@ socket.on("yourRole", (data) => {
     `;
 });
 
-// ADMIN BUTTON (NOVO)
+// ADMIN OPEN
 document.getElementById("adminBtn").onclick = () => {
     socket.emit("requestAdmin", currentRoom);
 };
@@ -79,17 +83,21 @@ socket.on("adminPanel", (data) => {
         data.players.map(p => `<li>${p.name} → ${p.role}</li>`).join("");
 });
 
-// NEW GAME FIX
+// BACK BUTTON (FIX FOR MOBILE)
+document.getElementById("backFromAdminBtn").onclick = () => {
+    showScreen("hostScreen");
+};
+
+// NEW GAME (RESET FIX)
 document.getElementById("newGameBtn").onclick = () => {
     socket.emit("resetGame", currentRoom);
 
-    // UI cleanup
     document.getElementById("cardContainer").innerHTML = "";
     document.getElementById("adminList").innerHTML = "";
     showScreen("hostScreen");
 };
 
-// RESET
+// RESET FROM SERVER
 socket.on("resetGame", () => {
     showScreen("hostScreen");
 });
