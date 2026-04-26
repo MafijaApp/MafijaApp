@@ -1,63 +1,73 @@
 const socket = io();
 let currentRoom = null;
+let isHost = false;
 
 function showScreen(id) {
-    document.querySelectorAll(".screen").forEach(s => s.style.display = "none");
-    document.getElementById(id).style.display = "flex";
+    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'flex';
 }
 
 // CREATE
 document.getElementById("createBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
-    if (!name) return alert("Unesi ime!");
+    if (!name) return alert("Unesi ime");
 
-    socket.emit("createRoom", name);
+    isHost = true;
+    socket.emit('createRoom', name);
 };
 
 // ROOM CREATED
-socket.on("roomCreated", (roomID) => {
+socket.on('roomCreated', (roomID) => {
     currentRoom = roomID;
     document.getElementById("roomCodeText").textContent = roomID;
-    showScreen("hostScreen");
+    document.getElementById("roomCodeModal").style.display = "flex";
 });
+
+// CLOSE MODAL
+document.getElementById("closeModal").onclick = () => {
+    document.getElementById("roomCodeModal").style.display = "none";
+    showScreen('hostScreen');
+};
 
 // JOIN
 document.getElementById("joinBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     const roomID = document.getElementById("roomInput").value.trim().toUpperCase();
 
-    if (!name || !roomID) return alert("Unesi podatke!");
+    if (!name || !roomID) return alert("Unesi sve");
 
     currentRoom = roomID;
-    socket.emit("joinRoom", { roomID, name });
+    socket.emit('joinRoom', { roomID, name });
 
-    showScreen("reveal");
+    showScreen('reveal');
 };
 
-// PLAYERS LIST
-socket.on("updatePlayers", (players) => {
-    document.getElementById("playerList").innerHTML =
-        players.map(p => `<li>${p}</li>`).join("");
+// PLAYERS
+socket.on('updatePlayers', (players) => {
+    const list = document.getElementById("playerList");
+    if (!list) return;
+
+    list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
 });
 
 // START GAME
 document.getElementById("startGameBtn").onclick = () => {
 
     const config = {
-        mafija: Math.max(0, +document.getElementById("mafija").value || 0),
-        doktor: Math.max(0, +document.getElementById("doktor").value || 0),
-        policajac: Math.max(0, +document.getElementById("policajac").value || 0),
-        dama: Math.max(0, +document.getElementById("dama").value || 0)
+        mafija: +document.getElementById("mafija").value,
+        doktor: +document.getElementById("doktor").value,
+        policajac: +document.getElementById("policajac").value,
+        dama: +document.getElementById("dama").value
     };
 
-    socket.emit("startGame", { roomID: currentRoom, config });
+    socket.emit('startGame', { roomID: currentRoom, config });
 };
 
 // ROLE
-socket.on("yourRole", (data) => {
-    showScreen("reveal");
+socket.on('yourRole', (data) => {
+    const container = document.getElementById("cardContainer");
 
-    document.getElementById("cardContainer").innerHTML = `
+    container.innerHTML = `
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
                 <div class="card-front">DOTAKNI</div>
@@ -65,37 +75,32 @@ socket.on("yourRole", (data) => {
             </div>
         </div>
     `;
-});
 
-// ADMIN OPEN
-document.getElementById("adminBtn").onclick = () => {
-    socket.emit("requestAdmin", currentRoom);
-};
+    showScreen('reveal');
+});
 
 // ADMIN PANEL
-socket.on("adminPanel", (data) => {
-    showScreen("adminScreen");
+socket.on('adminPanel', (players) => {
+    if (!isHost) return;
 
-    document.getElementById("adminList").innerHTML =
-        data.players.map(p => `<li>${p.name} → ${p.role}</li>`).join("");
+    let panel = players.map(p =>
+        `${p.name} - ${p.role || '---'}`
+    ).join("\n");
+
+    alert("ADMIN PANEL:\n\n" + panel);
 });
 
-// BACK
-document.getElementById("backFromAdminBtn").onclick = () => {
-    showScreen("hostScreen");
-};
-
-// NEW GAME (REAL RESET)
+// NEW GAME
 document.getElementById("newGameBtn").onclick = () => {
-    socket.emit("resetGame", currentRoom);
+    socket.emit('newGame', currentRoom);
 };
 
-// RESET UI FROM SERVER
-socket.on("resetGame", () => {
+// RESET
+socket.on('resetGame', () => {
+    document.getElementById("startGameBtn").disabled = false;
     document.getElementById("cardContainer").innerHTML = "";
-    document.getElementById("adminList").innerHTML = "";
-    showScreen("hostScreen");
+    showScreen('hostScreen');
 });
 
 // ERROR
-socket.on("error", (msg) => alert(msg));
+socket.on('error', msg => alert(msg));
