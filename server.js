@@ -5,106 +5,78 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+
+// Rešava bagove sa diskonekcijom na mobilnim telefonima
+const io = new Server(server, {
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    cors: { origin: "*" }
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const rooms = {};
-
-function safeNum(n) {
-    n = parseInt(n);
-    if (isNaN(n) || n < 0) return 0;
-    return n;
-}
+let rooms = {};
 
 io.on('connection', (socket) => {
+    console.log('Novi korisnik povezan:', socket.id);
 
     socket.on('createRoom', () => {
         const roomID = Math.random().toString(36).substring(2, 7).toUpperCase();
-
-        rooms[roomID] = {
-            host: socket.id,
-            players: [],
-            roles: [],
-            started: false
-        };
-
+        rooms[roomID] = { host: socket.id, players: [] };
         socket.join(roomID);
         socket.emit('roomCreated', roomID);
     });
 
     socket.on('joinRoom', ({ roomID, name }) => {
-        const room = rooms[roomID];
-        if (!room) return socket.emit('error', 'Soba ne postoji');
-
-        room.players.push({ id: socket.id, name });
-
-        socket.join(roomID);
-
-        io.to(roomID).emit(
-            'updatePlayers',
-            room.players.map(p => p.name)
-        );
+        const id = roomID.toUpperCase();
+        if (rooms[id]) {
+            // Provera da igrač već nije u sobi
+            rooms[id].players.push({ id: socket.id, name: name });
+            socket.join(id);
+            const names = rooms[id].players.map(p => p.name);
+            io.to(id).emit('updatePlayers', names);
+        } else {
+            socket.emit('error', 'Soba sa tim kodom ne postoji!');
+        }
     });
 
     socket.on('startGame', ({ roomID, config }) => {
         const room = rooms[roomID];
         if (!room) return;
 
-        const players = room.players;
-
+        let players = room.players;
         let roles = [];
-
-        let mafija = safeNum(config.mafija);
-        let doktor = safeNum(config.doktor);
-        let policajac = safeNum(config.policajac);
-        let dama = safeNum(config.dama);
-
-        for (let i = 0; i < mafija; i++) roles.push('Mafija');
-        for (let i = 0; i < doktor; i++) roles.push('Doktor');
-        for (let i = 0; i < policajac; i++) roles.push('Policajac');
-        for (let i = 0; i < dama; i++) roles.push('Dama');
+        
+        // Dinamički dodajemo uloge iz tvojih inputa (Dama, Mafija...)
+        if (config.mafija) for (let i = 0; i < config.mafija; i++) roles.push('Mafija');
+        if (config.doktor) for (let i = 0; i < config.doktor; i++) roles.push('Doktor');
+        if (config.policajac) for (let i = 0; i < config.policajac; i++) roles.push('Policajac');
+        if (config.dama) for (let i = 0; i < config.dama; i++) roles.push('Dama');
 
         while (roles.length < players.length) {
             roles.push('Gradjanin');
         }
 
+        // Mešanje uloga
         roles.sort(() => Math.random() - 0.5);
 
-        room.roles = roles;
-        room.started = true;
-
+        let hostSummary = [];
         players.forEach((p, i) => {
-            io.to(p.id).emit('yourRole', {
-                role: roles[i]
-            });
+            const assignedRole = roles[i];
+            io.to(p.id).emit('yourRole', { role: assignedRole });
+            hostSummary.push({ name: p.name, role: assignedRole });
         });
 
-        io.to(room.host).emit('adminRoles', {
-            data: players.map((p, i) => ({
-                name: p.name,
-                role: roles[i]
-            }))
-        });
-    });
-
-    socket.on('newGame', (roomID) => {
-        const room = rooms[roomID];
-        if (!room) return;
-
-        room.roles = [];
-        room.started = false;
-
-        io.to(roomID).emit('resetGame');
+        // Host dobija listu svih igrača i njihovih uloga
+        io.to(room.host).emit('hostViewRoles', hostSummary);
     });
 
     socket.on('disconnect', () => {
-        for (const id in rooms) {
-            rooms[id].players = rooms[id].players.filter(p => p.id !== socket.id);
-        }
+        console.log('Korisnik se odjavio');
     });
 });
 
-server.listen(process.env.PORT || 3000, () =>
-    console.log("Server running")
-);
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server pokrenut na portu ${PORT}`);
+});
