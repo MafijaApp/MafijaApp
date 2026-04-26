@@ -6,7 +6,7 @@ function showScreen(id) {
     document.getElementById(id).style.display = "flex";
 }
 
-// CREATE ROOM
+// CREATE
 document.getElementById("createBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     if (!name) return alert("Unesi ime!");
@@ -21,7 +21,7 @@ socket.on("roomCreated", (roomID) => {
     showScreen("hostScreen");
 });
 
-// JOIN ROOM
+// JOIN
 document.getElementById("joinBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     const roomID = document.getElementById("roomInput").value.trim().toUpperCase();
@@ -34,12 +34,10 @@ document.getElementById("joinBtn").onclick = () => {
     showScreen("reveal");
 };
 
-// UPDATE PLAYERS
+// PLAYERS LIST
 socket.on("updatePlayers", (players) => {
     const list = document.getElementById("playerList");
-    if (list) {
-        list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
-    }
+    if (list) list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
 });
 
 // START GAME
@@ -54,7 +52,7 @@ document.getElementById("startGameBtn").onclick = () => {
     socket.emit("startGame", { roomID: currentRoom, config });
 };
 
-// PLAYER ROLE
+// ROLE
 socket.on("yourRole", (data) => {
     showScreen("reveal");
 
@@ -68,21 +66,26 @@ socket.on("yourRole", (data) => {
     `;
 });
 
-// ADMIN PANEL
+// ADMIN PANEL (FIXED SAFE RENDER)
 socket.on("adminPanel", (data) => {
     showScreen("adminScreen");
 
-    document.getElementById("adminList").innerHTML =
-        data.players.map(p => `<li>${p.name} → ${p.role}</li>`).join("");
+    const list = document.getElementById("adminList");
+
+    list.innerHTML = data.players
+        .map(p => `<li><b>${p.name}</b> → ${p.role}</li>`)
+        .join("");
 });
 
-// NEW GAME
+// NEW GAME FIX (IMPORTANT)
 document.getElementById("newGameBtn").onclick = () => {
+    if (!currentRoom) return;
     socket.emit("resetGame", currentRoom);
 };
 
-// RESET
+// RESET UI
 socket.on("resetGame", () => {
+    document.getElementById("cardContainer").innerHTML = "";
     showScreen("hostScreen");
 });
 
