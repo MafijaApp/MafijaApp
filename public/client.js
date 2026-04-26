@@ -34,10 +34,10 @@ document.getElementById("joinBtn").onclick = () => {
     showScreen("reveal");
 };
 
-// PLAYERS LIST
+// PLAYERS
 socket.on("updatePlayers", (players) => {
-    const list = document.getElementById("playerList");
-    if (list) list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
+    document.getElementById("playerList").innerHTML =
+        players.map(p => `<li>${p}</li>`).join("");
 });
 
 // START GAME
@@ -66,26 +66,31 @@ socket.on("yourRole", (data) => {
     `;
 });
 
-// ADMIN PANEL (FIXED SAFE RENDER)
+// ADMIN BUTTON (NOVO)
+document.getElementById("adminBtn").onclick = () => {
+    socket.emit("requestAdmin", currentRoom);
+};
+
+// ADMIN PANEL
 socket.on("adminPanel", (data) => {
     showScreen("adminScreen");
 
-    const list = document.getElementById("adminList");
-
-    list.innerHTML = data.players
-        .map(p => `<li><b>${p.name}</b> → ${p.role}</li>`)
-        .join("");
+    document.getElementById("adminList").innerHTML =
+        data.players.map(p => `<li>${p.name} → ${p.role}</li>`).join("");
 });
 
-// NEW GAME FIX (IMPORTANT)
+// NEW GAME FIX
 document.getElementById("newGameBtn").onclick = () => {
-    if (!currentRoom) return;
     socket.emit("resetGame", currentRoom);
+
+    // UI cleanup
+    document.getElementById("cardContainer").innerHTML = "";
+    document.getElementById("adminList").innerHTML = "";
+    showScreen("hostScreen");
 };
 
-// RESET UI
+// RESET
 socket.on("resetGame", () => {
-    document.getElementById("cardContainer").innerHTML = "";
     showScreen("hostScreen");
 });
 
