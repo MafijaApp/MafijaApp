@@ -19,16 +19,14 @@ io.on("connection", (socket) => {
 
         rooms[roomID] = {
             host: socket.id,
-            hostName: name || "Host",
             players: []
         };
 
         socket.join(roomID);
-
         socket.emit("roomCreated", roomID);
     });
 
-    // JOIN ROOM
+    // JOIN
     socket.on("joinRoom", ({ roomID, name }) => {
         const room = rooms[roomID];
         if (!room) return socket.emit("error", "Soba ne postoji!");
@@ -37,14 +35,11 @@ io.on("connection", (socket) => {
 
         room.players.push({
             id: socket.id,
-            name: name || "Player",
+            name,
             role: null
         });
 
-        io.to(roomID).emit(
-            "updatePlayers",
-            room.players.map(p => p.name)
-        );
+        io.to(roomID).emit("updatePlayers", room.players.map(p => p.name));
     });
 
     // START GAME
@@ -53,6 +48,7 @@ io.on("connection", (socket) => {
         if (!room) return;
 
         const players = room.players;
+
         let roles = [];
 
         for (let i = 0; i < (config.mafija || 0); i++) roles.push("Mafija");
@@ -60,9 +56,7 @@ io.on("connection", (socket) => {
         for (let i = 0; i < (config.policajac || 0); i++) roles.push("Policajac");
         for (let i = 0; i < (config.dama || 0); i++) roles.push("Dama");
 
-        while (roles.length < players.length) {
-            roles.push("Gradjanin");
-        }
+        while (roles.length < players.length) roles.push("Gradjanin");
 
         roles.sort(() => Math.random() - 0.5);
 
@@ -79,31 +73,30 @@ io.on("connection", (socket) => {
             io.to(p.id).emit("yourRole", { role: roles[i] });
         });
 
-        // HOST ADMIN PANEL
-        io.to(room.host).emit("adminPanel", {
-            roomID,
-            players: fullState
+        room.lastGame = fullState;
+    });
+
+    // ADMIN REQUEST (NOVO FIX)
+    socket.on("requestAdmin", (roomID) => {
+        const room = rooms[roomID];
+        if (!room || !room.lastGame) return;
+
+        io.to(socket.id).emit("adminPanel", {
+            players: room.lastGame
         });
     });
 
-    // RESET GAME
+    // RESET
     socket.on("resetGame", (roomID) => {
         const room = rooms[roomID];
         if (!room) return;
 
-        room.players.forEach(p => (p.role = null));
+        room.players.forEach(p => p.role = null);
+        room.lastGame = null;
 
         io.to(roomID).emit("resetGame");
-    });
-
-    // DISCONNECT
-    socket.on("disconnect", () => {
-        for (const roomID in rooms) {
-            rooms[roomID].players =
-                rooms[roomID].players.filter(p => p.id !== socket.id);
-        }
     });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log("Server running on " + PORT));
+server.listen(PORT, () => console.log("Server running"));
