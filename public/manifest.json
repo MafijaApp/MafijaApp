@@ -1,23 +1,20 @@
 {
+  "name": "Mafija",
   "short_name": "Mafija",
-  "name": "Mafija Multiplayer",
-  "description": "Igraj Mafiju sa prijateljima uživo!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#f01818",
   "icons": [
     {
-      "src": "/icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "/icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
-  ],
-  "start_url": "/",
-  "background_color": "#020617",
-  "display": "standalone",
-  "theme_color": "#f01818",
-  "orientation": "portrait"
-
+  ]
 }
