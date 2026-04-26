@@ -34,12 +34,16 @@ io.on("connection", (socket) => {
 
         rooms[roomID].players.push({
             id: socket.id,
-            name,
+            name: name || "Host",
             role: null
         });
 
         socket.emit("roomCreated", roomID);
-        io.to(roomID).emit("updatePlayers", rooms[roomID].players.map(p => p.name));
+
+        io.to(roomID).emit(
+            "updatePlayers",
+            rooms[roomID].players.map(p => p.name)
+        );
     });
 
     socket.on("joinRoom", ({ roomID, name }) => {
@@ -50,27 +54,26 @@ io.on("connection", (socket) => {
 
         room.players.push({
             id: socket.id,
-            name,
+            name: name || "Player",
             role: null
         });
 
-        io.to(roomID).emit("updatePlayers", room.players.map(p => p.name));
+        io.to(roomID).emit(
+            "updatePlayers",
+            room.players.map(p => p.name || "Unknown")
+        );
     });
 
     socket.on("startGame", ({ roomID, config }) => {
         const room = rooms[roomID];
         if (!room) return;
 
-        if (room.players.length < 3) {
-            return io.to(roomID).emit("error", "Premalo igrača!");
-        }
-
         let roles = [];
 
-        for (let i = 0; i < config.mafija; i++) roles.push("Mafija");
-        for (let i = 0; i < config.doktor; i++) roles.push("Doktor");
-        for (let i = 0; i < config.policajac; i++) roles.push("Policajac");
-        for (let i = 0; i < config.dama; i++) roles.push("Dama");
+        for (let i = 0; i < (config.mafija || 0); i++) roles.push("Mafija");
+        for (let i = 0; i < (config.doktor || 0); i++) roles.push("Doktor");
+        for (let i = 0; i < (config.policajac || 0); i++) roles.push("Policajac");
+        for (let i = 0; i < (config.dama || 0); i++) roles.push("Dama");
 
         while (roles.length < room.players.length) {
             roles.push("Gradjanin");
@@ -94,7 +97,10 @@ io.on("connection", (socket) => {
         room.started = false;
 
         io.to(roomID).emit("resetGame");
-        io.to(roomID).emit("updatePlayers", room.players.map(p => p.name));
+        io.to(roomID).emit(
+            "updatePlayers",
+            room.players.map(p => p.name || "Unknown")
+        );
     });
 
     socket.on("disconnect", () => {
@@ -106,7 +112,10 @@ io.on("connection", (socket) => {
             if (room.players.length === 0) {
                 delete rooms[roomID];
             } else {
-                io.to(roomID).emit("updatePlayers", room.players.map(p => p.name));
+                io.to(roomID).emit(
+                    "updatePlayers",
+                    room.players.map(p => p.name || "Unknown")
+                );
             }
         }
     });
@@ -114,5 +123,5 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, "0.0.0.0", () => {
-    console.log("Server radi na portu " + PORT);
+    console.log("Server running on port " + PORT);
 });
