@@ -194,13 +194,26 @@ h3 {
 }
 
 /* ================= MOBILE ================= */
-@media (max-width: 500px) {
-    .card {
-        width: 220px;
-        height: 320px;
+}@media (max-width: 768px) {
+    input, button {
+        width: 90%;
+        font-size: 18px;
     }
 
-    input, button {
-        width: 220px;
+    .card {
+        width: 180px;
+        height: 260px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .screen {
+        padding: 10px;
+    }
+
+    ul {
+        width: 90%;
     }
 }
