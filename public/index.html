@@ -1,70 +1,48 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta http-equiv="Cache-Control" content="no-store" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-
-<title>Mafija</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mafija Online</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
 </head>
-
 <body>
 
-<h3>Napravio Marko Veljović</h3>
-
-<div id="home" class="screen">
-    <h1>MAFIJA</h1>
-
-    <input id="playerName" placeholder="Ime">
-
-    <button id="createBtn">NAPRAVI SOBU</button>
-
-    <p>ili</p>
-
-    <input id="roomInput" placeholder="Kod">
-    <button id="joinBtn">UĐI</button>
-</div>
-
-<div id="hostScreen" class="screen">
-
-    <h2>Soba: <span id="roomCodeText"></span></h2>
-
-    <div>
-        <label>Mafija: <input type="number" id="mafija" value="1" min="0" max="2"></label>
-        <label>Doktor: <input type="number" id="doktor" value="1" min="0" max="1"></label>
-        <label>Policajac: <input type="number" id="policajac" value="1" min="0" max="1"></label>
-        <label>Dama: <input type="number" id="dama" value="1" min="0" max="1"></label>
+    <div id="home" class="screen">
+        <h1>MAFIJA</h1>
+        <input type="text" id="playerName" placeholder="Tvoje ime">
+        <button id="createBtn">NAPRAVI SOBU</button>
+        <p>ili</p>
+        <input type="text" id="roomInput" placeholder="Kod sobe">
+        <button id="joinBtn">UĐI U SOBU</button>
     </div>
 
-    <button id="startGameBtn">PODELI ROLE</button>
-    <button id="newGameBtn">NOVA IGRA</button>
-
-    <h3>ADMIN</h3>
-    <ul id="adminList"></ul>
-
-    <h3>IGRAČI</h3>
-    <ul id="playerList"></ul>
-
-</div>
-
-<div id="reveal" class="screen">
-    <div id="cardContainer"></div>
-</div>
-
-<div id="roomCodeModal" class="modal">
-    <div class="modal-content">
-        <h3>Kod</h3>
-        <h1 id="roomCodeTextModal"></h1>
-        <button id="closeModal">OK</button>
+    <div id="hostScreen" class="screen" style="display:none;">
+        <h2>Kod sobe: <span id="roomCodeText"></span></h2>
+        <div class="settings">
+            <label>Mafija: <input type="number" id="mafija" value="1" min="1" max="2"></label>
+            <label>Doktor: <input type="number" id="doktor" value="1" min="0" max="1"></label>
+            <label>Policajac: <input type="number" id="policajac" value="1" min="0" max="1"></label>
+            <label>Dama: <input type="number" id="dama" value="1" min="0" max="1"></label>
+        </div>
+        <button id="startGameBtn">PODELI ROLE</button>
+        <ul id="playerList"></ul>
     </div>
-</div>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="client.js?v=999"></script>
+    <div id="reveal" class="screen" style="display:none;">
+        <div id="cardContainer"></div>
+    </div>
 
+    <div id="roomCodeModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>Kod tvoje sobe:</h3>
+            <h1 id="roomCodeTextModal"></h1>
+            <button id="closeModal">OK, IDI U LOBI</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
 </body>
 </html>
