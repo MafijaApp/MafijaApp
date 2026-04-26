@@ -11,7 +11,60 @@
 
 <h3>Napravio Marko Veljović</h3>
 
-<div id="home" class="screen" style="display:flex;">
+<div id="home" class="screen" style="di<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mafija</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h3>Napravio Marko Veljović</h3>
+
+<div id="home" class="screen">
+    <h1>MAFIJA</h1>
+
+    <input id="playerName" placeholder="Tvoje ime">
+    <button id="createBtn">NAPRAVI SOBU</button>
+
+    <p>ili</p>
+
+    <input id="roomInput" placeholder="Kod sobe">
+    <button id="joinBtn">UĐI</button>
+</div>
+
+<div id="hostScreen" class="screen" style="display:none;">
+    <h2>Soba: <span id="roomCodeText"></span></h2>
+
+    <div class="settings">
+        <label>Mafija <input id="mafija" type="number" value="1" min="0" max="2"></label>
+        <label>Doktor <input id="doktor" type="number" value="1" min="0" max="1"></label>
+        <label>Policajac <input id="policajac" type="number" value="1" min="0" max="1"></label>
+        <label>Dama <input id="dama" type="number" value="1" min="0" max="1"></label>
+    </div>
+
+    <button id="startGameBtn">PODELI ROLE</button>
+    <button id="newGameBtn">NOVA IGRA</button>
+
+    <ul id="playerList"></ul>
+</div>
+
+<div id="reveal" class="screen" style="display:none;">
+    <div id="cardContainer"></div>
+</div>
+
+<div id="adminScreen" class="screen" style="display:none;">
+    <h2>ADMIN PANEL</h2>
+    <ul id="adminList"></ul>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
+
+</body>
+</html>splay:flex;">
     <h1>MAFIJA</h1>
     <input type="text" id="playerName" placeholder="Tvoje ime">
     <button id="createBtn">NAPRAVI SOBU</button>
