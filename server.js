@@ -13,20 +13,19 @@ const rooms = {};
 
 io.on("connection", (socket) => {
 
-    // CREATE ROOM
-    socket.on("createRoom", (name) => {
+    socket.on("createRoom", () => {
         const roomID = Math.random().toString(36).substring(2, 7).toUpperCase();
 
         rooms[roomID] = {
             host: socket.id,
-            players: []
+            players: [],
+            state: "lobby"
         };
 
         socket.join(roomID);
         socket.emit("roomCreated", roomID);
     });
 
-    // JOIN
     socket.on("joinRoom", ({ roomID, name }) => {
         const room = rooms[roomID];
         if (!room) return socket.emit("error", "Soba ne postoji!");
@@ -39,33 +38,35 @@ io.on("connection", (socket) => {
             role: null
         });
 
-        io.to(roomID).emit("updatePlayers", room.players.map(p => p.name));
+        io.to(roomID).emit(
+            "updatePlayers",
+            room.players.map(p => p.name)
+        );
     });
 
-    // START GAME
     socket.on("startGame", ({ roomID, config }) => {
         const room = rooms[roomID];
         if (!room) return;
 
-        const players = room.players;
-
         let roles = [];
 
-        for (let i = 0; i < (config.mafija || 0); i++) roles.push("Mafija");
-        for (let i = 0; i < (config.doktor || 0); i++) roles.push("Doktor");
-        for (let i = 0; i < (config.policajac || 0); i++) roles.push("Policajac");
-        for (let i = 0; i < (config.dama || 0); i++) roles.push("Dama");
+        for (let i = 0; i < config.mafija; i++) roles.push("Mafija");
+        for (let i = 0; i < config.doktor; i++) roles.push("Doktor");
+        for (let i = 0; i < config.policajac; i++) roles.push("Policajac");
+        for (let i = 0; i < config.dama; i++) roles.push("Dama");
+
+        const players = room.players;
 
         while (roles.length < players.length) roles.push("Gradjanin");
 
         roles.sort(() => Math.random() - 0.5);
 
-        const fullState = [];
+        const fullGame = [];
 
         players.forEach((p, i) => {
             p.role = roles[i];
 
-            fullState.push({
+            fullGame.push({
                 name: p.name,
                 role: roles[i]
             });
@@ -73,10 +74,10 @@ io.on("connection", (socket) => {
             io.to(p.id).emit("yourRole", { role: roles[i] });
         });
 
-        room.lastGame = fullState;
+        room.lastGame = fullGame;
+        room.state = "playing";
     });
 
-    // ADMIN REQUEST (NOVO FIX)
     socket.on("requestAdmin", (roomID) => {
         const room = rooms[roomID];
         if (!room || !room.lastGame) return;
@@ -86,17 +87,16 @@ io.on("connection", (socket) => {
         });
     });
 
-    // RESET
     socket.on("resetGame", (roomID) => {
         const room = rooms[roomID];
         if (!room) return;
 
         room.players.forEach(p => p.role = null);
-        room.lastGame = null;
+        room.lastGame = [];
+        room.state = "lobby";
 
         io.to(roomID).emit("resetGame");
     });
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log("Server running"));
+server.listen(process.env.PORT || 3000);
