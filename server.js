@@ -104,7 +104,13 @@ io.on('connection', (socket) => {
         }
     });
 });
-
+rooms[roomID] = {
+    host: socket.id,
+    players: [],
+    roles: [],
+    started: false,
+    round: 0
+};
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on ${PORT}`);
