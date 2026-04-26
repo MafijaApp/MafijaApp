@@ -1,16 +1,12 @@
 const socket = io();
 let currentRoom = null;
 
-// SCREEN SWITCH (STABLE)
 function showScreen(id) {
-    document.querySelectorAll(".screen").forEach(s => {
-        s.style.display = "none";
-    });
-
+    document.querySelectorAll(".screen").forEach(s => s.style.display = "none");
     document.getElementById(id).style.display = "flex";
 }
 
-// CREATE ROOM
+// CREATE
 document.getElementById("createBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     if (!name) return alert("Unesi ime!");
@@ -25,7 +21,7 @@ socket.on("roomCreated", (roomID) => {
     showScreen("hostScreen");
 });
 
-// JOIN ROOM
+// JOIN
 document.getElementById("joinBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     const roomID = document.getElementById("roomInput").value.trim().toUpperCase();
@@ -38,7 +34,7 @@ document.getElementById("joinBtn").onclick = () => {
     showScreen("reveal");
 };
 
-// PLAYERS
+// PLAYERS LIST
 socket.on("updatePlayers", (players) => {
     document.getElementById("playerList").innerHTML =
         players.map(p => `<li>${p}</li>`).join("");
@@ -46,17 +42,18 @@ socket.on("updatePlayers", (players) => {
 
 // START GAME
 document.getElementById("startGameBtn").onclick = () => {
+
     const config = {
-        mafija: +document.getElementById("mafija").value || 0,
-        doktor: +document.getElementById("doktor").value || 0,
-        policajac: +document.getElementById("policajac").value || 0,
-        dama: +document.getElementById("dama").value || 0
+        mafija: Math.max(0, +document.getElementById("mafija").value || 0),
+        doktor: Math.max(0, +document.getElementById("doktor").value || 0),
+        policajac: Math.max(0, +document.getElementById("policajac").value || 0),
+        dama: Math.max(0, +document.getElementById("dama").value || 0)
     };
 
     socket.emit("startGame", { roomID: currentRoom, config });
 };
 
-// ROLE SHOW
+// ROLE
 socket.on("yourRole", (data) => {
     showScreen("reveal");
 
@@ -83,22 +80,20 @@ socket.on("adminPanel", (data) => {
         data.players.map(p => `<li>${p.name} → ${p.role}</li>`).join("");
 });
 
-// BACK BUTTON (FIX FOR MOBILE)
+// BACK
 document.getElementById("backFromAdminBtn").onclick = () => {
     showScreen("hostScreen");
 };
 
-// NEW GAME (RESET FIX)
+// NEW GAME (REAL RESET)
 document.getElementById("newGameBtn").onclick = () => {
     socket.emit("resetGame", currentRoom);
-
-    document.getElementById("cardContainer").innerHTML = "";
-    document.getElementById("adminList").innerHTML = "";
-    showScreen("hostScreen");
 };
 
-// RESET FROM SERVER
+// RESET UI FROM SERVER
 socket.on("resetGame", () => {
+    document.getElementById("cardContainer").innerHTML = "";
+    document.getElementById("adminList").innerHTML = "";
     showScreen("hostScreen");
 });
 
