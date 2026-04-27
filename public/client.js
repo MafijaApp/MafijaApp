@@ -1,15 +1,4 @@
-const socket = io({
-    reconnection: true,
-    reconnectionAttempts: 15,
-    reconnectionDelay: 1000
-});
-
-// Automatski refresh aplikacije kada detektuje novi sw.js
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-        window.location.reload();
-    });
-}
+const socket = io();
 
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
@@ -17,6 +6,7 @@ function showScreen(id) {
     if (target) target.style.display = 'flex';
 }
 
+// KREIRANJE SOBE
 document.getElementById("createBtn").onclick = () => socket.emit('createRoom');
 
 socket.on('roomCreated', (roomID) => {
@@ -30,14 +20,16 @@ document.getElementById("closeModal").onclick = () => {
     showScreen('hostScreen');
 };
 
+// ULAZAK U SOBU
 document.getElementById("joinBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     const roomID = document.getElementById("roomInput").value.trim().toUpperCase();
     if(name && roomID) {
         socket.emit('joinRoom', { roomID, name });
         showScreen('reveal');
+        document.getElementById("cardContainer").innerHTML = "<h3>Čekamo hosta da podeli uloge...</h3>";
     } else {
-        alert("Popuni sva polja!");
+        alert("Unesi ime i kod!");
     }
 };
 
@@ -46,6 +38,7 @@ socket.on('updatePlayers', (players) => {
     if(list) list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
 });
 
+// START IGRE
 document.getElementById("startGameBtn").onclick = () => {
     const roomID = document.getElementById("roomCodeText").textContent;
     const config = {
@@ -57,6 +50,7 @@ document.getElementById("startGameBtn").onclick = () => {
     socket.emit('startGame', { roomID, config });
 };
 
+// PRIKAZ ULOGE
 socket.on('yourRole', (data) => {
     showScreen('reveal');
     const container = document.getElementById("cardContainer");
@@ -70,26 +64,17 @@ socket.on('yourRole', (data) => {
     container.innerHTML = `
         <div class="card" onclick="this.classList.toggle('flipped')">
             <div class="card-inner">
-                <div class="card-front">DOTAKNI KARTU</div>
+                <div class="card-front">DODIRNI KARTU</div>
                 <div class="card-back ${roleClass}">${data.role}</div>
             </div>
         </div>`;
 });
 
-// HOST vidi sve uloge
 socket.on('hostViewRoles', (data) => {
     const list = document.getElementById("playerList");
     if(list) {
-        list.innerHTML = "<h3>Pregled uloga:</h3>" + data.map(p => 
-            `<li style="margin-bottom: 8px;"><strong>${p.name}</strong>: ${p.role}</li>`
-        ).join("");
+        list.innerHTML = "<h3>Pregled:</h3>" + data.map(p => `<li>${p.name}: ${p.role}</li>`).join("");
     }
 });
 
 socket.on('error', (m) => alert(m));
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js');
-    });
-}
