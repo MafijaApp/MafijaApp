@@ -29,6 +29,11 @@ document.getElementById("joinBtn").onclick = () => {
     }
 };
 
+// DUGME ZA IGRAČE - POTPUNI IZLAZ
+document.getElementById("exitBtn").onclick = () => {
+    location.reload();
+};
+
 socket.on('updatePlayers', (players) => {
     const list = document.getElementById("playerList");
     if(list) list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
@@ -44,27 +49,35 @@ document.getElementById("startGameBtn").onclick = () => {
     };
     socket.emit('startGame', { roomID, config });
     
-    // Sakrij podešavanja, pokaži dugme za reset
     document.getElementById("setupArea").style.display = "none";
-    document.getElementById("newGameBtn").style.display = "block";
+    document.getElementById("hostActions").style.display = "block";
 };
 
-// KLIK NA NOVA PARTIJA
+// OPCIJA 1: HOST RESETUJE SAMO ULOGE
 document.getElementById("newGameBtn").onclick = () => {
     const roomID = document.getElementById("roomCodeText").textContent;
     socket.emit('resetGame', roomID);
 };
 
-// SVI SE VRAĆAJU U LOBI
+// SIGNAL ZA IGRAČE DA SE SAMO RESETUJU KARTICE
 socket.on('goToLobby', () => {
     document.getElementById("setupArea").style.display = "block";
-    document.getElementById("newGameBtn").style.display = "none";
+    document.getElementById("hostActions").style.display = "none";
     
-    // Ako je igrač bio na ekranu za kartu, vrati ga na čekanje
     const revealScreen = document.getElementById("reveal");
     if (revealScreen.style.display !== "none") {
         document.getElementById("cardContainer").innerHTML = "<h3>Sledeća partija počinje...</h3>";
     }
+});
+
+// OPCIJA 2: HOST GASI SVE
+document.getElementById("endGameBtn").onclick = () => {
+    const roomID = document.getElementById("roomCodeText").textContent;
+    socket.emit('destroyRoom', roomID);
+};
+
+socket.on('forceToHome', () => {
+    location.reload();
 });
 
 socket.on('yourRole', (data) => {
