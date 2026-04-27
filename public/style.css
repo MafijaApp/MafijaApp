@@ -22,10 +22,30 @@ body {
 
 .full-width { width: 100%; display: flex; flex-direction: column; align-items: center; }
 
-/* LOGO I NASLOVI */
+/* LOGO */
 .logo { font-size: 3rem; color: #e11d48; letter-spacing: 4px; margin-bottom: 2rem; }
-.room-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
-#roomCodeText { color: #e11d48; font-weight: 800; }
+
+/* DIVIDER (ILI sa linijom koja deli ekran) */
+.divider { 
+    display: flex; 
+    align-items: center; 
+    text-align: center; 
+    width: 100%; 
+    margin: 25px 0; 
+    color: #64748b; 
+    font-size: 0.85rem; 
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.3); /* Providna linija */
+}
+
+.divider:not(:empty)::before { margin-right: 15px; }
+.divider:not(:empty)::after { margin-left: 15px; }
 
 /* FORME */
 .input-group { width: 100%; }
@@ -33,7 +53,7 @@ input {
     width: 100%; 
     padding: 14px; 
     margin: 8px 0; 
-    border-radius: 10px; 
+    border-radius: 12px; 
     border: 1px solid #334155; 
     background: #1e293b; 
     color: white; 
@@ -41,9 +61,7 @@ input {
     text-align: center;
 }
 
-.divider { margin: 15px 0; color: #64748b; font-size: 0.8rem; position: relative; }
-
-/* PODEŠAVANJA ULOGA (REŠENJE ZA TVOJ PROBLEM) */
+/* PODEŠAVANJA ULOGA (Tvoj omiljeni deo) */
 .settings-card {
     width: 100%;
     background: #1e293b;
@@ -58,13 +76,11 @@ input {
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
 }
 
 .setting-row:last-child { border-bottom: none; }
-
 .setting-row label { font-size: 1rem; color: #cbd5e1; }
-
 .setting-row input { 
     width: 65px !important; 
     margin: 0 !important; 
@@ -83,30 +99,31 @@ button {
     font-size: 1rem; 
     cursor: pointer; 
     margin: 5px 0; 
+    transition: 0.2s;
 }
+button:active { transform: scale(0.97); }
+
 .primary-btn, #createBtn, #joinBtn, #closeModal { background: #e11d48; color: white; }
 .success-btn { background: #22c55e; color: white; }
 .secondary-btn { background: #475569; color: white; margin-top: 20px; }
 
-/* LISTA IGRAČA */
-#playerList { list-style: none; padding: 0; width: 100%; margin-top: 20px; }
-#playerList li { background: #1e293b; padding: 12px; margin-bottom: 6px; border-radius: 8px; border-left: 4px solid #e11d48; text-align: left; }
-
-/* MODAL */
+/* MODAL I KARTE (Ostalo nepromenjeno) */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
 .modal-content { background: #1e293b; width: 100%; max-width: 320px; padding: 30px; border-radius: 24px; text-align: center; border: 2px solid #e11d48; }
 #roomCodeTextModal { font-size: 3.5rem; margin: 15px 0; color: #e11d48; letter-spacing: 2px; }
 
-/* KARTE */
 .card { width: 280px; height: 400px; perspective: 1000px; margin: 20px 0; }
 .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
 .card.flipped .card-inner { transform: rotateY(180deg); }
 .card-front, .card-back { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 24px; font-size: 2rem; font-weight: 800; border: 6px solid #f8fafc; }
 .card-front { background: #1e293b; color: #e11d48; }
-.card-back { transform: rotateY(180deg); color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.card-back { transform: rotateY(180deg); color: white; }
 
 .role-mafija { background: linear-gradient(135deg, #991b1b, #ef4444); }
 .role-doktor { background: linear-gradient(135deg, #166534, #22c55e); }
 .role-policajac { background: linear-gradient(135deg, #1e40af, #3b82f6); }
 .role-dama { background: linear-gradient(135deg, #be185d, #ff69b4); }
 .role-civil { background: linear-gradient(135deg, #334155, #64748b); }
+
+#playerList { list-style: none; padding: 0; width: 100%; margin-top: 20px; }
+#playerList li { background: #1e293b; padding: 12px; margin-bottom: 6px; border-radius: 8px; border-left: 4px solid #e11d48; text-align: left; }
