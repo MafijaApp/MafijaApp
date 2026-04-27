@@ -2,51 +2,64 @@
 <html lang="sr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mafija Online</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="home" class="screen">
-        <h1>MAFIJA</h1>
+        <h1 style="color: #e11d48; letter-spacing: 5px;">MAFIJA</h1>
         <input type="text" id="playerName" placeholder="Tvoje ime">
         <button id="createBtn">NAPRAVI SOBU</button>
-        <p>ili</p>
+        <p style="margin: 15px; color: #64748b;">— ILI —</p>
         <input type="text" id="roomInput" placeholder="Kod sobe">
         <button id="joinBtn">UĐI U SOBU</button>
     </div>
 
     <div id="hostScreen" class="screen" style="display:none;">
-        <h2>Soba: <span id="roomCodeText"></span></h2>
-        <div id="setupArea">
+        <h2 style="margin-bottom: 5px;">Soba: <span id="roomCodeText" style="color: #e11d48;"></span></h2>
+        <p style="color: #64748b; margin-bottom: 20px;">Podešavanje uloga</p>
+        
+        <div id="setupArea" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
             <div class="settings">
-                <label>Mafija (1-2): <input type="number" id="mafija" value="1" min="1" max="2"></label>
-                <label>Doktor (1): <input type="number" id="doktor" value="1" min="1" max="1" readonly></label>
-                <label>Policajac (1): <input type="number" id="policajac" value="1" min="1" max="1" readonly></label>
-                <label>Dama (0-1): <input type="number" id="dama" value="1" min="0" max="1"></label>
+                <div class="setting-row">
+                    <label>Mafija (1-2)</label>
+                    <input type="number" id="mafija" value="1" min="1" max="2">
+                </div>
+                <div class="setting-row">
+                    <label>Doktor (1)</label>
+                    <input type="number" id="doktor" value="1" readonly>
+                </div>
+                <div class="setting-row">
+                    <label>Policajac (1)</label>
+                    <input type="number" id="policajac" value="1" readonly>
+                </div>
+                <div class="setting-row">
+                    <label>Dama (0-1)</label>
+                    <input type="number" id="dama" value="1" min="0" max="1">
+                </div>
             </div>
-            <p id="playerCountWarn" style="color: #fda4af; font-size: 0.8em; display:none;">Potrebno je više igrača za ove uloge!</p>
             <button id="startGameBtn">PODELI ROLE</button>
         </div>
-        
-        <div id="hostActions" style="display:none; width: 100%;">
-            <button id="newGameBtn" style="background: #22c55e;">NOVA PARTIJA</button>
+
+        <div id="hostActions" style="display:none; width: 100%; flex-direction: column; align-items: center;">
+            <button id="newGameBtn" style="background: #22c55e; margin-bottom: 10px;">NOVA PARTIJA</button>
             <button id="endGameBtn" style="background: #475569;">NAPUSTI SVE</button>
         </div>
-        
+
         <ul id="playerList"></ul>
     </div>
 
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer"></div>
-        <button id="exitBtn" style="margin-top: 20px; background: #475569;">NAPUSTI IGRU</button>
+        <button id="exitBtn" style="margin-top: 30px; background: #475569;">NAPUSTI IGRU</button>
     </div>
 
     <div id="roomCodeModal" class="modal" style="display:none;">
         <div class="modal-content">
-            <h3>Kod sobe:</h3>
-            <h1 id="roomCodeTextModal"></h1>
-            <button id="closeModal">OK</button>
+            <h3 style="margin-top: 0;">Kod tvoje sobe:</h3>
+            <h1 id="roomCodeTextModal" style="color: #e11d48; font-size: 3em; margin: 10px 0;"></h1>
+            <button id="closeModal">OK, U LOBI</button>
         </div>
     </div>
 
