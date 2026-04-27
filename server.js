@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
         io.to(room.host).emit('hostViewRoles', hostSummary);
     });
 
-    // NOVA KOMANDA ZA RESET
+    // OPCIJA 1: BRZI RESET (Ostaju u sobi)
     socket.on('resetGame', (roomID) => {
         const room = rooms[roomID];
         if (room && socket.id === room.host) {
@@ -63,8 +63,17 @@ io.on('connection', (socket) => {
         }
     });
 
+    // OPCIJA 2: IZLAZ (Gasi sobu i šalje na početak)
+    socket.on('destroyRoom', (roomID) => {
+        const room = rooms[roomID];
+        if (room && socket.id === room.host) {
+            io.to(roomID).emit('forceToHome');
+            delete rooms[roomID];
+        }
+    });
+
     socket.on('disconnect', () => {});
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => console.log(`Server na ${PORT}`));
+server.listen(PORT, '0.0.0.0', () => console.log(`Server pokrenut na portu ${PORT}`));
