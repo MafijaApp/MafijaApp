@@ -29,8 +29,9 @@ document.getElementById("joinBtn").onclick = () => {
     }
 };
 
-// DUGME ZA IGRAČE - POTPUNI IZLAZ
+// MODIFIKOVANO: Prvo diskonektuj socket, pa onda reloaduj
 document.getElementById("exitBtn").onclick = () => {
+    socket.disconnect(); 
     location.reload();
 };
 
@@ -48,29 +49,24 @@ document.getElementById("startGameBtn").onclick = () => {
         dama: parseInt(document.getElementById("dama").value) || 0
     };
     socket.emit('startGame', { roomID, config });
-    
     document.getElementById("setupArea").style.display = "none";
     document.getElementById("hostActions").style.display = "block";
 };
 
-// OPCIJA 1: HOST RESETUJE SAMO ULOGE
 document.getElementById("newGameBtn").onclick = () => {
     const roomID = document.getElementById("roomCodeText").textContent;
     socket.emit('resetGame', roomID);
 };
 
-// SIGNAL ZA IGRAČE DA SE SAMO RESETUJU KARTICE
 socket.on('goToLobby', () => {
     document.getElementById("setupArea").style.display = "block";
     document.getElementById("hostActions").style.display = "none";
-    
     const revealScreen = document.getElementById("reveal");
     if (revealScreen.style.display !== "none") {
         document.getElementById("cardContainer").innerHTML = "<h3>Sledeća partija počinje...</h3>";
     }
 });
 
-// OPCIJA 2: HOST GASI SVE
 document.getElementById("endGameBtn").onclick = () => {
     const roomID = document.getElementById("roomCodeText").textContent;
     socket.emit('destroyRoom', roomID);
