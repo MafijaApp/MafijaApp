@@ -6,7 +6,6 @@ function showScreen(id) {
     if (target) target.style.display = 'flex';
 }
 
-// KREIRANJE SOBE
 document.getElementById("createBtn").onclick = () => socket.emit('createRoom');
 
 socket.on('roomCreated', (roomID) => {
@@ -20,16 +19,13 @@ document.getElementById("closeModal").onclick = () => {
     showScreen('hostScreen');
 };
 
-// ULAZAK U SOBU
 document.getElementById("joinBtn").onclick = () => {
     const name = document.getElementById("playerName").value.trim();
     const roomID = document.getElementById("roomInput").value.trim().toUpperCase();
     if(name && roomID) {
         socket.emit('joinRoom', { roomID, name });
         showScreen('reveal');
-        document.getElementById("cardContainer").innerHTML = "<h3>Čekamo hosta da podeli uloge...</h3>";
-    } else {
-        alert("Unesi ime i kod!");
+        document.getElementById("cardContainer").innerHTML = "<h3>Čekamo hosta...</h3>";
     }
 };
 
@@ -38,7 +34,6 @@ socket.on('updatePlayers', (players) => {
     if(list) list.innerHTML = players.map(p => `<li>${p}</li>`).join("");
 });
 
-// START IGRE
 document.getElementById("startGameBtn").onclick = () => {
     const roomID = document.getElementById("roomCodeText").textContent;
     const config = {
@@ -48,13 +43,33 @@ document.getElementById("startGameBtn").onclick = () => {
         dama: parseInt(document.getElementById("dama").value) || 0
     };
     socket.emit('startGame', { roomID, config });
+    
+    // Sakrij podešavanja, pokaži dugme za reset
+    document.getElementById("setupArea").style.display = "none";
+    document.getElementById("newGameBtn").style.display = "block";
 };
 
-// PRIKAZ ULOGE
+// KLIK NA NOVA PARTIJA
+document.getElementById("newGameBtn").onclick = () => {
+    const roomID = document.getElementById("roomCodeText").textContent;
+    socket.emit('resetGame', roomID);
+};
+
+// SVI SE VRAĆAJU U LOBI
+socket.on('goToLobby', () => {
+    document.getElementById("setupArea").style.display = "block";
+    document.getElementById("newGameBtn").style.display = "none";
+    
+    // Ako je igrač bio na ekranu za kartu, vrati ga na čekanje
+    const revealScreen = document.getElementById("reveal");
+    if (revealScreen.style.display !== "none") {
+        document.getElementById("cardContainer").innerHTML = "<h3>Sledeća partija počinje...</h3>";
+    }
+});
+
 socket.on('yourRole', (data) => {
     showScreen('reveal');
     const container = document.getElementById("cardContainer");
-    
     let roleClass = "role-civil"; 
     if (data.role === "Mafija") roleClass = "role-mafija";
     if (data.role === "Doktor") roleClass = "role-doktor";
@@ -73,7 +88,7 @@ socket.on('yourRole', (data) => {
 socket.on('hostViewRoles', (data) => {
     const list = document.getElementById("playerList");
     if(list) {
-        list.innerHTML = "<h3>Pregled:</h3>" + data.map(p => `<li>${p.name}: ${p.role}</li>`).join("");
+        list.innerHTML = "<h3>Uloge:</h3>" + data.map(p => `<li>${p.name}: ${p.role}</li>`).join("");
     }
 });
 
