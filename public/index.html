@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mafija Online</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-
     <div id="home" class="screen">
         <h1>MAFIJA</h1>
         <input type="text" id="playerName" placeholder="Tvoje ime">
@@ -19,14 +17,19 @@
     </div>
 
     <div id="hostScreen" class="screen" style="display:none;">
-        <h2>Kod sobe: <span id="roomCodeText"></span></h2>
-        <div class="settings">
-            <label>Mafija: <input type="number" id="mafija" value="1" min="1" max="2"></label>
-            <label>Doktor: <input type="number" id="doktor" value="1" min="0" max="1"></label>
-            <label>Policajac: <input type="number" id="policajac" value="1" min="0" max="1"></label>
-            <label>Dama: <input type="number" id="dama" value="1" min="0" max="1"></label>
+        <h2>Soba: <span id="roomCodeText"></span></h2>
+        <div id="setupArea">
+            <div class="settings">
+                <label>Mafija: <input type="number" id="mafija" value="1" min="1" max="2"></label>
+                <label>Doktor: <input type="number" id="doktor" value="1" min="1" max="1"></label>
+                <label>Policajac: <input type="number" id="policajac" value="1" min="1" max="1"></label>
+                <label>Dama: <input type="number" id="dama" value="1" min="0" max="1"></label>
+            </div>
+            <button id="startGameBtn">PODELI ROLE</button>
         </div>
-        <button id="startGameBtn">PODELI ROLE</button>
+        
+        <button id="newGameBtn" style="display:none; background: #22c55e;">NOVA PARTIJA (RESET)</button>
+        
         <ul id="playerList"></ul>
     </div>
 
@@ -36,9 +39,9 @@
 
     <div id="roomCodeModal" class="modal" style="display:none;">
         <div class="modal-content">
-            <h3>Kod tvoje sobe:</h3>
+            <h3>Kod sobe:</h3>
             <h1 id="roomCodeTextModal"></h1>
-            <button id="closeModal">OK, IDI U LOBI</button>
+            <button id="closeModal">OK</button>
         </div>
     </div>
 
