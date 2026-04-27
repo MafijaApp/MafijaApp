@@ -26,8 +26,15 @@ io.on('connection', (socket) => {
     socket.on('joinRoom', ({ roomID, name }) => {
         const id = roomID.toUpperCase();
         if (rooms[id]) {
+            // Izbacujemo "duha" ako već postoji neko sa istim socket ID-em
+            rooms[id].players = rooms[id].players.filter(p => p.id !== socket.id);
+            
             rooms[id].players.push({ id: socket.id, name: name });
             socket.join(id);
+            
+            // Čuvamo roomID u samom socketu da bismo znali odakle da ga obrišemo na disconnect
+            socket.roomID = id;
+
             const names = rooms[id].players.map(p => p.name);
             io.to(id).emit('updatePlayers', names);
         } else {
@@ -47,15 +54,14 @@ io.on('connection', (socket) => {
         while (roles.length < players.length) roles.push('Gradjanin');
         roles.sort(() => Math.random() - 0.5);
 
-        let hostSummary = [];
         players.forEach((p, i) => {
             io.to(p.id).emit('yourRole', { role: roles[i] });
-            hostSummary.push({ name: p.name, role: roles[i] });
         });
+
+        let hostSummary = players.map((p, i) => ({ name: p.name, role: roles[i] }));
         io.to(room.host).emit('hostViewRoles', hostSummary);
     });
 
-    // OPCIJA 1: BRZI RESET (Ostaju u sobi)
     socket.on('resetGame', (roomID) => {
         const room = rooms[roomID];
         if (room && socket.id === room.host) {
@@ -63,7 +69,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // OPCIJA 2: IZLAZ (Gasi sobu i šalje na početak)
     socket.on('destroyRoom', (roomID) => {
         const room = rooms[roomID];
         if (room && socket.id === room.host) {
@@ -72,8 +77,25 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('disconnect', () => {});
+    // KLJUČNI DEO: BRISANJE IGRAČA KADA IZAĐE ILI UGASI TAB
+    socket.on('disconnect', () => {
+        const roomID = socket.roomID;
+        if (roomID && rooms[roomID]) {
+            // Filtriramo listu tako da izbacimo onoga ko se diskonektovao
+            rooms[roomID].players = rooms[roomID].players.filter(p => p.id !== socket.id);
+            
+            // Javljamo hostu da je lista ažurirana
+            const names = rooms[roomID].players.map(p => p.name);
+            io.to(roomID).emit('updatePlayers', names);
+
+            // Ako je host izašao, gasimo celu sobu
+            if (socket.id === rooms[roomID].host) {
+                io.to(roomID).emit('forceToHome');
+                delete rooms[roomID];
+            }
+        }
+    });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => console.log(`Server pokrenut na portu ${PORT}`));
+server.listen(PORT, '0.0.0.0', () => console.log(`Server live on ${PORT}`));
