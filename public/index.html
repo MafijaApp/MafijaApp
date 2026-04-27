@@ -28,13 +28,17 @@
             <button id="startGameBtn">PODELI ROLE</button>
         </div>
         
-        <button id="newGameBtn" style="display:none; background: #22c55e;">NOVA PARTIJA (RESET)</button>
+        <div id="hostActions" style="display:none; width: 100%;">
+            <button id="newGameBtn" style="background: #22c55e;">NOVA PARTIJA (ISTI KOD)</button>
+            <button id="endGameBtn" style="background: #475569;">NAPUSTI SVE (NAZAD NA MENI)</button>
+        </div>
         
         <ul id="playerList"></ul>
     </div>
 
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer"></div>
+        <button id="exitBtn" style="margin-top: 20px; background: #475569;">NAPUSTI IGRU</button>
     </div>
 
     <div id="roomCodeModal" class="modal" style="display:none;">
