@@ -1,7 +1,8 @@
 const socket = io();
 let currentRoomID = null;
+let isHost = false;
 
-// Funkcija za upravljanje + i - dugmićima (Stepperima)
+// Upravljanje + i - (Stepper)
 function changeVal(id, delta) {
     const input = document.getElementById(id);
     const min = parseInt(input.getAttribute('min'));
@@ -13,11 +14,12 @@ function changeVal(id, delta) {
     }
 }
 
-// Kreiranje sobe
+// Kreiranje sobe (Host)
 document.getElementById('createBtn').onclick = () => {
     const name = document.getElementById('playerName').value;
-    if (!name) return alert("Moraš uneti ime!");
+    if (!name) return alert("Unesi ime!");
     
+    isHost = true;
     socket.emit('createRoom');
     socket.once('roomCreated', (id) => {
         currentRoomID = id;
@@ -27,66 +29,86 @@ document.getElementById('createBtn').onclick = () => {
     });
 };
 
-// Ulazak u sobu
+// Ulazak u sobu (Igrač)
 document.getElementById('joinBtn').onclick = () => {
     const name = document.getElementById('playerName').value;
     const room = document.getElementById('roomInput').value.toUpperCase();
     if (name && room) {
         currentRoomID = room;
+        isHost = false;
         socket.emit('joinRoom', { roomID: room, name: name });
-    } else {
-        alert("Popuni sva polja!");
     }
 };
 
-// Uspešan ulazak
 socket.on('joinSuccess', () => {
     showScreen('hostScreen');
+    // Ako nije host, sakrij podešavanja uloga
+    if (!isHost) {
+        document.getElementById('setupArea').style.display = 'none';
+    }
 });
 
-// Ažuriranje liste igrača u lobiju
 socket.on('updatePlayers', (list) => {
     const ul = document.getElementById('playerList');
     ul.innerHTML = list.map(p => `<li>${p}</li>`).join('');
 });
 
-// Startovanje igre (samo za hosta)
+// Host pokreće igru
 document.getElementById('startGameBtn').onclick = () => {
-    const mafijaCount = parseInt(document.getElementById('mafija').value);
-    const damaCount = parseInt(document.getElementById('dama').value);
-
-    socket.emit('startGame', {
-        roomID: currentRoomID,
-        config: {
-            mafija: mafijaCount,
-            dama: damaCount
-        }
-    });
+    const config = {
+        mafija: parseInt(document.getElementById('mafija').value),
+        dama: parseInt(document.getElementById('dama').value),
+        doktor: 1,
+        policajac: 1
+    };
+    socket.emit('startGame', { roomID: currentRoomID, config });
 };
 
-// Prikaz dodeljene uloge
-socket.on('yourRole', ({ role }) => {
-    showScreen('reveal');
-    const cardContainer = document.getElementById('cardContainer');
-    cardContainer.innerHTML = `
-        <div class="role-reveal-anim">
-            <p>Tvoja uloga je:</p>
-            <h1 class="role-title">${role}</h1>
-        </div>
-    `;
+// Specijalni prikaz za Hosta (Vidi ko je ko i dugme za izbacivanje)
+socket.on('hostViewRoles', (data) => {
+    document.getElementById('setupArea').style.display = 'none';
+    document.getElementById('listTitle').innerText = "VODITELJSKI PANEL";
+    
+    const ul = document.getElementById('playerList');
+    // Host vidi sve, ali sebe (hosta) ne treba da izbacuje
+    ul.innerHTML = data.map(p => `
+        <li class="admin-player-row">
+            <span><strong>${p.name}</strong> (${p.role})</span>
+            <button class="kick-btn" onclick="kickPlayer('${p.id}')">IZBACI</button>
+        </li>
+    `).join('');
 });
 
-// Navigacija kroz ekrane
+// Igrač dobija svoju ulogu
+socket.on('yourRole', ({ role }) => {
+    if (!isHost) {
+        showScreen('reveal');
+        const container = document.getElementById('cardContainer');
+        container.innerHTML = `
+            <div class="role-reveal-card">
+                <p style="text-transform: uppercase; letter-spacing: 2px; opacity: 0.6;">Tvoja uloga je</p>
+                <h1 style="font-size: 3rem; color: #ff4b2b; margin-top: 10px;">${role}</h1>
+            </div>
+        `;
+    }
+});
+
+// Funkcija za izbacivanje koju zove Host
+function kickPlayer(playerID) {
+    if (confirm("Da li je ovaj igrač eliminisan?")) {
+        socket.emit('kickPlayer', { roomID: currentRoomID, playerID });
+    }
+}
+
+// Kada je igrač izbačen (dobija poruku ili se resetuje)
+socket.on('kicked', () => {
+    alert("Eliminisani ste iz igre.");
+    location.reload();
+});
+
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
     document.getElementById(id).style.display = 'block';
 }
 
-// Greške
 socket.on('error', (msg) => alert(msg));
-
-// Forsirano vraćanje na početnu
-socket.on('forceToHome', () => {
-    alert("Veza sa sobom je prekinuta.");
-    location.reload();
-});
