@@ -3,7 +3,6 @@ let currentRoomID = null;
 let isHost = false;
 let myName = "";
 
-// Funkcija za menjanje vrednosti (Mafija/Dama)
 function changeVal(id, delta) {
     const input = document.getElementById(id);
     const min = parseInt(input.getAttribute('min'));
@@ -12,6 +11,13 @@ function changeVal(id, delta) {
     if (newVal >= min && newVal <= max) {
         input.value = newVal;
         checkPlayerCount();
+    }
+}
+
+function regenerateRoomCode() {
+    if (!isHost) return;
+    if (confirm("Promeni kod sobe? Stari kod više neće raditi.")) {
+        socket.emit('createRoom'); 
     }
 }
 
@@ -24,15 +30,14 @@ document.getElementById('createBtn').onclick = () => {
 
 socket.on('roomCreated', (id) => {
     currentRoomID = id;
-    socket.emit('joinRoom', { roomID: id, name: myName });
-    showScreen('roomCodeModal');
-    document.getElementById('roomCodeDisplay').innerText = id;
-});
+    document.getElementById('stickyRoomHeader').style.display = 'block';
+    document.getElementById('topRoomCode').innerText = id;
+    if(isHost) document.getElementById('regenCodeBtn').style.display = 'inline-block';
 
-function closeCodeModal() {
+    socket.emit('joinRoom', { roomID: id, name: myName });
     showScreen('hostScreen');
     document.getElementById('globalExitBtn').style.display = 'block';
-}
+});
 
 document.getElementById('joinBtn').onclick = () => {
     myName = document.getElementById('playerName').value.trim();
@@ -45,18 +50,16 @@ document.getElementById('joinBtn').onclick = () => {
 };
 
 socket.on('joinSuccess', () => {
-    if (!isHost) {
-        showScreen('hostScreen');
-        document.getElementById('globalExitBtn').style.display = 'block';
-    }
+    document.getElementById('stickyRoomHeader').style.display = 'block';
+    document.getElementById('topRoomCode').innerText = currentRoomID;
+    showScreen('hostScreen');
+    document.getElementById('globalExitBtn').style.display = 'block';
 });
 
 let currentPlayersList = [];
-
 socket.on('updatePlayers', (list) => {
     currentPlayersList = list;
     const ul = document.getElementById('playerList');
-    // Host je uvek prvi u listi jer on kreira sobu
     ul.innerHTML = list.map((p, index) => `
         <li class="player-li">
             ${p} ${index === 0 ? '<span class="is-host-tag">HOST</span>' : ''}
@@ -67,14 +70,11 @@ socket.on('updatePlayers', (list) => {
 
 function checkPlayerCount() {
     if (!isHost) return;
-    
     const mafija = parseInt(document.getElementById('mafija').value);
     const dama = parseInt(document.getElementById('dama').value);
-    const totalRequired = mafija + dama + 2; // + Doktor + Policajac
-    
+    const totalRequired = mafija + dama + 2; 
     const startBtn = document.getElementById('startGameBtn');
-    // Broj igrača bez hosta
-    const playersReady = currentPlayersList.length - 1; 
+    const playersReady = currentPlayersList.length - 1; // Bez hosta
 
     if (playersReady >= totalRequired) {
         startBtn.disabled = false;
@@ -97,41 +97,34 @@ document.getElementById('startGameBtn').onclick = () => {
     socket.emit('startGame', { roomID: currentRoomID, config });
 };
 
-// SAMO HOST vidi Narator Panel sa ulogama
 socket.on('hostViewRoles', (data) => {
+    document.getElementById('setupArea').style.display = 'none';
+    document.getElementById('listTitle').innerText = "NARATOR PANEL";
     const ul = document.getElementById('playerList');
-    const setup = document.getElementById('setupArea');
-    if(setup) setup.style.display = 'none';
-    document.getElementById('listTitle').innerText = "NARATOR PANEL (UŽIVO)";
-    
     ul.innerHTML = data.map(p => `
-        <li class="admin-player-row">
+        <li class="player-li">
             <span><strong>${p.name}</strong> - ${p.role}</span>
-            <button class="kick-btn" onclick="kickPlayer('${p.id}')">IZBACI</button>
+            <button class="is-host-tag" style="background:red; color:white; border:none; cursor:pointer;" onclick="kickPlayer('${p.id}')">IZBACI</button>
         </li>
     `).join('');
 });
 
 function kickPlayer(id) {
-    if(confirm("Izbaci igrača iz igre?")) {
-        socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
-    }
+    if(confirm("Eliminiši igrača?")) socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
 }
 
-// IGRAČI dobijaju ulogu (Host je ovde preskočen jer on samo gleda panel)
 socket.on('yourRole', ({ role }) => {
     if (!isHost) {
         showScreen('reveal');
         document.getElementById('cardContainer').innerHTML = `
-            <div style="padding:40px; border:1px solid #ff0000; border-radius:12px; text-align:center; background: rgba(255,0,0,0.05);">
-                <p style="opacity:0.5; font-size:0.7rem; letter-spacing:3px; margin-bottom:10px;">DODELJENA ULOGA</p>
-                <h1 style="font-size:3rem; color:#ff0000; font-weight:900;">${role.toUpperCase()}</h1>
+            <div style="padding:50px 20px; border:2px solid #ff0000; border-radius:12px; text-align:center; background:rgba(255,0,0,0.05);">
+                <p style="opacity:0.5; font-size:0.8rem; letter-spacing:3px; margin-bottom:15px;">TVOJA ULOGA</p>
+                <h1 style="font-size:3.5rem; color:#ff0000; font-weight:900;">${role.toUpperCase()}</h1>
             </div>`;
     }
 });
 
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-    const target = document.getElementById(id);
-    if(target) target.style.display = 'block';
+    document.getElementById(id).style.display = 'block';
 }
