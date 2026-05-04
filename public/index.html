@@ -8,33 +8,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Crveno dugme za izlaz (fiksirano) -->
     <button id="globalExitBtn" class="exit-btn-fixed" style="display:none;" onclick="location.reload()">IZLAZ</button>
 
-    <!-- 1. POČETNI EKRAN -->
     <div id="home" class="screen">
-        <!-- CUSTOM LOGO DIZAJN -->
         <div class="logo-container">
             <h1 class="logo-main">MAFIJA</h1>
-            <div class="logo-sub">THE UNDERWORLD</div>
         </div>
 
         <div class="main-card">
-            <input type="text" id="playerName" placeholder="Tvoje ime">
+            <!-- Popravljeni inputi -->
+            <div class="field-wrapper">
+                <label>TVOJE IME</label>
+                <input type="text" id="playerName" placeholder="Unesi ime...">
+            </div>
+            
             <button id="createBtn" class="primary-btn">NOVA IGRA</button>
             
-            <div class="divider-container large-gap">
+            <div class="divider-container extra-large">
                 <span class="divider-line"></span>
                 <span class="divider-text">ILI</span>
                 <span class="divider-line"></span>
             </div>
             
-            <input type="text" id="roomInput" placeholder="Kod sobe">
+            <div class="field-wrapper">
+                <label>KOD SOBE</label>
+                <input type="text" id="roomInput" placeholder="Npr. AFK2">
+            </div>
             <button id="joinBtn" class="secondary-btn">UĐI U IGRU</button>
         </div>
     </div>
 
-    <!-- 2. KARTICA SA KODOM -->
+    <!-- MODAL ZA KOD -->
     <div id="roomCodeModal" class="screen" style="display:none;">
         <div class="main-card modal-center">
             <p class="label-text">KOD TVOJE SOBE:</p>
@@ -43,11 +47,10 @@
         </div>
     </div>
 
-    <!-- 3. LOBI I PODEŠAVANJA -->
+    <!-- LOBI / PODEŠAVANJA -->
     <div id="hostScreen" class="screen" style="display:none;">
         <div id="setupArea" class="settings-card">
-            <h3 class="card-subtitle">PODEŠAVANJE PARTIJE</h3>
-            
+            <h3 class="card-subtitle">ULOGE U IGRI</h3>
             <div class="stepper-group">
                 <div class="control-row">
                     <span class="role-name">MAFIJA</span>
@@ -66,11 +69,7 @@
                     </div>
                 </div>
             </div>
-
-            <div class="important-note">
-                DOKTOR I POLICAJAC (1+1) SU OBAVEZNI
-            </div>
-
+            <div class="important-note">POLICAJAC I DOKTOR (1+1) SU AKTIVNI</div>
             <button id="startGameBtn" class="start-btn locked" disabled>ČEKA SE DOVOLJNO IGRAČA</button>
         </div>
 
@@ -80,7 +79,6 @@
         </div>
     </div>
 
-    <!-- 4. EKRAN ZA ULOGU -->
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer"></div>
     </div>
