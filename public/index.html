@@ -8,17 +8,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Dugme za izlaz koje je uvek dostupno (osim na početnom ekranu) -->
+    <!-- Crveno dugme za izlaz (fiksirano) -->
     <button id="globalExitBtn" class="exit-btn-fixed" style="display:none;" onclick="location.reload()">IZLAZ</button>
 
     <!-- 1. POČETNI EKRAN -->
     <div id="home" class="screen">
-        <h1 class="logo-hero">MAFIJA</h1>
+        <!-- CUSTOM LOGO DIZAJN -->
+        <div class="logo-container">
+            <h1 class="logo-main">MAFIJA</h1>
+            <div class="logo-sub">THE UNDERWORLD</div>
+        </div>
+
         <div class="main-card">
             <input type="text" id="playerName" placeholder="Tvoje ime">
             <button id="createBtn" class="primary-btn">NOVA IGRA</button>
             
-            <div class="divider-container">
+            <div class="divider-container large-gap">
                 <span class="divider-line"></span>
                 <span class="divider-text">ILI</span>
                 <span class="divider-line"></span>
@@ -29,10 +34,10 @@
         </div>
     </div>
 
-    <!-- 2. KARTICA SA KODOM (MODAL) -->
+    <!-- 2. KARTICA SA KODOM -->
     <div id="roomCodeModal" class="screen" style="display:none;">
         <div class="main-card modal-center">
-            <p style="text-transform: uppercase; opacity: 0.6; letter-spacing: 2px;">Kod tvoje sobe:</p>
+            <p class="label-text">KOD TVOJE SOBE:</p>
             <h1 id="roomCodeDisplay" class="giant-code"></h1>
             <button onclick="closeCodeModal()" class="primary-btn">OK, NASTAVI</button>
         </div>
@@ -40,7 +45,7 @@
 
     <!-- 3. LOBI I PODEŠAVANJA -->
     <div id="hostScreen" class="screen" style="display:none;">
-        <div class="settings-card">
+        <div id="setupArea" class="settings-card">
             <h3 class="card-subtitle">PODEŠAVANJE PARTIJE</h3>
             
             <div class="stepper-group">
@@ -62,12 +67,11 @@
                 </div>
             </div>
 
-            <!-- Uočljivija napomena za uloge -->
             <div class="important-note">
-                DOKTOR I POLICAJAC SU AUTOMATSKI UKLJUČENI (1+1)
+                DOKTOR I POLICAJAC (1+1) SU OBAVEZNI
             </div>
 
-            <button id="startGameBtn" class="start-btn">PODELI ULOGE</button>
+            <button id="startGameBtn" class="start-btn locked" disabled>ČEKA SE DOVOLJNO IGRAČA</button>
         </div>
 
         <div class="players-section">
