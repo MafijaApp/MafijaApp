@@ -1,8 +1,9 @@
 :root {
-    --bg-gradient: linear-gradient(135deg, #050505 0%, #0d0d1a 100%);
-    --card-bg: rgba(15, 15, 25, 0.95);
-    --primary: #ff4b2b;
-    --radius: 20px;
+    --bg-gradient: linear-gradient(135deg, #000000 0%, #1a0000 100%);
+    --card-bg: rgba(20, 0, 0, 0.95);
+    --primary: #ff0000; /* Čista crvena */
+    --secondary: #333333; /* Tamno siva umesto plave */
+    --radius: 15px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
@@ -11,50 +12,79 @@ body { background: var(--bg-gradient); min-height: 100vh; display: flex; justify
 
 .screen { width: 100%; max-width: 450px; animation: fadeIn 0.4s ease; }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* MOĆAN LOGO */
+.logo-hero {
+    font-size: 5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--primary);
+    text-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+    letter-spacing: -2px;
+}
 
 .main-card, .settings-card {
     background: var(--card-bg);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 0, 0, 0.2);
     border-radius: var(--radius);
     padding: 30px;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
     text-align: center;
 }
 
-/* Fix za Stepper Redove */
-.control-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 15px 20px;
-    border-radius: 15px;
-    margin-bottom: 12px;
+/* INPUTI I DUGMIĆI */
+input[type="text"] { 
+    width: 100%; padding: 20px; border-radius: 12px; border: none; 
+    background: rgba(255,255,255,0.05); color: white; margin-bottom: 15px; 
+    text-align: center; font-size: 1.1rem; 
 }
-
-.role-name { font-weight: 700; letter-spacing: 1px; font-size: 0.9rem; }
-
-.stepper { display: flex; align-items: center; background: #000; border-radius: 10px; padding: 4px; }
-.stepper button { width: 35px; height: 35px; border: none; background: #1a1a1a; color: white; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
-.stepper input { width: 40px; border: none; background: transparent; color: var(--primary); text-align: center; font-size: 1.2rem; font-weight: 900; }
 
 .primary-btn, .start-btn { 
-    background: var(--primary); color: white; border: none; padding: 20px; width: 100%; 
-    border-radius: 15px; font-weight: 800; cursor: pointer; margin-top: 10px;
+    background: var(--primary); color: white; border: none; padding: 20px; 
+    width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; 
 }
 
-.secondary-btn { background: #302b63; color: white; border: none; padding: 20px; width: 100%; border-radius: 15px; font-weight: 800; }
+.secondary-btn { 
+    background: var(--secondary); color: white; border: none; padding: 20px; 
+    width: 100%; border-radius: 12px; font-weight: 900; 
+}
 
-input[type="text"] { width: 100%; padding: 18px; border-radius: 15px; border: none; background: rgba(255,255,255,0.05); color: white; margin-bottom: 15px; text-align: center; font-size: 1rem; }
+/* STEPPERI */
+.control-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 12px; margin-bottom: 10px;
+}
+.role-name { font-weight: 700; font-size: 0.9rem; }
+.stepper { display: flex; align-items: center; background: #000; border-radius: 8px; padding: 5px; }
+.stepper button { width: 35px; height: 35px; border: none; background: #222; color: white; cursor: pointer; font-size: 1.2rem; }
+.stepper input { width: 40px; border: none; background: transparent; color: var(--primary); text-align: center; font-size: 1.2rem; font-weight: 900; }
 
-.divider-container { display: flex; align-items: center; margin: 20px 0; opacity: 0.3; }
-.divider-line { flex: 1; height: 1px; background: white; }
-.divider-text { margin: 0 10px; font-size: 0.7rem; }
+/* NAPOMENA ZA ULOGE */
+.important-note {
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid var(--primary);
+    padding: 15px;
+    border-radius: 10px;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin: 20px 0;
+    text-transform: uppercase;
+}
 
-/* Admin lista za hosta */
+/* FIKSNO DUGME ZA IZLAZ */
+.exit-btn-fixed {
+    position: fixed; top: 20px; right: 20px; z-index: 100;
+    background: #222; color: white; border: 1px solid #444;
+    padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer;
+}
+
+.giant-code { font-size: 5rem; color: var(--primary); margin: 20px 0; }
+
 .admin-player-row {
     display: flex; justify-content: space-between; align-items: center;
-    background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 12px; margin-bottom: 8px;
+    background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; margin-bottom: 8px;
 }
-.kick-btn { background: #ff4b2b; border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+.kick-btn { background: var(--primary); border: none; color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; }
