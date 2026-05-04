@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- POČETNI EKRAN -->
     <div id="home" class="screen">
         <h1 class="logo">MAFIJA</h1>
         <div class="input-group">
@@ -18,30 +19,55 @@
         </div>
     </div>
 
-    
+    <!-- HOST LOBI EKRAN -->
     <div id="hostScreen" class="screen" style="display:none;">
         <h2 class="room-title">Soba: <span id="roomCodeText"></span></h2>
+        
         <div id="setupArea" class="full-width">
             <div class="settings-card">
-                <div class="setting-row"><label>Mafija (1-2)</label><input type="number" id="mafija" value="1" min="1" max="2" onkeydown="return false"></div>
-                <div class="setting-row"><label>Doktor (1)</label><input type="number" id="doktor" value="1" readonly></div>
-                <div class="setting-row"><label>Policajac (1)</label><input type="number" id="policajac" value="1" readonly></div>
-                <div class="setting-row"><label>Dama (0-1)</label><input type="number" id="dama" value="1" min="0" max="1" onkeydown="return false"></div>
+                <h3>Podešavanje uloga</h3>
+                
+                <!-- Mafija Slider (1-2) -->
+                <div class="setting-row">
+                    <label>Mafija: <span id="mafija-val" class="bold-val">1</span></label>
+                    <input type="range" id="mafija" min="1" max="2" value="1" step="1" 
+                           oninput="document.getElementById('mafija-val').innerText = this.value">
+                </div>
+
+                <!-- Dama Slider (0-1) -->
+                <div class="setting-row">
+                    <label>Dama: <span id="dama-val" class="bold-val">1</span></label>
+                    <input type="range" id="dama" min="0" max="1" value="1" step="1" 
+                           oninput="document.getElementById('dama-val').innerText = this.value">
+                </div>
+
+                <!-- Fiksne uloge -->
+                <div class="setting-row disabled-row">
+                    <label>Doktor: <span class="bold-val">1</span></label>
+                </div>
+                <div class="setting-row disabled-row">
+                    <label>Policajac: <span class="bold-val">1</span></label>
+                </div>
             </div>
+            
             <button id="startGameBtn" class="primary-btn">PODELI ROLE</button>
         </div>
+
         <div id="hostActions" style="display:none;" class="full-width">
             <button id="newGameBtn" class="success-btn">NOVA PARTIJA</button>
             <button id="endGameBtn" class="secondary-btn">UGASI SOBU</button>
         </div>
+
         <ul id="playerList"></ul>
     </div>
 
+    <!-- EKRAN ZA OTKRIVANJE ROLE -->
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer"></div>
         <button id="exitBtn" class="secondary-btn">NAPUSTI IGRU</button>
     </div>
 
+    <!-- MODAL ZA KOD SOBE -->
     <div id="roomCodeModal" class="modal" style="display:none;">
         <div class="modal-content">
             <p>Kod tvoje sobe:</p>
