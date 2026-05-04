@@ -1,11 +1,16 @@
 {
-  "name": "mafija-app",
+  "name": "mafija-igra",
   "version": "1.0.0",
+  "description": "Mafija online igra",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
     "socket.io": "^4.7.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
