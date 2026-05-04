@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mafija Online</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts za moderniji, zaobljeniji izgled -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- POZADINA KOJA SE NE POMERA -->
     <div class="bg-overlay"></div>
 
     <!-- POČETNI EKRAN -->
@@ -33,13 +31,15 @@
         </div>
     </div>
 
-    <!-- LOBI EKRAN (HOST) -->
+    <!-- LOBI EKRAN (HOST / VODITELJ) -->
     <div id="hostScreen" class="screen" style="display:none;">
         <h2 class="room-title">Soba: <span id="roomCodeText"></span></h2>
         
-        <div class="settings-card">
+        <!-- Podešavanja uloga - Vidi samo Host pre početka -->
+        <div id="setupArea" class="settings-card">
             <h3 class="card-subtitle">PODEŠAVANJE ULOGA</h3>
             
+            <!-- Mafija -->
             <div class="control-row">
                 <div class="control-label">
                     <span class="name">Mafija</span>
@@ -52,6 +52,33 @@
                 </div>
             </div>
 
+            <!-- Doktor -->
+            <div class="control-row">
+                <div class="control-label">
+                    <span class="name">Doktor</span>
+                    <span class="limit">Fiksno 1</span>
+                </div>
+                <div class="stepper">
+                    <button type="button" disabled style="opacity: 0.3;">−</button>
+                    <input type="number" id="doktor" value="1" readonly>
+                    <button type="button" disabled style="opacity: 0.3;">+</button>
+                </div>
+            </div>
+
+            <!-- Policajac -->
+            <div class="control-row">
+                <div class="control-label">
+                    <span class="name">Policajac</span>
+                    <span class="limit">Fiksno 1</span>
+                </div>
+                <div class="stepper">
+                    <button type="button" disabled style="opacity: 0.3;">−</button>
+                    <input type="number" id="policajac" value="1" readonly>
+                    <button type="button" disabled style="opacity: 0.3;">+</button>
+                </div>
+            </div>
+
+            <!-- Dama -->
             <div class="control-row">
                 <div class="control-label">
                     <span class="name">Dama</span>
@@ -59,7 +86,7 @@
                 </div>
                 <div class="stepper">
                     <button type="button" onclick="changeVal('dama', -1)">−</button>
-                    <input type="number" id="dama" value="0" min="0" max="1" readonly>
+                    <input type="number" id="dama" value="1" min="0" max="1" readonly>
                     <button type="button" onclick="changeVal('dama', 1)">+</button>
                 </div>
             </div>
@@ -67,16 +94,22 @@
             <button id="startGameBtn" class="start-btn">PODELI ULOGE</button>
         </div>
 
+        <!-- Lista igrača sa opcijom za izbacivanje (Kada krene igra) -->
         <div class="players-section">
-            <h3>Igrači u lobiju:</h3>
+            <h3 id="listTitle">Igrači u lobiju:</h3>
             <ul id="playerList"></ul>
+        </div>
+
+        <!-- Kontrole za hosta nakon podele -->
+        <div id="hostActions" style="display:none; margin-top: 20px;">
+            <button id="newGameBtn" class="primary-btn" style="background: #27ae60;">NOVA PARTIJA</button>
         </div>
     </div>
 
-    <!-- EKRAN ZA OTKRIVANJE ULOGE -->
+    <!-- EKRAN ZA IGRAČE (OTKRIVANJE ULOGE) -->
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer">
-            <!-- Dinamički ubačen sadržaj iz client.js -->
+            <!-- Ovde će pisati uloga -->
         </div>
         <button id="exitBtn" class="exit-btn">NAPUSTI</button>
     </div>
