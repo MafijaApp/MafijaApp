@@ -3,61 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mafija Online</title>
+    <title>Mafija Online | Underworld</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- POČETNI EKRAN (HOME) -->
     <div id="home" class="screen">
         <h1 class="logo">MAFIJA</h1>
         <div class="input-group">
-            <input type="text" id="playerName" placeholder="Tvoje ime">
-            <button id="createBtn" class="primary-btn">NAPRAVI SOBU</button>
-            <div class="divider">ILI</div>
+            <input type="text" id="playerName" placeholder="Unesi svoj pseudonim...">
+            <button id="createBtn" class="primary-btn">OSNUJ KLAN (HOST)</button>
+            <div class="divider" style="margin: 20px 0; color: #555; font-size: 0.8rem;">ILI SE PRIDRUŽI</div>
             <input type="text" id="roomInput" placeholder="Kod sobe">
-            <button id="joinBtn" class="primary-btn">UĐI U SOBU</button>
+            <button id="joinBtn" class="primary-btn">UĐI U PODZEMLJE</button>
         </div>
     </div>
 
+    <!-- HOST LOBI EKRAN -->
     <div id="hostScreen" class="screen" style="display:none;">
-        <h2 class="room-title">Soba: <span id="roomCodeText"></span></h2>
+        <h2 class="room-title" style="margin-bottom: 10px;">Soba: <span id="roomCodeText" style="color: var(--primary-bright);"></span></h2>
         
-        <div id="setupArea" class="settings-card">
-            <h3 class="settings-title">Konfiguracija Uloga</h3>
-            
-            <div class="role-control">
-                <div class="role-info"><span class="role-name">Mafija</span><span class="role-limit">(1-2)</span></div>
-                <div class="stepper">
-                    <button onclick="changeVal('mafija', -1)">−</button>
-                    <input type="number" id="mafija" value="1" min="1" max="2" readonly>
-                    <button onclick="changeVal('mafija', 1)">+</button>
+        <div id="setupArea">
+            <div class="settings-card">
+                <h3 class="settings-title">Konfiguracija Dosijea</h3>
+                
+                <!-- Mafija Stepper -->
+                <div class="role-control">
+                    <div class="role-info">
+                        <span class="role-name">Mafija</span>
+                        <span class="role-limit">1 ili 2 operativca</span>
+                    </div>
+                    <div class="stepper">
+                        <button type="button" onclick="changeVal('mafija', -1)">−</button>
+                        <input type="number" id="mafija" value="1" min="1" max="2" readonly>
+                        <button type="button" onclick="changeVal('mafija', 1)">+</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="role-control">
-                <div class="role-info"><span class="role-name">Dama</span><span class="role-limit">(0-1)</span></div>
-                <div class="stepper">
-                    <button onclick="changeVal('dama', -1)">−</button>
-                    <input type="number" id="dama" value="1" min="0" max="1" readonly>
-                    <button onclick="changeVal('dama', 1)">+</button>
+                <!-- Dama Stepper -->
+                <div class="role-control">
+                    <div class="role-info">
+                        <span class="role-name">Dama</span>
+                        <span class="role-limit">0 ili 1 (opciono)</span>
+                    </div>
+                    <div class="stepper">
+                        <button type="button" onclick="changeVal('dama', -1)">−</button>
+                        <input type="number" id="dama" value="1" min="0" max="1" readonly>
+                        <button type="button" onclick="changeVal('dama', 1)">+</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="role-control disabled">
-                <div class="role-info"><span class="role-name">Doktor / Policajac</span></div>
-                <div class="static-val">Fiksno: 1</div>
-            </div>
+                <!-- Fiksne uloge (Vizuelni indikator) -->
+                <div class="role-control disabled" style="border-bottom: none; padding-bottom: 0;">
+                    <div class="role-info">
+                        <span class="role-name" style="font-size: 0.9rem; color: #666;">Doktor i Policajac</span>
+                        <span class="role-limit">Uvek aktivni u istrazi</span>
+                    </div>
+                </div>
 
-            <button id="startGameBtn" class="primary-btn" style="margin-top: 20px; width: 100%;">PODELI ROLE</button>
+                <button id="startGameBtn" class="primary-btn">PODELI DOSIJEE</button>
+            </div>
         </div>
 
+        <!-- Akcije za hosta nakon što igra krene (Nova partija/Gašenje) -->
+        <div id="hostActions" style="display:none; margin-top: 20px;">
+            <button id="newGameBtn" class="primary-btn" style="background: #2e7d32; box-shadow: 0 4px 0 #1b5e20;">NOVA RUNDA</button>
+            <button id="endGameBtn" class="primary-btn" style="background: #444; box-shadow: 0 4px 0 #222; margin-top: 10px;">ZATVORI SOBU</button>
+        </div>
+
+        <h3 style="text-align: left; margin: 20px 0 10px 5px; font-size: 0.9rem; text-transform: uppercase; color: #777;">Aktivni igrači:</h3>
         <ul id="playerList"></ul>
     </div>
 
+    <!-- EKRAN ZA OTKRIVANJE ULOGE -->
     <div id="reveal" class="screen" style="display:none;">
-        <div id="cardContainer"></div>
-        <button id="exitBtn" class="secondary-btn">NAPUSTI IGRU</button>
+        <div id="cardContainer" class="role-reveal-anim">
+            <!-- Ovde JS ubacuje ulogu -->
+        </div>
+        <button id="exitBtn" class="primary-btn" style="background: #333; margin-top: 30px; box-shadow: 0 4px 0 #111;">NAPUSTI IGRU</button>
     </div>
 
+    <!-- MODAL ZA KOD SOBE (Opciono ako ga koristiš) -->
+    <div id="roomCodeModal" class="modal" style="display:none;">
+        <div class="modal-content settings-card">
+            <p style="text-transform: uppercase; letter-spacing: 1px;">Kod tvoje sobe:</p>
+            <h1 id="roomCodeTextModal" style="font-size: 3rem; color: var(--primary-bright); margin: 20px 0;"></h1>
+            <button id="closeModal" class="primary-btn">ULAZAK U LOBI</button>
+        </div>
+    </div>
+
+    <!-- Socket.io i tvoja logika -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
 </body>
