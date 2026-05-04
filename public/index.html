@@ -8,110 +8,72 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="bg-overlay"></div>
-
-    <!-- POČETNI EKRAN -->
+    <!-- 1. POČETNI EKRAN -->
     <div id="home" class="screen">
         <h1 class="logo">MAFIJA</h1>
-        
         <div class="main-card">
-            <div class="input-group">
-                <input type="text" id="playerName" placeholder="Tvoje ime" autocomplete="off">
-                <button id="createBtn" class="primary-btn">NOVA IGRA</button>
-                
-                <div class="divider-container">
-                    <span class="divider-line"></span>
-                    <span class="divider-text">ILI</span>
-                    <span class="divider-line"></span>
-                </div>
-                
-                <input type="text" id="roomInput" placeholder="Kod sobe" autocomplete="off">
-                <button id="joinBtn" class="secondary-btn">UĐI U IGRU</button>
+            <input type="text" id="playerName" placeholder="Tvoje ime">
+            <button id="createBtn" class="primary-btn">NOVA IGRA</button>
+            <div class="divider-container">
+                <span class="divider-line"></span><span class="divider-text">ILI</span><span class="divider-line"></span>
             </div>
+            <input type="text" id="roomInput" placeholder="Kod sobe">
+            <button id="joinBtn" class="secondary-btn">UĐI U IGRU</button>
         </div>
     </div>
 
-    <!-- LOBI EKRAN (HOST / VODITELJ) -->
+    <!-- 2. KARTICA SA KODOM (MODAL) - VRAĆENO -->
+    <div id="roomCodeModal" class="screen" style="display:none;">
+        <div class="main-card modal-center">
+            <p style="text-transform: uppercase; opacity: 0.6; letter-spacing: 1px;">Kod tvoje sobe je:</p>
+            <h1 id="roomCodeDisplay" style="font-size: 4rem; color: #ff4b2b; margin: 20px 0; text-shadow: 0 0 15px rgba(255, 75, 43, 0.3);"></h1>
+            <button onclick="closeCodeModal()" class="primary-btn">OK, NASTAVI</button>
+        </div>
+    </div>
+
+    <!-- 3. LOBI I PODEŠAVANJA -->
     <div id="hostScreen" class="screen" style="display:none;">
-        <h2 class="room-title">Soba: <span id="roomCodeText"></span></h2>
-        
-        <!-- Podešavanja uloga - Vidi samo Host pre početka -->
-        <div id="setupArea" class="settings-card">
-            <h3 class="card-subtitle">PODEŠAVANJE ULOGA</h3>
+        <div class="settings-card">
+            <h3 class="card-subtitle">KONFIGURACIJA PARTIJE</h3>
             
-            <!-- Mafija -->
-            <div class="control-row">
-                <div class="control-label">
-                    <span class="name">Mafija</span>
-                    <span class="limit">1-2 igrača</span>
+            <div class="stepper-group">
+                <!-- Mafija -->
+                <div class="control-row">
+                    <span class="role-name">MAFIJA</span>
+                    <div class="stepper">
+                        <button type="button" onclick="changeVal('mafija', -1)">−</button>
+                        <input type="number" id="mafija" value="1" min="1" max="5" readonly>
+                        <button type="button" onclick="changeVal('mafija', 1)">+</button>
+                    </div>
                 </div>
-                <div class="stepper">
-                    <button type="button" onclick="changeVal('mafija', -1)">−</button>
-                    <input type="number" id="mafija" value="1" min="1" max="2" readonly>
-                    <button type="button" onclick="changeVal('mafija', 1)">+</button>
-                </div>
-            </div>
-
-            <!-- Doktor -->
-            <div class="control-row">
-                <div class="control-label">
-                    <span class="name">Doktor</span>
-                    <span class="limit">Fiksno 1</span>
-                </div>
-                <div class="stepper">
-                    <button type="button" disabled style="opacity: 0.3;">−</button>
-                    <input type="number" id="doktor" value="1" readonly>
-                    <button type="button" disabled style="opacity: 0.3;">+</button>
+                <!-- Dama -->
+                <div class="control-row">
+                    <span class="role-name">DAMA</span>
+                    <div class="stepper">
+                        <button type="button" onclick="changeVal('dama', -1)">−</button>
+                        <input type="number" id="dama" value="0" min="0" max="1" readonly>
+                        <button type="button" onclick="changeVal('dama', 1)">+</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Policajac -->
-            <div class="control-row">
-                <div class="control-label">
-                    <span class="name">Policajac</span>
-                    <span class="limit">Fiksno 1</span>
-                </div>
-                <div class="stepper">
-                    <button type="button" disabled style="opacity: 0.3;">−</button>
-                    <input type="number" id="policajac" value="1" readonly>
-                    <button type="button" disabled style="opacity: 0.3;">+</button>
-                </div>
-            </div>
-
-            <!-- Dama -->
-            <div class="control-row">
-                <div class="control-label">
-                    <span class="name">Dama</span>
-                    <span class="limit">0-1 igrača</span>
-                </div>
-                <div class="stepper">
-                    <button type="button" onclick="changeVal('dama', -1)">−</button>
-                    <input type="number" id="dama" value="1" min="0" max="1" readonly>
-                    <button type="button" onclick="changeVal('dama', 1)">+</button>
-                </div>
-            </div>
+            <p style="font-size: 0.75rem; color: #666; text-align: center; margin-bottom: 20px;">
+                Doktor i Policajac su podrazumevani (1+1)
+            </p>
 
             <button id="startGameBtn" class="start-btn">PODELI ULOGE</button>
         </div>
 
-        <!-- Lista igrača sa opcijom za izbacivanje (Kada krene igra) -->
         <div class="players-section">
-            <h3 id="listTitle">Igrači u lobiju:</h3>
+            <h3 id="listTitle">IGRAČI U LOBIJU:</h3>
             <ul id="playerList"></ul>
-        </div>
-
-        <!-- Kontrole za hosta nakon podele -->
-        <div id="hostActions" style="display:none; margin-top: 20px;">
-            <button id="newGameBtn" class="primary-btn" style="background: #27ae60;">NOVA PARTIJA</button>
         </div>
     </div>
 
-    <!-- EKRAN ZA IGRAČE (OTKRIVANJE ULOGE) -->
+    <!-- 4. EKRAN ZA ULOGU -->
     <div id="reveal" class="screen" style="display:none;">
-        <div id="cardContainer">
-            <!-- Ovde će pisati uloga -->
-        </div>
-        <button id="exitBtn" class="exit-btn">NAPUSTI</button>
+        <div id="cardContainer"></div>
+        <button id="exitBtn" class="exit-btn" onclick="location.reload()">IZLAZ</button>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
