@@ -3,6 +3,7 @@ let currentRoomID = null;
 let isHost = false;
 let myName = "";
 
+// Funkcija za menjanje vrednosti (Mafija/Dama)
 function changeVal(id, delta) {
     const input = document.getElementById(id);
     const min = parseInt(input.getAttribute('min'));
@@ -15,7 +16,7 @@ function changeVal(id, delta) {
 }
 
 document.getElementById('createBtn').onclick = () => {
-    myName = document.getElementById('playerName').value;
+    myName = document.getElementById('playerName').value.trim();
     if (!myName) return alert("Unesi ime!");
     isHost = true;
     socket.emit('createRoom');
@@ -34,8 +35,8 @@ function closeCodeModal() {
 }
 
 document.getElementById('joinBtn').onclick = () => {
-    myName = document.getElementById('playerName').value;
-    const room = document.getElementById('roomInput').value.toUpperCase();
+    myName = document.getElementById('playerName').value.trim();
+    const room = document.getElementById('roomInput').value.toUpperCase().trim();
     if (myName && room) {
         currentRoomID = room;
         isHost = false;
@@ -55,7 +56,7 @@ let currentPlayersList = [];
 socket.on('updatePlayers', (list) => {
     currentPlayersList = list;
     const ul = document.getElementById('playerList');
-    // Prvi u listi je uvek Host
+    // Host je uvek prvi u listi jer on kreira sobu
     ul.innerHTML = list.map((p, index) => `
         <li class="player-li">
             ${p} ${index === 0 ? '<span class="is-host-tag">HOST</span>' : ''}
@@ -66,12 +67,14 @@ socket.on('updatePlayers', (list) => {
 
 function checkPlayerCount() {
     if (!isHost) return;
+    
     const mafija = parseInt(document.getElementById('mafija').value);
     const dama = parseInt(document.getElementById('dama').value);
     const totalRequired = mafija + dama + 2; // + Doktor + Policajac
     
     const startBtn = document.getElementById('startGameBtn');
-    const playersReady = currentPlayersList.length - 1; // Izuzmi hosta
+    // Broj igrača bez hosta
+    const playersReady = currentPlayersList.length - 1; 
 
     if (playersReady >= totalRequired) {
         startBtn.disabled = false;
@@ -94,11 +97,12 @@ document.getElementById('startGameBtn').onclick = () => {
     socket.emit('startGame', { roomID: currentRoomID, config });
 };
 
-// SAMO HOST dobija ovaj event sa svim ulogama
+// SAMO HOST vidi Narator Panel sa ulogama
 socket.on('hostViewRoles', (data) => {
     const ul = document.getElementById('playerList');
-    document.getElementById('setupArea').style.display = 'none';
-    document.getElementById('listTitle').innerText = "NARATOR PANEL";
+    const setup = document.getElementById('setupArea');
+    if(setup) setup.style.display = 'none';
+    document.getElementById('listTitle').innerText = "NARATOR PANEL (UŽIVO)";
     
     ul.innerHTML = data.map(p => `
         <li class="admin-player-row">
@@ -109,22 +113,25 @@ socket.on('hostViewRoles', (data) => {
 });
 
 function kickPlayer(id) {
-    if(confirm("Eliminiši igrača?")) socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
+    if(confirm("Izbaci igrača iz igre?")) {
+        socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
+    }
 }
 
-// IGRAČI dobijaju samo svoju ulogu
+// IGRAČI dobijaju ulogu (Host je ovde preskočen jer on samo gleda panel)
 socket.on('yourRole', ({ role }) => {
     if (!isHost) {
         showScreen('reveal');
         document.getElementById('cardContainer').innerHTML = `
-            <div style="padding:40px; border:1px solid #ff0000; border-radius:10px; text-align:center;">
-                <p style="opacity:0.4; font-size:0.8rem; letter-spacing:2px;">TVOJA ULOGA</p>
-                <h1 style="font-size:3.5rem; color:#ff0000; margin:20px 0;">${role}</h1>
+            <div style="padding:40px; border:1px solid #ff0000; border-radius:12px; text-align:center; background: rgba(255,0,0,0.05);">
+                <p style="opacity:0.5; font-size:0.7rem; letter-spacing:3px; margin-bottom:10px;">DODELJENA ULOGA</p>
+                <h1 style="font-size:3rem; color:#ff0000; font-weight:900;">${role.toUpperCase()}</h1>
             </div>`;
     }
 });
 
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
+    const target = document.getElementById(id);
+    if(target) target.style.display = 'block';
 }
