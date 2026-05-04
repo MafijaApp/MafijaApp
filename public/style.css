@@ -1,10 +1,12 @@
 :root {
-    --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-    --btn-primary: linear-gradient(to right, #ff416c, #ff4b2b);
-    --btn-secondary: linear-gradient(to right, #4776E6, #8E54E9);
-    --glass: rgba(255, 255, 255, 0.05);
-    --white: #ffffff;
-    --radius: 16px;
+    /* Tamniji, ozbiljniji gradijent */
+    --bg-gradient: linear-gradient(135deg, #050505 0%, #0a0a12 50%, #11111d 100%);
+    --btn-primary: linear-gradient(to right, #8b0000, #ff0000); /* Crvena kao krv */
+    --btn-secondary: linear-gradient(to right, #1e3c72, #2a5298);
+    --card-bg: rgba(0, 0, 0, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --white: #e0e0e0;
+    --radius: 20px;
 }
 
 * { 
@@ -21,135 +23,95 @@ body {
     justify-content: center;
     align-items: center;
     color: var(--white);
-    overflow-x: hidden;
 }
 
-/* Stil za logo sa gradijentom */
 .logo {
     font-size: 3.5rem;
     font-weight: 900;
     text-align: center;
     margin-bottom: 2rem;
-    background: linear-gradient(to bottom, #fff 30%, #ccc 100%);
+    background: linear-gradient(to bottom, #ff4b2b 0%, #8b0000 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: 4px;
+    letter-spacing: 6px;
+    filter: drop-shadow(0 0 10px rgba(139, 0, 0, 0.5));
 }
 
-/* Glavna kartica */
 .main-card, .settings-card {
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius);
     padding: 2.5rem;
     width: 100%;
-    max-width: 400px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    max-width: 450px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6);
 }
 
-/* Veliki, moderni inputi */
 input[type="text"] {
     width: 100%;
-    padding: 18px;
-    border-radius: var(--radius);
-    border: none;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.03);
     color: white;
     font-size: 1.1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
     outline: none;
+}
+
+.primary-btn, .secondary-btn, .start-btn {
+    width: 100%;
+    padding: 20px;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
     transition: 0.3s;
 }
 
-input[type="text"]:focus {
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
-}
+.primary-btn { background: var(--btn-primary); }
+.secondary-btn { background: var(--btn-secondary); }
+.start-btn { background: #27ae60; margin-top: 15px; }
 
-/* Dugmići sa gradijentom */
-.primary-btn, .secondary-btn, .start-btn {
-    width: 100%;
-    padding: 18px;
-    border: none;
-    border-radius: var(--radius);
-    color: white;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.primary-btn { background: var(--btn-primary); box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3); }
-.secondary-btn { background: var(--btn-secondary); box-shadow: 0 4px 15px rgba(71, 118, 230, 0.3); }
-
-.primary-btn:active, .secondary-btn:active { transform: scale(0.98); }
-
-/* Centrirani separator (ILI) */
 .divider-container {
     display: flex;
     align-items: center;
-    justify-content: center;
     margin: 1.5rem 0;
 }
 
-.divider-line {
-    flex: 1;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-}
+.divider-line { flex: 1; height: 1px; background: var(--glass-border); }
+.divider-text { margin: 0 15px; font-size: 0.8rem; color: #555; }
 
-.divider-text {
-    margin: 0 15px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.3);
-}
-
-/* Lobi i Stepperi */
-.control-row {
+/* Kontrolna tabla za hosta */
+.admin-player-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.control-label .name { display: block; font-weight: 700; font-size: 1.1rem; }
-.control-label .limit { font-size: 0.75rem; opacity: 0.5; }
-
-.stepper {
-    display: flex;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    padding: 5px;
-}
-
-.stepper button {
-    width: 35px; height: 35px; border-radius: 10px; border: none;
-    background: rgba(255, 255, 255, 0.1); color: white; font-size: 1.2rem; cursor: pointer;
-}
-
-.stepper input {
-    width: 40px; text-align: center; background: transparent; border: none;
-    color: white; font-weight: 700; font-size: 1.2rem;
-}
-
-.start-btn { background: #27ae60; margin-top: 1rem; }
-
-/* Lista igrača */
-#playerList {
-    list-style: none;
-    margin-top: 1rem;
-}
-
-#playerList li {
     background: rgba(255, 255, 255, 0.05);
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 8px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+}
+
+.kick-btn {
+    background: #c0392b;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.role-reveal-card {
     text-align: center;
-    font-weight: 400;
+    padding: 40px;
+    border: 2px solid #8b0000;
+    border-radius: var(--radius);
+    background: rgba(139, 0, 0, 0.1);
 }
