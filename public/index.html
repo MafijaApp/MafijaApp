@@ -7,48 +7,32 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div id="home" class="screen">
         <h1 class="logo">MAFIJA</h1>
         <div class="input-group">
             <input type="text" id="playerName" placeholder="Tvoje ime">
-            <button id="createBtn">NAPRAVI SOBU</button>
-            <div class="divider"><span>ILI</span></div>
+            <button id="createBtn" class="primary-btn">NAPRAVI SOBU</button>
+            <div class="divider">ILI</div>
             <input type="text" id="roomInput" placeholder="Kod sobe">
-            <button id="joinBtn">UĐI U SOBU</button>
+            <button id="joinBtn" class="primary-btn">UĐI U SOBU</button>
         </div>
     </div>
 
     <div id="hostScreen" class="screen" style="display:none;">
         <h2 class="room-title">Soba: <span id="roomCodeText"></span></h2>
-        
         <div id="setupArea" class="full-width">
             <div class="settings-card">
-                <div class="setting-row">
-                    <label>Mafija (1-2)</label>
-                    <input type="number" id="mafija" value="1" min="1" max="2">
-                </div>
-                <div class="setting-row">
-                    <label>Doktor (1)</label>
-                    <input type="number" id="doktor" value="1" readonly>
-                </div>
-                <div class="setting-row">
-                    <label>Policajac (1)</label>
-                    <input type="number" id="policajac" value="1" readonly>
-                </div>
-                <div class="setting-row">
-                    <label>Dama (0-1)</label>
-                    <input type="number" id="dama" value="1" min="0" max="1">
-                </div>
+                <div class="setting-row"><label>Mafija (1-2)</label><input type="number" id="mafija" value="1" min="1" max="2" onkeydown="return false"></div>
+                <div class="setting-row"><label>Doktor (1)</label><input type="number" id="doktor" value="1" readonly></div>
+                <div class="setting-row"><label>Policajac (1)</label><input type="number" id="policajac" value="1" readonly></div>
+                <div class="setting-row"><label>Dama (0-1)</label><input type="number" id="dama" value="1" min="0" max="1" onkeydown="return false"></div>
             </div>
             <button id="startGameBtn" class="primary-btn">PODELI ROLE</button>
         </div>
-
         <div id="hostActions" style="display:none;" class="full-width">
             <button id="newGameBtn" class="success-btn">NOVA PARTIJA</button>
-            <button id="endGameBtn" class="secondary-btn">NAPUSTI SVE</button>
+            <button id="endGameBtn" class="secondary-btn">UGASI SOBU</button>
         </div>
-
         <ul id="playerList"></ul>
     </div>
 
@@ -61,7 +45,7 @@
         <div class="modal-content">
             <p>Kod tvoje sobe:</p>
             <h1 id="roomCodeTextModal"></h1>
-            <button id="closeModal">OK, IDI U LOBI</button>
+            <button id="closeModal" class="primary-btn">OK, IDI U LOBI</button>
         </div>
     </div>
 
