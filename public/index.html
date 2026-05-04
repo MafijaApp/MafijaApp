@@ -8,48 +8,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Kôd sobe stalno vidljiv na vrhu nakon ulaska -->
+    <div id="stickyRoomHeader" class="sticky-header" style="display:none;">
+        KOD SOBE: <span id="topRoomCode">----</span>
+    </div>
+
     <button id="globalExitBtn" class="exit-btn-fixed" style="display:none;" onclick="location.reload()">IZLAZ</button>
 
+    <!-- 1. POČETNI EKRAN -->
     <div id="home" class="screen">
         <div class="logo-container">
             <h1 class="logo-main">MAFIJA</h1>
         </div>
-
         <div class="main-card">
-            <!-- Popravljeni inputi -->
             <div class="field-wrapper">
                 <label>TVOJE IME</label>
                 <input type="text" id="playerName" placeholder="Unesi ime...">
             </div>
-            
             <button id="createBtn" class="primary-btn">NOVA IGRA</button>
-            
             <div class="divider-container extra-large">
                 <span class="divider-line"></span>
                 <span class="divider-text">ILI</span>
                 <span class="divider-line"></span>
             </div>
-            
             <div class="field-wrapper">
                 <label>KOD SOBE</label>
-                <input type="text" id="roomInput" placeholder="Npr. AFK2">
+                <input type="text" id="roomInput" placeholder="Npr. AX82">
             </div>
             <button id="joinBtn" class="secondary-btn">UĐI U IGRU</button>
         </div>
     </div>
 
-    <!-- MODAL ZA KOD -->
-    <div id="roomCodeModal" class="screen" style="display:none;">
-        <div class="main-card modal-center">
-            <p class="label-text">KOD TVOJE SOBE:</p>
-            <h1 id="roomCodeDisplay" class="giant-code"></h1>
-            <button onclick="closeCodeModal()" class="primary-btn">OK, NASTAVI</button>
-        </div>
-    </div>
-
-    <!-- LOBI / PODEŠAVANJA -->
+    <!-- 2. LOBI I PODEŠAVANJA -->
     <div id="hostScreen" class="screen" style="display:none;">
         <div id="setupArea" class="settings-card">
+            <!-- Dugme za generisanje novog koda (samo za hosta) -->
+            <button id="regenCodeBtn" class="regen-btn" style="display:none;" onclick="regenerateRoomCode()">GENERIŠI NOVI KOD</button>
+            
             <h3 class="card-subtitle">ULOGE U IGRI</h3>
             <div class="stepper-group">
                 <div class="control-row">
