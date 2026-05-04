@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 let rooms = {};
 
 io.on('connection', (socket) => {
-    // Kreiranje sobe
+    // Kreiranje nove sobe
     socket.on('createRoom', () => {
         const roomID = Math.random().toString(36).substring(2, 7).toUpperCase();
         rooms[roomID] = { host: socket.id, players: [] };
@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
     socket.on('joinRoom', ({ roomID, name }) => {
         const id = roomID.trim().toUpperCase();
         if (rooms[id]) {
-            // Sprečavamo dupliranje istog soketa
+            // Osiguravamo da isti soket ne bude dupliran u nizu
             rooms[id].players = rooms[id].players.filter(p => p.id !== socket.id);
             rooms[id].players.push({ id: socket.id, name: name });
             
@@ -39,20 +39,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Izbacivanje igrača (samo host)
-    socket.on('kickPlayer', (playerName) => {
-        const id = socket.roomID;
-        if (id && rooms[id] && socket.id === rooms[id].host) {
-            const target = rooms[id].players.find(p => p.name === playerName);
-            if (target) {
-                io.to(target.id).emit('youAreKick');
-                rooms[id].players = rooms[id].players.filter(p => p.name !== playerName);
-                io.to(id).emit('updatePlayers', rooms[id].players.map(p => p.name));
-            }
-        }
-    });
-
-    // Startovanje igre i dodela uloga
+    // Startovanje igre sa ulogama
     socket.on('startGame', ({ roomID, config }) => {
         const id = roomID.toUpperCase();
         if (!rooms[id]) return;
@@ -60,43 +47,30 @@ io.on('connection', (socket) => {
         let players = rooms[id].players;
         let roles = [];
 
-        // Punjenje niza ulogama prema konfiguraciji
+        // Dodavanje uloga na osnovu konfiguracije hosta
         if (config.mafija) for (let i = 0; i < config.mafija; i++) roles.push('Mafija');
-        if (config.doktor) for (let i = 0; i < config.doktor; i++) roles.push('Doktor');
-        if (config.policajac) for (let i = 0; i < config.policajac; i++) roles.push('Policajac');
         if (config.dama) for (let i = 0; i < config.dama; i++) roles.push('Dama');
+        
+        // Fiksne uloge
+        roles.push('Doktor');
+        roles.push('Policajac');
 
-        // Ostatak su građani
-        while (roles.length < players.length) roles.push('Gradjanin');
+        // Ostali igrači postaju građani
+        while (roles.length < players.length) {
+            roles.push('Gradjanin');
+        }
 
-        // Mešanje uloga
+        // Mešanje uloga nasumično
         roles.sort(() => Math.random() - 0.5);
 
-        // Slanje uloga svakom igraču
+        // Slanje uloga svakom igraču ponaosob
         players.forEach((p, i) => {
             io.to(p.id).emit('yourRole', { role: roles[i] });
         });
 
-        // Host dobija listu svih uloga (da bi vodio igru)
+        // Hostu šaljemo pregled svih uloga (da bi znao ko je ko)
         let hostSummary = players.map((p, i) => ({ name: p.name, role: roles[i] }));
         io.to(rooms[id].host).emit('hostViewRoles', hostSummary);
-    });
-
-    // Resetovanje igre nazad u lobi
-    socket.on('resetGame', (roomID) => {
-        const id = roomID.toUpperCase();
-        if (rooms[id] && socket.id === rooms[id].host) {
-            io.to(id).emit('goToLobby');
-        }
-    });
-
-    // Gašenje sobe
-    socket.on('destroyRoom', (roomID) => {
-        const id = roomID.toUpperCase();
-        if (rooms[id] && socket.id === rooms[id].host) {
-            io.to(id).emit('forceToHome');
-            delete rooms[id];
-        }
     });
 
     // Diskonekcija
@@ -106,6 +80,7 @@ io.on('connection', (socket) => {
             rooms[id].players = rooms[id].players.filter(p => p.id !== socket.id);
             io.to(id).emit('updatePlayers', rooms[id].players.map(p => p.name));
 
+            // Ako je host izašao, gasimo sobu
             if (socket.id === rooms[id].host) {
                 io.to(id).emit('forceToHome');
                 delete rooms[id];
@@ -116,5 +91,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server je pokrenut na portu ${PORT}`);
+    console.log(`Server pokrenut na portu ${PORT}`);
 });
