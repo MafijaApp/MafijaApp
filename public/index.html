@@ -8,25 +8,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Dugme za izlaz koje je uvek dostupno (osim na početnom ekranu) -->
+    <button id="globalExitBtn" class="exit-btn-fixed" style="display:none;" onclick="location.reload()">IZLAZ</button>
+
     <!-- 1. POČETNI EKRAN -->
     <div id="home" class="screen">
-        <h1 class="logo">MAFIJA</h1>
+        <h1 class="logo-hero">MAFIJA</h1>
         <div class="main-card">
             <input type="text" id="playerName" placeholder="Tvoje ime">
             <button id="createBtn" class="primary-btn">NOVA IGRA</button>
+            
             <div class="divider-container">
-                <span class="divider-line"></span><span class="divider-text">ILI</span><span class="divider-line"></span>
+                <span class="divider-line"></span>
+                <span class="divider-text">ILI</span>
+                <span class="divider-line"></span>
             </div>
+            
             <input type="text" id="roomInput" placeholder="Kod sobe">
             <button id="joinBtn" class="secondary-btn">UĐI U IGRU</button>
         </div>
     </div>
 
-    <!-- 2. KARTICA SA KODOM (MODAL) - VRAĆENO -->
+    <!-- 2. KARTICA SA KODOM (MODAL) -->
     <div id="roomCodeModal" class="screen" style="display:none;">
         <div class="main-card modal-center">
-            <p style="text-transform: uppercase; opacity: 0.6; letter-spacing: 1px;">Kod tvoje sobe je:</p>
-            <h1 id="roomCodeDisplay" style="font-size: 4rem; color: #ff4b2b; margin: 20px 0; text-shadow: 0 0 15px rgba(255, 75, 43, 0.3);"></h1>
+            <p style="text-transform: uppercase; opacity: 0.6; letter-spacing: 2px;">Kod tvoje sobe:</p>
+            <h1 id="roomCodeDisplay" class="giant-code"></h1>
             <button onclick="closeCodeModal()" class="primary-btn">OK, NASTAVI</button>
         </div>
     </div>
@@ -34,10 +41,9 @@
     <!-- 3. LOBI I PODEŠAVANJA -->
     <div id="hostScreen" class="screen" style="display:none;">
         <div class="settings-card">
-            <h3 class="card-subtitle">KONFIGURACIJA PARTIJE</h3>
+            <h3 class="card-subtitle">PODEŠAVANJE PARTIJE</h3>
             
             <div class="stepper-group">
-                <!-- Mafija -->
                 <div class="control-row">
                     <span class="role-name">MAFIJA</span>
                     <div class="stepper">
@@ -46,7 +52,6 @@
                         <button type="button" onclick="changeVal('mafija', 1)">+</button>
                     </div>
                 </div>
-                <!-- Dama -->
                 <div class="control-row">
                     <span class="role-name">DAMA</span>
                     <div class="stepper">
@@ -57,9 +62,10 @@
                 </div>
             </div>
 
-            <p style="font-size: 0.75rem; color: #666; text-align: center; margin-bottom: 20px;">
-                Doktor i Policajac su podrazumevani (1+1)
-            </p>
+            <!-- Uočljivija napomena za uloge -->
+            <div class="important-note">
+                DOKTOR I POLICAJAC SU AUTOMATSKI UKLJUČENI (1+1)
+            </div>
 
             <button id="startGameBtn" class="start-btn">PODELI ULOGE</button>
         </div>
@@ -73,7 +79,6 @@
     <!-- 4. EKRAN ZA ULOGU -->
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer"></div>
-        <button id="exitBtn" class="exit-btn" onclick="location.reload()">IZLAZ</button>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
