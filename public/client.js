@@ -21,14 +21,13 @@ socket.on('roomCreated', (id) => {
     currentRoomID = id;
     const name = document.getElementById('playerName').value;
     socket.emit('joinRoom', { roomID: id, name: name });
-    
-    // Prikaži prvo KOD modal
     showScreen('roomCodeModal');
     document.getElementById('roomCodeDisplay').innerText = id;
 });
 
 function closeCodeModal() {
     showScreen('hostScreen');
+    document.getElementById('globalExitBtn').style.display = 'block';
 }
 
 document.getElementById('joinBtn').onclick = () => {
@@ -42,7 +41,10 @@ document.getElementById('joinBtn').onclick = () => {
 };
 
 socket.on('joinSuccess', () => {
-    if (!isHost) showScreen('hostScreen');
+    if (!isHost) {
+        showScreen('hostScreen');
+        document.getElementById('globalExitBtn').style.display = 'block';
+    }
 });
 
 socket.on('updatePlayers', (list) => {
@@ -60,10 +62,13 @@ document.getElementById('startGameBtn').onclick = () => {
     socket.emit('startGame', { roomID: currentRoomID, config });
 };
 
+// PANEL ZA HOSTA (NARATORA)
 socket.on('hostViewRoles', (data) => {
     const ul = document.getElementById('playerList');
     document.getElementById('hostScreen').querySelector('.settings-card').style.display = 'none';
     document.getElementById('listTitle').innerText = "NARATOR TABELA";
+    
+    // Host vidi sve, ali hostu se ne dodeljuje uloga u samoj igri
     ul.innerHTML = data.map(p => `
         <li class="admin-player-row">
             <span><strong>${p.name}</strong> - ${p.role}</span>
@@ -73,16 +78,17 @@ socket.on('hostViewRoles', (data) => {
 });
 
 function kickPlayer(id) {
-    if(confirm("Izbaci igrača?")) socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
+    if(confirm("Potvrdi eliminaciju igrača?")) socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
 }
 
+// IGRAČI DOBIJAJU ULOGE (Host ne dobija ovaj event za sebe)
 socket.on('yourRole', ({ role }) => {
     if (!isHost) {
         showScreen('reveal');
         document.getElementById('cardContainer').innerHTML = `
-            <div style="padding:40px; border:2px solid #ff4b2b; border-radius:20px; background:rgba(255,75,43,0.1);">
-                <p style="opacity:0.6">TVOJA ULOGA</p>
-                <h1 style="font-size:3.5rem; margin-top:10px;">${role}</h1>
+            <div style="padding:40px; border:2px solid #ff0000; border-radius:20px; background:rgba(255,0,0,0.1); text-align:center;">
+                <p style="opacity:0.6; letter-spacing:2px;">TVOJA ULOGA</p>
+                <h1 style="font-size:3.5rem; margin-top:10px; color:#ff0000;">${role}</h1>
             </div>`;
     }
 });
