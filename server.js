@@ -5,11 +5,7 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-    pingTimeout: 60000,
-    pingInterval: 25000,
-    cors: { origin: "*" }
-});
+const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -24,17 +20,73 @@ io.on('connection', (socket) => {
     });
 
     socket.on('joinRoom', ({ roomID, name }) => {
-        const id = roomID.toUpperCase();
+        const id = roomID.trim().toUpperCase();
         if (rooms[id]) {
-            // Izbacujemo "duha" ako već postoji neko sa istim socket ID-em
             rooms[id].players = rooms[id].players.filter(p => p.id !== socket.id);
-            
             rooms[id].players.push({ id: socket.id, name: name });
             socket.join(id);
-            
-            // Čuvamo roomID u samom socketu da bismo znali odakle da ga obrišemo na disconnect
             socket.roomID = id;
+            socket.emit('joinSuccess');
+            io.to(id).emit('updatePlayers', rooms[id].players.map(p => p.name));
+        } else {
+            socket.emit('error', 'Soba ne postoji!');
+        }
+    });
 
+    socket.on('kickPlayer', (playerName) => {
+        const id = socket.roomID;
+        if (id && rooms[id] && socket.id === rooms[id].host) {
+            const target = rooms[id].players.find(p => p.name === playerName);
+            if (target) {
+                io.to(target.id).emit('youAreKick');
+                rooms[id].players = rooms[id].players.filter(p => p.name !== playerName);
+                io.to(id).emit('updatePlayers', rooms[id].players.map(p => p.name));
+            }
+        }
+    });
+
+    socket.on('startGame', ({ roomID, config }) => {
+        const id = roomID.toUpperCase();
+        if (!rooms[id]) return;
+        let players = rooms[id].players;
+        let roles = [];
+        for (let i = 0; i < config.mafija; i++) roles.push('Mafija');
+        for (let i = 0; i < config.doktor; i++) roles.push('Doktor');
+        for (let i = 0; i < config.policajac; i++) roles.push('Policajac');
+        for (let i = 0; i < config.dama; i++) roles.push('Dama');
+        while (roles.length < players.length) roles.push('Gradjanin');
+        roles.sort(() => Math.random() - 0.5);
+        players.forEach((p, i) => io.to(p.id).emit('yourRole', { role: roles[i] }));
+        io.to(rooms[id].host).emit('hostViewRoles', players.map((p, i) => ({ name: p.name, role: roles[i] })));
+    });
+
+    socket.on('resetGame', (roomID) => {
+        const id = roomID.toUpperCase();
+        if (rooms[id] && socket.id === rooms[id].host) io.to(id).emit('goToLobby');
+    });
+
+    socket.on('destroyRoom', (roomID) => {
+        const id = roomID.toUpperCase();
+        if (rooms[id] && socket.id === rooms[id].host) {
+            io.to(id).emit('forceToHome');
+            delete rooms[id];
+        }
+    });
+
+    socket.on('disconnect', () => {
+        const id = socket.roomID;
+        if (id && rooms[id]) {
+            rooms[id].players = rooms[id].players.filter(p => p.id !== socket.id);
+            io.to(id).emit('updatePlayers', rooms[id].players.map(p => p.name));
+            if (socket.id === rooms[id].host) {
+                io.to(id).emit('forceToHome');
+                delete rooms[id];
+            }
+        }
+    });
+});
+
+server.listen(process.env.PORT || 3000, '0.0.0.0');
             const names = rooms[id].players.map(p => p.name);
             io.to(id).emit('updatePlayers', names);
         } else {
