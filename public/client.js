@@ -7,7 +7,10 @@ function changeVal(id, delta) {
     const min = parseInt(input.getAttribute('min'));
     const max = parseInt(input.getAttribute('max'));
     let newVal = parseInt(input.value) + delta;
-    if (newVal >= min && newVal <= max) input.value = newVal;
+    if (newVal >= min && newVal <= max) {
+        input.value = newVal;
+        checkPlayerCount(); // Proveri limit čim se promeni broj uloga
+    }
 }
 
 document.getElementById('createBtn').onclick = () => {
@@ -47,10 +50,39 @@ socket.on('joinSuccess', () => {
     }
 });
 
+let currentPlayersList = [];
+
 socket.on('updatePlayers', (list) => {
+    currentPlayersList = list;
     const ul = document.getElementById('playerList');
-    ul.innerHTML = list.map(p => `<li style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-bottom:5px; list-style:none;">${p}</li>`).join('');
+    ul.innerHTML = list.map(p => `<li class="player-li">${p}</li>`).join('');
+    checkPlayerCount();
 });
+
+// FUNKCIJA KOJA SPREČAVA START BEZ IGRAČA
+function checkPlayerCount() {
+    if (!isHost) return;
+    
+    const mafijaCount = parseInt(document.getElementById('mafija').value);
+    const damaCount = parseInt(document.getElementById('dama').value);
+    const totalRequired = mafijaCount + damaCount + 2; // +2 su Doktor i Policajac
+    
+    const startBtn = document.getElementById('startGameBtn');
+    
+    // VAŽNO: Host se NE računa u igrače koji dobijaju uloge
+    // Broj igrača u listi MINUS host
+    const playersReady = currentPlayersList.length - 1; 
+
+    if (playersReady >= totalRequired) {
+        startBtn.disabled = false;
+        startBtn.classList.remove('locked');
+        startBtn.innerText = "PODELI ULOGE";
+    } else {
+        startBtn.disabled = true;
+        startBtn.classList.add('locked');
+        startBtn.innerText = `POTREBNO JOŠ ${totalRequired - playersReady} IGRAČA`;
+    }
+}
 
 document.getElementById('startGameBtn').onclick = () => {
     const config = {
@@ -62,13 +94,12 @@ document.getElementById('startGameBtn').onclick = () => {
     socket.emit('startGame', { roomID: currentRoomID, config });
 };
 
-// PANEL ZA HOSTA (NARATORA)
 socket.on('hostViewRoles', (data) => {
     const ul = document.getElementById('playerList');
-    document.getElementById('hostScreen').querySelector('.settings-card').style.display = 'none';
-    document.getElementById('listTitle').innerText = "NARATOR TABELA";
+    document.getElementById('setupArea').style.display = 'none';
+    document.getElementById('listTitle').innerText = "NARATOR PANEL (UŽIVO)";
     
-    // Host vidi sve, ali hostu se ne dodeljuje uloga u samoj igri
+    // Filtriramo listu tako da Host vidi sve IGRAČE, ali host sam nema ulogu
     ul.innerHTML = data.map(p => `
         <li class="admin-player-row">
             <span><strong>${p.name}</strong> - ${p.role}</span>
@@ -78,17 +109,18 @@ socket.on('hostViewRoles', (data) => {
 });
 
 function kickPlayer(id) {
-    if(confirm("Potvrdi eliminaciju igrača?")) socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
+    if(confirm("Eliminiši igrača iz ove runde?")) socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
 }
 
-// IGRAČI DOBIJAJU ULOGE (Host ne dobija ovaj event za sebe)
 socket.on('yourRole', ({ role }) => {
+    // DUPLA PROVERA: Host nikada ne dobija ovaj event
     if (!isHost) {
         showScreen('reveal');
         document.getElementById('cardContainer').innerHTML = `
-            <div style="padding:40px; border:2px solid #ff0000; border-radius:20px; background:rgba(255,0,0,0.1); text-align:center;">
-                <p style="opacity:0.6; letter-spacing:2px;">TVOJA ULOGA</p>
-                <h1 style="font-size:3.5rem; margin-top:10px; color:#ff0000;">${role}</h1>
+            <div class="role-reveal-card">
+                <p style="opacity:0.5; letter-spacing:3px;">DODELJEN DOSIJE</p>
+                <h1 style="font-size:3.5rem; color:#ff0000; margin:15px 0;">${role}</h1>
+                <p style="font-size:0.8rem; color:#666;">Igraj pošteno. Ne otkrivaj ekran drugima.</p>
             </div>`;
     }
 });
