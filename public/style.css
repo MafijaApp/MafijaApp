@@ -1,40 +1,48 @@
-/* RESET I OSNOVA */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-    background-color: #0f172a; 
-    color: #f8fafc; 
-    margin: 0; 
-    display: flex; 
-    justify-content: center;
-}
-
-.screen { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
-    width: 100%; 
-    max-width: 400px; 
-    min-height: 100vh; 
-    padding: 20px; 
-}
-
+body { font-family: sans-serif; background: #0f172a; color: #f8fafc; margin: 0; display: flex; justify-content: center; }
+.screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 400px; min-height: 100vh; padding: 20px; }
 .full-width { width: 100%; display: flex; flex-direction: column; align-items: center; }
-
-/* LOGO */
 .logo { font-size: 3rem; color: #e11d48; letter-spacing: 4px; margin-bottom: 2rem; }
 
-/* DIVIDER (ILI sa linijom koja deli ekran) */
-.divider { 
-    display: flex; 
-    align-items: center; 
-    text-align: center; 
-    width: 100%; 
-    margin: 25px 0; 
-    color: #64748b; 
-    font-size: 0.85rem; 
-    font-weight: bold;
+.divider { display: flex; align-items: center; width: 100%; margin: 25px 0; color: #64748b; font-size: 0.85rem; font-weight: bold; }
+.divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(100, 116, 139, 0.3); }
+.divider::before { margin-right: 15px; }
+.divider::after { margin-left: 15px; }
+
+input { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: white; text-align: center; font-size: 1rem; }
+input[readonly], input[onkeydown] { cursor: default; }
+
+.settings-card { width: 100%; background: #1e293b; padding: 15px; border-radius: 16px; border: 1px solid #334155; margin-bottom: 20px; }
+.setting-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(51, 65, 85, 0.5); }
+.setting-row:last-child { border-bottom: none; }
+.setting-row input { width: 70px !important; margin: 0 !important; border: 1px solid #e11d48; background: #0f172a; }
+
+button { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; margin: 5px 0; transition: 0.2s; }
+button:active { transform: scale(0.98); }
+.primary-btn { background: #e11d48; color: white; }
+.success-btn { background: #22c55e; color: white; }
+.secondary-btn { background: #475569; color: white; }
+
+.kick-btn { width: auto; padding: 5px 12px; font-size: 0.75rem; background: #334155; color: #f1f5f9; float: right; margin: 0; }
+.kick-btn:hover { background: #e11d48; }
+
+#playerList { list-style: none; padding: 0; width: 100%; margin-top: 20px; }
+#playerList li { background: #1e293b; padding: 12px; margin-bottom: 8px; border-radius: 10px; border-left: 4px solid #e11d48; line-height: 24px; }
+
+.card { width: 280px; height: 400px; perspective: 1000px; margin: 20px 0; }
+.card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+.card.flipped .card-inner { transform: rotateY(180deg); }
+.card-front, .card-back { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 24px; font-size: 2rem; font-weight: 800; border: 6px solid #f8fafc; }
+.card-front { background: #1e293b; color: #e11d48; }
+.card-back { transform: rotateY(180deg); color: white; }
+.role-mafija { background: linear-gradient(135deg, #991b1b, #ef4444); }
+.role-doktor { background: linear-gradient(135deg, #166534, #22c55e); }
+.role-policajac { background: linear-gradient(135deg, #1e40af, #3b82f6); }
+.role-dama { background: linear-gradient(135deg, #be185d, #ff69b4); }
+.role-civil { background: linear-gradient(135deg, #334155, #64748b); }
+
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal-content { background: #1e293b; width: 100%; max-width: 320px; padding: 30px; border-radius: 24px; text-align: center; border: 2px solid #e11d48; }    font-weight: bold;
     letter-spacing: 1px;
 }
 
