@@ -11,256 +11,55 @@
     --radius: 12px;
 }
 
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-    font-family: 'Montserrat', sans-serif; 
-}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+body { background: var(--bg-gradient); min-height: 100vh; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; }
 
-body { 
-    background: var(--bg-gradient); 
-    min-height: 100vh; 
-    color: white; 
-    padding: 20px; 
-    padding-bottom: 120px; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-}
-
-/* STICKY HEADER ZA KOD SOBE */
 .sticky-header {
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%;
-    background: rgba(15, 0, 0, 0.95); 
-    backdrop-filter: blur(10px);
-    border-bottom: 2px solid var(--primary);
-    padding: 12px; 
-    text-align: center; 
-    font-weight: 900; 
-    z-index: 99; 
-    color: var(--primary); 
-    letter-spacing: 2px;
+    position: fixed; top: 0; left: 0; width: 100%; background: rgba(15, 0, 0, 0.95);
+    border-bottom: 2px solid var(--primary); padding: 12px; text-align: center; z-index: 99;
 }
-.sticky-header span { color: white; margin-left: 8px; text-shadow: 0 0 10px var(--primary); }
+
+.regen-btn-styled {
+    background: rgba(255, 0, 0, 0.15); color: var(--primary); border: 1px solid var(--primary);
+    padding: 5px 10px; border-radius: 4px; font-size: 0.6rem; cursor: pointer; margin-left: 10px;
+}
 
 .screen { width: 100%; max-width: 420px; margin-top: 60px; }
+.logo-main { font-size: 4rem; color: var(--primary); text-align: center; margin-bottom: 20px; font-weight: 900; }
 
-.logo-main { 
-    font-size: 5rem; 
-    font-weight: 900; 
-    color: var(--primary); 
-    text-align: center; 
-    margin-bottom: 30px; 
-    letter-spacing: -2px; 
-}
-
-/* KARTICE I PODEŠAVANJA */
 .main-card, .settings-card { 
-    background: var(--card-bg); 
-    border: 1px solid rgba(255, 0, 0, 0.2); 
-    border-radius: var(--radius); 
-    padding: 30px; 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
-    margin-bottom: 20px;
+    background: var(--card-bg); border: 1px solid rgba(255, 0, 0, 0.2); 
+    border-radius: var(--radius); padding: 25px; margin-bottom: 20px;
 }
 
-.important-note {
-    background: rgba(255, 0, 0, 0.1);
-    color: var(--primary);
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 0.7rem;
-    font-weight: 900;
-    text-align: center;
-    margin-bottom: 20px;
-    border: 1px solid var(--primary);
-    letter-spacing: 1px;
+.important-note { 
+    background: rgba(255, 255, 255, 0.03); color: #666; padding: 10px; 
+    border-radius: 8px; font-size: 0.65rem; text-align: center; margin: 10px 0;
 }
 
-.host-container {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px dashed rgba(255, 0, 0, 0.4);
-    padding: 15px; 
-    border-radius: var(--radius);
-    margin-bottom: 25px; 
-    text-align: center;
-}
+input { width: 100%; padding: 15px; background: var(--input-bg); border: 1px solid #222; color: white; border-radius: 8px; margin-bottom: 15px; text-align: center; }
 
-.styled-label {
-    font-size: 0.75rem; 
-    font-weight: 900; 
-    color: var(--primary);
-    text-transform: uppercase; 
-    letter-spacing: 3px; 
-    display: block; 
-    margin-bottom: 12px;
-}
+.primary-btn, .start-btn { background: var(--primary); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; }
+.secondary-btn { background: #111; color: white; border: 1px solid #333; padding: 15px; width: 100%; border-radius: 8px; cursor: pointer; }
 
-/* INPUTI */
-input[type="text"], input[type="number"] { 
-    width: 100%; 
-    padding: 22px; 
-    background: var(--input-bg); 
-    border: 1px solid #222; 
-    border-radius: var(--radius); 
-    color: white; 
-    font-size: 1.2rem; 
-    text-align: center; 
-    outline: none; 
-    margin-bottom: 25px; 
-}
+.highlight-host { border: 2px solid var(--primary) !important; position: relative; text-align: center; padding: 25px !important; background: #000; }
+.host-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--primary); padding: 2px 10px; font-size: 0.6rem; border-radius: 4px; }
+.host-name { font-size: 1.4rem; font-weight: 900; }
 
-/* DUGMAD */
-.primary-btn, .start-btn { 
-    background: linear-gradient(45deg, #ff0000, #990000); 
-    color: white; 
-    border: none; 
-    padding: 22px; 
-    width: 100%; 
-    border-radius: var(--radius); 
-    font-weight: 900; 
-    cursor: pointer; 
-    text-transform: uppercase;
-}
+.role-card { padding: 60px 20px; border-radius: 20px; text-align: center; border: 3px solid; }
+.role-mafija { border-color: red; background: radial-gradient(circle, var(--mafija-red), transparent); }
+.role-dama { border-color: pink; background: radial-gradient(circle, var(--dama-pink), transparent); }
+.role-doktor { border-color: lime; background: radial-gradient(circle, var(--doktor-green), transparent); }
+.role-policajac { border-color: dodgerblue; background: radial-gradient(circle, var(--policajac-blue), transparent); }
+.role-gradjanin { border-color: #888; background: radial-gradient(circle, var(--gradjanin-gray), transparent); }
 
-.start-btn.locked { 
-    background: #222; 
-    color: #555; 
-    cursor: not-allowed; 
-    border: 1px solid #333; 
-}
+.rules-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.rules-content { background: #111; padding: 25px; border-radius: 15px; border: 1px solid var(--primary); max-width: 350px; }
 
-.secondary-btn { 
-    background: #111; 
-    color: white; 
-    border: 2px solid #333; 
-    padding: 20px; 
-    width: 100%; 
-    border-radius: var(--radius); 
-    font-weight: 900; 
-    cursor: pointer; 
-}
+.signature { margin-top: 30px; text-align: center; }
+.signature span { font-size: 0.6rem; color: #444; letter-spacing: 3px; }
+.signature p { font-weight: 900; letter-spacing: 1px; }
 
-.rules-btn {
-    background: transparent;
-    color: #555;
-    border: 1px solid #333;
-    padding: 10px;
-    margin-top: 20px;
-    width: 100%;
-    border-radius: 8px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-/* SEPARATOR */
-.divider-container.extra-large { 
-    margin: 40px 0; 
-    display: flex; 
-    align-items: center; 
-}
-.divider-line { 
-    flex: 1; 
-    height: 1px; 
-    background: linear-gradient(to right, transparent, rgba(255, 0, 0, 0.3), transparent); 
-}
-.divider-text { 
-    margin: 0 20px; 
-    font-size: 0.9rem; 
-    color: #444; 
-    font-weight: 900; 
-    letter-spacing: 4px; 
-}
-
-/* ROLE CARDS */
-.role-card { 
-    padding: 80px 20px; 
-    border-radius: 20px; 
-    text-align: center; 
-    border-width: 3px; 
-    border-style: solid; 
-}
-.role-mafija { background: radial-gradient(circle, var(--mafija-red) 0%, transparent 100%); border-color: #ff0000; }
-.role-dama { background: radial-gradient(circle, var(--dama-pink) 0%, transparent 100%); border-color: #ff1493; }
-.role-doktor { background: radial-gradient(circle, var(--doktor-green) 0%, transparent 100%); border-color: #32cd32; }
-.role-policajac { background: radial-gradient(circle, var(--policajac-blue) 0%, transparent 100%); border-color: #1e90ff; }
-.role-gradjanin { background: radial-gradient(circle, var(--gradjanin-gray) 0%, transparent 100%); border-color: #888; }
-
-/* STEPPER KONTROLE */
-.control-row { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    background: #111; 
-    padding: 18px; 
-    border-radius: var(--radius); 
-    margin-bottom: 12px; 
-    border: 1px solid #222; 
-}
-.stepper { display: flex; align-items: center; }
-.stepper button { 
-    width: 45px; 
-    height: 45px; 
-    border: none; 
-    background: #1a1a1a; 
-    color: white; 
-    border-radius: 10px; 
-    font-size: 1.5rem; 
-    cursor: pointer; 
-}
-.stepper input { 
-    width: 50px; 
-    margin-bottom: 0; 
-    padding: 0; 
-    background: transparent; 
-    border: none; 
-    font-weight: 900; 
-    color: var(--primary); 
-}
-
-/* LISTA IGRAČA */
-.player-li { 
-    background: #0e0e0e; 
-    padding: 16px; 
-    border-radius: 10px; 
-    margin-bottom: 8px; 
-    border: 1px solid #1a1a1a; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    list-style: none;
-}
-
-/* MODAL ZA PRAVILA */
-.rules-modal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95); z-index: 1000;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-}
-.rules-content {
-    background: #111; border: 1px solid var(--primary);
-    padding: 30px; border-radius: 15px; max-width: 400px;
-    text-align: left;
-}
-.rules-content h3 { color: var(--primary); margin-bottom: 15px; letter-spacing: 2px; }
-.rules-content p { font-size: 0.85rem; margin-bottom: 12px; line-height: 1.4; color: #ccc; }
-.close-rules { 
-    margin-top: 20px; background: var(--primary); border: none; 
-    color: white; padding: 12px 25px; border-radius: 8px; font-weight: 900; cursor: pointer; width: 100%;
-}
-
-/* PREMIUM SIGNATURE */
-.signature { margin: 40px auto 20px; text-align: center; position: relative; padding: 15px; max-width: 200px; }
-.signature::before { content: ''; position: absolute; top: 0; left: 25%; width: 50%; height: 1px; background: linear-gradient(to right, transparent, var(--primary), transparent); opacity: 0.5; }
-.signature span { font-size: 0.6rem; letter-spacing: 5px; color: #444; display: block; margin-bottom: 8px; text-transform: uppercase; }
-.signature p { font-size: 0.85rem; font-weight: 900; color: #fff; letter-spacing: 2px; text-transform: uppercase; transition: 0.4s; }
-.signature p:hover { color: var(--primary); text-shadow: 0 0 15px rgba(255, 0, 0, 0.6); transform: scale(1.05); }
-.signature::after { content: '●'; font-size: 6px; color: var(--primary); display: block; margin-top: 10px; opacity: 0.3; animation: pulseGlow 2s infinite; }
-
-@keyframes pulseGlow { 0% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.2); } 100% { opacity: 0.2; transform: scale(1); } }
+.stepper { display: flex; justify-content: center; align-items: center; }
+.stepper button { width: 35px; height: 35px; background: #222; color: white; border: none; border-radius: 5px; cursor: pointer; }
+.stepper input { width: 40px; margin: 0 10px; padding: 0; border: none; font-size: 1.2rem; background: transparent; }
