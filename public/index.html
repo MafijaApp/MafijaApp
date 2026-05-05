@@ -8,12 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Kôd sobe stalno vidljiv na vrhu nakon ulaska -->
     <div id="stickyRoomHeader" class="sticky-header" style="display:none;">
         KOD SOBE: <span id="topRoomCode">----</span>
     </div>
-
-    <button id="globalExitBtn" class="exit-btn-fixed" style="display:none;" onclick="location.reload()">IZLAZ</button>
 
     <!-- 1. POČETNI EKRAN -->
     <div id="home" class="screen">
@@ -25,33 +22,33 @@
                 <label>TVOJE IME</label>
                 <input type="text" id="playerName" placeholder="Unesi ime...">
             </div>
-            <button id="createBtn" class="primary-btn">NOVA IGRA</button>
+            <button id="createBtn" class="primary-btn">KREIRAJ KAO HOST</button>
+            
             <div class="divider-container extra-large">
                 <span class="divider-line"></span>
                 <span class="divider-text">ILI</span>
                 <span class="divider-line"></span>
             </div>
+            
             <div class="field-wrapper">
                 <label>KOD SOBE</label>
                 <input type="text" id="roomInput" placeholder="Npr. AX82">
             </div>
-            <button id="joinBtn" class="secondary-btn">UĐI U IGRU</button>
+            <button id="joinBtn" class="secondary-btn">UĐI KAO IGRAČ</button>
         </div>
     </div>
 
     <!-- 2. LOBI I PODEŠAVANJA -->
     <div id="hostScreen" class="screen" style="display:none;">
         <div id="setupArea" class="settings-card">
-            <!-- Dugme za generisanje novog koda (samo za hosta) -->
-            <button id="regenCodeBtn" class="regen-btn" style="display:none;" onclick="regenerateRoomCode()">GENERIŠI NOVI KOD</button>
-            
-            <h3 class="card-subtitle">ULOGE U IGRI</h3>
+            <button id="regenCodeBtn" class="regen-btn" style="display:none;" onclick="regenerateRoomCode()">NOVI KOD</button>
+            <h3 class="card-subtitle">PODEŠAVANJE ULOGA</h3>
             <div class="stepper-group">
                 <div class="control-row">
                     <span class="role-name">MAFIJA</span>
                     <div class="stepper">
                         <button type="button" onclick="changeVal('mafija', -1)">−</button>
-                        <input type="number" id="mafija" value="1" min="1" max="5" readonly>
+                        <input type="number" id="mafija" value="1" min="1" max="10" readonly>
                         <button type="button" onclick="changeVal('mafija', 1)">+</button>
                     </div>
                 </div>
@@ -64,12 +61,12 @@
                     </div>
                 </div>
             </div>
-            <div class="important-note">POLICAJAC I DOKTOR (1+1) SU AKTIVNI</div>
-            <button id="startGameBtn" class="start-btn locked" disabled>ČEKA SE DOVOLJNO IGRAČA</button>
+            <div class="important-note">HOST JE NARATOR I NE DOBIJA ULOGU.</div>
+            <button id="startGameBtn" class="start-btn locked" disabled>PROVERA IGRAČA...</button>
         </div>
 
         <div class="players-section">
-            <h3 id="listTitle">IGRAČI U LOBIJU:</h3>
+            <h3 id="listTitle">IGRAČI (BEZ HOSTA):</h3>
             <ul id="playerList"></ul>
         </div>
     </div>
@@ -77,6 +74,9 @@
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer"></div>
     </div>
+
+    <!-- CENTRIRANO DUGME ZA IZLAZ NA DNU -->
+    <button id="globalExitBtn" class="exit-btn-bottom" style="display:none;" onclick="confirmExit()">NAPUSTI IGRU</button>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
