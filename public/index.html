@@ -12,15 +12,14 @@
         KOD SOBE: <span id="topRoomCode">----</span>
     </div>
 
-    <!-- 1. POČETNI EKRAN -->
     <div id="home" class="screen">
         <div class="logo-container">
             <h1 class="logo-main">MAFIJA</h1>
         </div>
         <div class="main-card">
             <div class="field-wrapper">
-                <label>TVOJE IME</label>
-                <input type="text" id="playerName" placeholder="Unesi ime...">
+                <label class="styled-label">TVOJE IME</label>
+                <input type="text" id="playerName" placeholder="Upisana legenda...">
             </div>
             <button id="createBtn" class="primary-btn">KREIRAJ KAO HOST</button>
             
@@ -31,17 +30,18 @@
             </div>
             
             <div class="field-wrapper">
-                <label>KOD SOBE</label>
+                <label class="styled-label">KOD SOBE</label>
                 <input type="text" id="roomInput" placeholder="Npr. AX82">
             </div>
             <button id="joinBtn" class="secondary-btn">UĐI KAO IGRAČ</button>
         </div>
     </div>
 
-    <!-- 2. LOBI I PODEŠAVANJA -->
     <div id="hostScreen" class="screen" style="display:none;">
         <div id="setupArea" class="settings-card">
-            <button id="regenCodeBtn" class="regen-btn" style="display:none;" onclick="regenerateRoomCode()">NOVI KOD</button>
+            <div style="text-align: right;">
+                <button id="regenCodeBtn" class="regen-btn-styled" style="display:none;" onclick="regenerateRoomCode()">NOVI KOD</button>
+            </div>
             <h3 class="card-subtitle">PODEŠAVANJE ULOGA</h3>
             <div class="stepper-group">
                 <div class="control-row">
@@ -66,7 +66,7 @@
         </div>
 
         <div class="players-section">
-            <h3 id="listTitle">IGRAČI (BEZ HOSTA):</h3>
+            <h3 id="listTitle" class="styled-label" style="margin-bottom:15px;">IGRAČI (BEZ HOSTA):</h3>
             <ul id="playerList"></ul>
         </div>
     </div>
@@ -75,7 +75,6 @@
         <div id="cardContainer"></div>
     </div>
 
-    <!-- CENTRIRANO DUGME ZA IZLAZ NA DNU -->
     <button id="globalExitBtn" class="exit-btn-bottom" style="display:none;" onclick="confirmExit()">NAPUSTI IGRU</button>
 
     <script src="/socket.io/socket.io.js"></script>
