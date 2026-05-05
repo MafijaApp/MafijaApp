@@ -17,17 +17,28 @@
         <h1 class="logo-main">MAFIJA</h1>
         <div class="main-card">
             <label class="styled-label">IME</label>
-            <input type="text" id="playerName" placeholder="Tvoje ime...">
+            <input type="text" id="playerName" class="main-input" placeholder="Tvoje ime...">
             <button id="createBtn" class="primary-btn">KREIRAJ SOBU</button>
-            <div class="divider-container extra-large"><span class="divider-text">ILI</span></div>
+            
+            <div class="divider-container">
+                <div class="divider-line"></div>
+                <span class="divider-text">ILI</span>
+                <div class="divider-line"></div>
+            </div>
+
             <label class="styled-label">KOD SOBE</label>
-            <input type="text" id="roomInput" placeholder="Npr. AX82">
+            <input type="text" id="roomInput" class="main-input" placeholder="Npr. AX82">
             <button id="joinBtn" class="secondary-btn">UĐI U SOBU</button>
             <button onclick="toggleRules()" class="rules-btn">UPUTSTVO ZA IGRU</button>
         </div>
-        <div class="signature"><span>CREATED BY</span><p>Marko Veljovic</p></div>
+        <div class="signature">
+            <div class="sig-line"></div>
+            <span>CREATED BY</span>
+            <p>Marko Veljovic</p>
+        </div>
     </div>
 
+    <!-- Ostatak ekrana ostaje isti kao u tvom kodu -->
     <div id="hostScreen" class="screen" style="display:none;">
         <div class="settings-card">
             <h3 class="styled-label" style="text-align:center;">PODEŠAVANJE</h3>
