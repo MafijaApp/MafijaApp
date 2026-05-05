@@ -2,98 +2,71 @@
 <html lang="sr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mafija Online</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- KOD SOBE KOJI SE VIDI TOKOM IGRE -->
     <div id="stickyRoomHeader" class="sticky-header" style="display:none;">
         KOD SOBE: <span id="topRoomCode">----</span>
+        <button id="regenBtn" class="regen-btn-styled" style="display:none;">NOVI KOD</button>
     </div>
 
     <div id="home" class="screen">
-        <div class="logo-container">
-            <h1 class="logo-main">MAFIJA</h1>
-        </div>
+        <h1 class="logo-main">MAFIJA</h1>
         <div class="main-card">
-            <label class="styled-label">VASE IME</label>
-            <input type="text" id="playerName" placeholder="Npr. Marko">
-            <button id="createBtn" class="primary-btn">KREIRAJ KAO HOST</button>
-            
-            <div class="divider-container extra-large">
-                <span class="divider-text">ILI</span>
-            </div>
-            
+            <label class="styled-label">IME</label>
+            <input type="text" id="playerName" placeholder="Tvoje ime...">
+            <button id="createBtn" class="primary-btn">KREIRAJ SOBU</button>
+            <div class="divider-container extra-large"><span class="divider-text">ILI</span></div>
             <label class="styled-label">KOD SOBE</label>
             <input type="text" id="roomInput" placeholder="Npr. AX82">
-            <button id="joinBtn" class="secondary-btn">UĐI KAO IGRAČ</button>
-            
-            <!-- DUGME ZA UPUTSTVO -->
-            <button onclick="toggleRules()" class="rules-btn">KREIRAJ/UĐI - UPUTSTVO</button>
+            <button id="joinBtn" class="secondary-btn">UĐI U SOBU</button>
+            <button onclick="toggleRules()" class="rules-btn">UPUTSTVO ZA IGRU</button>
         </div>
-
-        <div id="rulesModal" class="rules-modal" style="display:none;">
-            <div class="rules-content">
-                <h3>PRAVILA IGRE</h3>
-                <p><strong>Narator:</strong> Host koji vodi igru i jedini zna sve uloge. On ne dobija ulogu.</p>
-                <p><strong>Mafija:</strong> Svake noći bira jednu žrtvu koju želi da eliminiše.</p>
-                <p><strong>Doktor:</strong> Svake noći bira jednu osobu koju želi da spasi. Može spasiti i sebe.</p>
-                <p><strong>Policajac:</strong> Svake noći proverava identitet jednog igrača.</p>
-                <p><strong>Građani:</strong> Tokom dana pokušavaju da provale ko je mafija i glasaju za izbacivanje.</p>
-                <button onclick="toggleRules()" class="close-rules">ZATVORI</button>
-            </div>
-        </div>
-
         <div class="signature"><span>CREATED BY</span><p>Marko Veljovic</p></div>
     </div>
 
     <div id="hostScreen" class="screen" style="display:none;">
         <div class="settings-card">
-            <h3 class="card-subtitle">PODEŠAVANJE ULOGA</h3>
-            <div class="important-note">
-                DOKTOR I POLICAJAC SU OBAVEZNI (1+1)
-            </div>
-            <div class="stepper-group">
-                <div class="control-row">
-                    <span class="role-name">MAFIJA</span>
-                    <div class="stepper">
-                        <button type="button" onclick="changeVal('mafija', -1)">−</button>
-                        <input type="number" id="mafija" value="1" readonly>
-                        <button type="button" onclick="changeVal('mafija', 1)">+</button>
-                    </div>
-                </div>
-                <div class="control-row">
-                    <span class="role-name">DAMA</span>
-                    <div class="stepper">
-                        <button type="button" onclick="changeVal('dama', -1)">−</button>
-                        <input type="number" id="dama" value="0" readonly>
-                        <button type="button" onclick="changeVal('dama', 1)">+</button>
-                    </div>
+            <h3 class="styled-label" style="text-align:center;">PODEŠAVANJE</h3>
+            <div class="control-row">
+                <span>MAFIJA</span>
+                <div class="stepper">
+                    <button onclick="changeVal('mafija', -1)">−</button>
+                    <input type="number" id="mafija" value="1" readonly>
+                    <button onclick="changeVal('mafija', 1)">+</button>
                 </div>
             </div>
+            <div class="control-row">
+                <span>DAMA</span>
+                <div class="stepper">
+                    <button onclick="changeVal('dama', -1)">−</button>
+                    <input type="number" id="dama" value="0" readonly>
+                    <button onclick="changeVal('dama', 1)">+</button>
+                </div>
+            </div>
+            <div class="important-note">PODRAZUMEVA SE: 1 DOKTOR + 1 POLICAJAC</div>
             <button id="startGameBtn" class="start-btn locked" disabled>ČEKAMO IGRAČE...</button>
         </div>
-
-        <div class="players-section">
-            <div id="hostDisplay" class="host-container"></div>
-            <label class="styled-label">IGRAČI U SOBI</label>
-            <ul id="playerList"></ul>
-        </div>
+        <div id="hostDisplay" class="host-container highlight-host"></div>
+        <ul id="playerList"></ul>
     </div>
 
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer"></div>
     </div>
 
+    <div id="rulesModal" class="rules-modal" style="display:none;">
+        <div class="rules-content">
+            <h3>PRAVILA</h3>
+            <p><strong>Narator:</strong> Vodi igru. <strong>Mafija:</strong> Ubija. <strong>Doktor:</strong> Spasava. <strong>Policajac:</strong> Proverava. <strong>Građanin:</strong> Glasa.</p>
+            <button onclick="toggleRules()" class="close-rules">ZATVORI</button>
+        </div>
+    </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
-    <script>
-        function toggleRules() {
-            const modal = document.getElementById('rulesModal');
-            modal.style.display = modal.style.display === 'none' ? 'flex' : 'none';
-        }
-    </script>
 </body>
 </html>
