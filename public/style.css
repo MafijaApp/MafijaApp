@@ -1,6 +1,7 @@
 :root {
     --bg-gradient: radial-gradient(circle at center, #1a0000 0%, #050505 100%);
     --primary: #ff0000;
+    --primary-dark: #800000;
     --card-bg: #0c0c0c;
     --input-bg: #080808;
     --radius: 12px;
@@ -9,7 +10,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
 body { background: var(--bg-gradient); min-height: 100vh; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; }
 
-/* LOGO - MASIVNIJI */
+/* LOGO */
 .logo-main { 
     font-size: clamp(3rem, 15vw, 5rem); 
     color: var(--primary); 
@@ -20,18 +21,19 @@ body { background: var(--bg-gradient); min-height: 100vh; color: white; padding:
     text-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
 }
 
-.screen { width: 100%; max-width: 400px; margin-top: 40px; display: flex; flex-direction: column; }
+.screen { width: 100%; max-width: 400px; margin-top: 40px; }
 
-/* KARTICA */
-.main-card { 
+/* KARTICE */
+.main-card, .settings-card { 
     background: var(--card-bg); 
     border: 1px solid rgba(255, 255, 255, 0.05); 
     border-radius: var(--radius); 
     padding: 30px; 
     box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    margin-bottom: 20px;
 }
 
-/* GRAFIČKI INPUTI */
+/* INPUTI */
 .styled-label {
     display: block; font-size: 0.75rem; font-weight: 900; color: var(--primary);
     letter-spacing: 3px; margin-bottom: 12px; text-transform: uppercase;
@@ -42,50 +44,74 @@ body { background: var(--bg-gradient); min-height: 100vh; color: white; padding:
     border: 1px solid #1a1a1a; color: white; border-radius: 8px; 
     margin-bottom: 20px; text-align: center; font-size: 1.1rem;
     font-weight: 700; outline: none; transition: 0.3s;
-    /* Efekat udubljenja */
     box-shadow: inset 0 4px 10px rgba(0,0,0,0.7);
 }
 
-.main-input:focus {
-    border-color: var(--primary);
-    background: #0f0000;
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.1), inset 0 4px 10px rgba(0,0,0,0.9);
-}
+.main-input:focus { border-color: var(--primary); background: #0f0000; }
 
 /* DUGMAD */
-.primary-btn { 
+.primary-btn, .start-btn { 
     background: var(--primary); color: white; border: none; padding: 20px; 
     width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; 
     text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;
+    box-shadow: 0 4px 0 var(--primary-dark);
 }
 
-.primary-btn:active { transform: scale(0.98); opacity: 0.9; }
+.start-btn.locked { background: #1a1a1a; color: #444; box-shadow: none; cursor: not-allowed; }
 
 .secondary-btn { 
     background: transparent; color: white; border: 1px solid #222; 
     padding: 18px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 900;
 }
 
-/* NOVI DIVIDER (ILI) */
-.divider-container {
-    display: flex; align-items: center; margin: 30px 0;
-}
-
+/* DIVIDER */
+.divider-container { display: flex; align-items: center; margin: 30px 0; }
 .divider-line { flex: 1; height: 1px; background: #222; }
+.divider-text { padding: 0 15px; color: #444; font-weight: 900; font-size: 0.8rem; letter-spacing: 2px; }
 
-.divider-text {
-    padding: 0 15px; color: #444; font-weight: 900; font-size: 0.8rem; letter-spacing: 2px;
+/* DRUGA STRANA - STEPPER GRAFIKA */
+.control-row { 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.02); 
+    border-radius: 8px; border: 1px solid #1a1a1a;
 }
 
-/* SIGNATURE - POPRAVLJENO */
-.signature { margin-top: 50px; text-align: center; position: relative; }
-.sig-line { width: 30px; height: 3px; background: var(--primary); margin: 0 auto 15px; }
+.role-name { font-weight: 900; font-size: 0.9rem; letter-spacing: 1px; }
+
+.stepper { display: flex; align-items: center; background: #000; border-radius: 6px; padding: 5px; border: 1px solid #222; }
+.step-btn { 
+    width: 35px; height: 35px; background: #111; border: 1px solid #222; 
+    color: var(--primary); font-size: 1.2rem; font-weight: 900; cursor: pointer; border-radius: 4px;
+}
+.step-btn:hover { background: var(--primary); color: white; }
+
+.stepper-input { 
+    width: 45px; text-align: center; background: transparent; border: none; 
+    color: white; font-size: 1.2rem; font-weight: 900; pointer-events: none;
+}
+
+/* NOTE */
+.important-note { text-align: center; margin: 20px 0; }
+.important-note p { font-size: 0.6rem; color: #444; letter-spacing: 2px; margin-bottom: 5px; }
+.important-note span { font-size: 0.75rem; color: #888; font-weight: 700; }
+
+/* HOST DISPLAY */
+.highlight-host { 
+    background: #000; border: 2px solid var(--primary); padding: 30px; 
+    border-radius: var(--radius); text-align: center; position: relative; margin-top: 30px;
+}
+.host-badge { 
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%); 
+    background: var(--primary); padding: 4px 15px; font-size: 0.7rem; font-weight: 900; border-radius: 4px; 
+}
+.host-name { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+
+/* SIGNATURE */
+.signature { margin-top: 50px; text-align: center; }
+.sig-line { width: 35px; height: 3px; background: var(--primary); margin: 0 auto 15px; }
 .signature span { font-size: 0.6rem; color: #333; letter-spacing: 4px; display: block; font-weight: 900; }
-.signature p { font-weight: 900; font-size: 1.1rem; color: #fff; letter-spacing: 1px; margin-top: 5px; }
+.signature p { font-weight: 900; font-size: 1.2rem; color: #fff; text-transform: uppercase; margin-top: 5px; }
 
-/* OSTALI ELEMENTI */
-.rules-btn {
-    background: none; border: none; color: #444; width: 100%; margin-top: 20px;
-    font-weight: 700; cursor: pointer; font-size: 0.75rem; letter-spacing: 1px;
-}
-.rules-btn:hover { color: var(--primary); }
+/* MISC */
+.rules-btn { background: none; border: none; color: #333; width: 100%; margin-top: 20px; font-weight: 700; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
+.sticky-header { position: fixed; top: 0; left: 0; width: 100%; background: #0a0000; border-bottom: 2px solid var(--primary); padding: 15px; text-align: center; z-index: 100; font-weight: 900; letter-spacing: 1px; }
