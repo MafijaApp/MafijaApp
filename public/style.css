@@ -1,19 +1,18 @@
 :root {
     --bg-gradient: radial-gradient(circle at center, #1a0000 0%, #050505 100%);
     --primary: #ff0000;
-    --mafija-red: rgba(255, 0, 0, 0.15);
-    --dama-pink: rgba(255, 20, 147, 0.15);
-    --doktor-green: rgba(50, 205, 50, 0.15);
-    --policajac-blue: rgba(30, 144, 255, 0.15);
+    --mafija-red: rgba(255, 0, 0, 0.25);
+    --dama-pink: rgba(255, 20, 147, 0.25);
+    --doktor-green: rgba(50, 205, 50, 0.25);
+    --policajac-blue: rgba(30, 144, 255, 0.25);
     --card-bg: #0c0c0c;
     --input-bg: #151515;
     --radius: 12px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-body { background: var(--bg-gradient); min-height: 100vh; display: flex; flex-direction: column; align-items: center; color: white; padding: 20px; padding-bottom: 120px; }
+body { background: var(--bg-gradient); min-height: 100vh; color: white; padding: 20px; padding-bottom: 120px; display: flex; flex-direction: column; align-items: center; }
 
-/* STALNI KOD NA VRHU */
 .sticky-header {
     position: fixed; top: 0; left: 0; width: 100%;
     background: rgba(15, 0, 0, 0.95); backdrop-filter: blur(10px);
@@ -27,31 +26,32 @@ body { background: var(--bg-gradient); min-height: 100vh; display: flex; flex-di
 
 /* KARTICE */
 .main-card, .settings-card { 
-    background: var(--card-bg); 
-    border: 1px solid rgba(255, 0, 0, 0.2); 
-    border-radius: var(--radius); 
-    padding: 30px; 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+    background: var(--card-bg); border: 1px solid rgba(255, 0, 0, 0.2); 
+    border-radius: var(--radius); padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+    margin-bottom: 20px;
 }
 
-/* STILIZOVANI LABELI */
+/* POSEBAN BOX ZA HOSTA */
+.host-container {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 0, 0, 0.4);
+    padding: 15px; border-radius: var(--radius);
+    margin-bottom: 25px; text-align: center;
+}
+
+/* GRAFIČKI LABELI */
 .styled-label {
-    font-size: 0.8rem;
-    font-weight: 900;
-    color: #ff0000;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    display: block;
-    margin-bottom: 10px;
+    font-size: 0.75rem; font-weight: 900; color: var(--primary);
+    text-transform: uppercase; letter-spacing: 3px; display: block; margin-bottom: 12px;
     text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
 }
 
 /* INPUTI */
 input[type="text"] { 
     width: 100%; padding: 22px; background: var(--input-bg); 
-    border: 1px solid #222; border-radius: var(--radius); 
-    color: white; font-size: 1.3rem; text-align: center; outline: none; 
-    margin-bottom: 25px; transition: 0.3s;
+    border: 1px solid #222; border-radius: var(--radius); color: white; 
+    font-size: 1.2rem; text-align: center; outline: none; margin-bottom: 25px; 
+    transition: 0.3s;
 }
 input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(255,0,0,0.1); }
 
@@ -60,60 +60,44 @@ input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 15px rg
     background: linear-gradient(45deg, #ff0000, #990000); 
     color: white; border: none; padding: 22px; width: 100%; 
     border-radius: var(--radius); font-weight: 900; cursor: pointer; 
-    font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;
-    box-shadow: 0 5px 15px rgba(255,0,0,0.2);
+    text-transform: uppercase; letter-spacing: 1px;
 }
+.start-btn.locked { background: #222; color: #555; cursor: not-allowed; }
 
-.secondary-btn { 
-    background: #111; color: white; border: 2px solid #333; 
-    padding: 20px; width: 100%; border-radius: var(--radius); 
-    font-weight: 900; cursor: pointer; transition: 0.3s;
-}
-.secondary-btn:hover { border-color: #555; background: #151515; }
+.secondary-btn { background: #111; color: white; border: 2px solid #333; padding: 20px; width: 100%; border-radius: var(--radius); font-weight: 900; cursor: pointer; }
 
-/* STILIZOVANO NOVI KOD DUGME */
 .regen-btn-styled {
-    background: rgba(255, 0, 0, 0.1);
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    padding: 8px 15px;
-    border-radius: 6px;
-    font-weight: 900;
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    margin-bottom: 15px;
+    background: rgba(255, 0, 0, 0.1); color: var(--primary); border: 1px solid var(--primary);
+    padding: 8px 15px; border-radius: 6px; font-weight: 900; font-size: 0.7rem; cursor: pointer;
     transition: 0.3s;
 }
 .regen-btn-styled:hover { background: var(--primary); color: white; }
 
-/* ILI SEPARATOR */
-.divider-container.extra-large { margin: 40px 0; display: flex; align-items: center; justify-content: center; }
+/* SEPARATOR */
+.divider-container.extra-large { margin: 40px 0; display: flex; align-items: center; }
 .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, rgba(255, 0, 0, 0.3), transparent); }
-.divider-text { margin: 0 25px; font-size: 0.9rem; color: #444; font-weight: 900; letter-spacing: 4px; }
+.divider-text { margin: 0 20px; font-size: 0.9rem; color: #444; font-weight: 900; letter-spacing: 4px; }
 
-/* ROLE CARDS (Sa tvojim gradijentima) */
-.role-card {
-    padding: 60px 20px; border-radius: 20px; text-align: center; 
-    box-shadow: 0 0 40px rgba(0,0,0,0.5); border-width: 2px; border-style: solid;
-}
-.role-mafija { background: radial-gradient(circle, var(--mafija-red) 0%, transparent 100%); border-color: #ff0000; }
-.role-dama { background: radial-gradient(circle, var(--dama-pink) 0%, transparent 100%); border-color: #ff1493; }
-.role-doktor { background: radial-gradient(circle, var(--doktor-green) 0%, transparent 100%); border-color: #32cd32; }
-.role-policajac { background: radial-gradient(circle, var(--policajac-blue) 0%, transparent 100%); border-color: #1e90ff; }
+/* ROLE CARDS */
+.role-card { padding: 80px 20px; border-radius: 20px; text-align: center; border-width: 3px; border-style: solid; }
+.role-mafija { background: radial-gradient(circle, var(--mafija-red) 0%, transparent 100%); border-color: #ff0000; box-shadow: 0 0 30px rgba(255,0,0,0.2); }
+.role-dama { background: radial-gradient(circle, var(--dama-pink) 0%, transparent 100%); border-color: #ff1493; box-shadow: 0 0 30px rgba(255,20,147,0.2); }
+.role-doktor { background: radial-gradient(circle, var(--doktor-green) 0%, transparent 100%); border-color: #32cd32; box-shadow: 0 0 30px rgba(50,205,50,0.2); }
+.role-policajac { background: radial-gradient(circle, var(--policajac-blue) 0%, transparent 100%); border-color: #1e90ff; box-shadow: 0 0 30px rgba(30,144,255,0.2); }
 
 /* STEPPER */
 .control-row { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 18px; border-radius: var(--radius); margin-bottom: 12px; border: 1px solid #222; }
-.stepper button { width: 48px; height: 48px; border: none; background: #1a1a1a; color: white; border-radius: 10px; font-size: 1.6rem; cursor: pointer; }
-.stepper input { width: 40px; border: none; background: transparent; color: var(--primary); text-align: center; font-size: 1.7rem; font-weight: 900; }
+.stepper button { width: 45px; height: 45px; border: none; background: #1a1a1a; color: white; border-radius: 10px; font-size: 1.5rem; cursor: pointer; }
+.stepper input { width: 40px; border: none; background: transparent; color: var(--primary); text-align: center; font-size: 1.5rem; font-weight: 900; }
 
-/* LISTA */
-.player-li { background: #0a0a0a; padding: 18px; border-radius: var(--radius); margin-bottom: 10px; border-left: 4px solid #333; display: flex; justify-content: space-between; align-items: center; }
-.is-host-tag { color: var(--primary); font-size: 0.65rem; border: 1px solid var(--primary); padding: 3px 7px; border-radius: 5px; font-weight: 900; }
+/* LISTA IGRAČA */
+.player-li { 
+    background: #0e0e0e; padding: 16px; border-radius: 10px; 
+    margin-bottom: 8px; border: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; 
+}
 
 .exit-btn-bottom {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
     background: rgba(0,0,0,0.8); color: #444; border: 1px solid #222; padding: 15px 30px;
     border-radius: 50px; font-weight: 800; font-size: 0.8rem; cursor: pointer;
-    z-index: 100; backdrop-filter: blur(5px);
 }
