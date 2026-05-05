@@ -1,143 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Space+Mono:wght@700&display=swap');
+
 :root {
-    --bg-gradient: radial-gradient(circle at center, #1a0000 0%, #030303 100%);
-    --primary: #ff0000;
-    --primary-dark: #800000;
-    --card-bg: #0a0a0a;
-    --input-focus-bg: #110000;
-    --radius: 4px; /* Oštrije ivice deluju ozbiljnije/opasnije */
+    --red: #ff0000;
+    --dark-red: #8b0000;
+    --black: #050505;
+    --panel: #0d0d0d;
+    --border: #1a1a1a;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-body { background: var(--bg-gradient); min-height: 100vh; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* LOGO KOJI DOMINIRA */
+body { 
+    background: radial-gradient(circle at center, #1a0000 0%, #000 100%);
+    min-height: 100vh;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+.screen { 
+    width: 100%; 
+    max-width: 440px; 
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- LOGO --- */
 .logo-main { 
-    font-size: clamp(4rem, 15vw, 6.5rem); 
-    font-weight: 900; 
-    color: var(--primary); 
-    letter-spacing: -3px;
-    text-shadow: 0 0 40px rgba(255, 0, 0, 0.4);
+    font-size: 5.5rem;
+    letter-spacing: -4px;
+    color: var(--red);
+    text-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
     margin-bottom: 20px;
-    text-transform: uppercase;
+    line-height: 1;
 }
 
-/* KARTICA SA DUBINOM */
-.main-card { 
-    background: var(--card-bg); 
+/* --- GLAVNI PANEL --- */
+.main-card {
+    background: var(--panel);
     width: 100%;
-    max-width: 420px;
-    padding: 40px; 
-    border: 1px solid #1a1a1a;
-    box-shadow: 0 50px 100px rgba(0,0,0,0.9);
-    position: relative;
+    padding: 40px 30px;
+    border: 1px solid var(--border);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+    border-radius: 4px;
 }
 
-/* PREMIUM LABELE */
-.premium-label {
+/* --- BOXOVI (IME I KOD) --- */
+.input-section { margin-bottom: 15px; }
+
+.glitch-label {
     display: block;
-    font-weight: 900;
-    font-size: 0.8rem;
-    color: var(--primary);
+    font-size: 0.75rem;
+    color: var(--red);
     letter-spacing: 4px;
     margin-bottom: 12px;
+    font-weight: 900;
     text-transform: uppercase;
 }
 
-/* MASIVNI INPUTI SA GRAFIKOM */
-.main-input {
+.mafia-input {
     width: 100%;
-    height: 70px;
-    background: #050505;
-    border: 2px solid #1a1a1a;
-    border-radius: var(--radius);
-    color: white;
-    font-size: 1.3rem;
+    height: 75px;
+    background: #000;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1.4rem;
     font-weight: 900;
     text-align: center;
-    margin-bottom: 20px;
     outline: none;
-    transition: all 0.3s;
-    /* Unutrašnja senka za "gaming" udubljenje */
-    box-shadow: inset 0 5px 15px rgba(0,0,0,0.8);
+    transition: 0.3s;
+    box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
+    margin-bottom: 15px;
 }
 
-.main-input:focus {
-    border-color: var(--primary);
-    background: var(--input-focus-bg);
-    box-shadow: 0 0 25px rgba(255, 0, 0, 0.15), inset 0 5px 15px rgba(0,0,0,0.9);
+.mafia-input:focus {
+    border-color: var(--red);
+    background: #0a0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.15), inset 0 5px 15px rgba(0,0,0,1);
 }
 
-.main-input::placeholder {
-    color: #222;
+.mafia-input::placeholder {
+    color: #1a1a1a;
     font-size: 0.9rem;
     letter-spacing: 2px;
 }
 
-/* DUGMAD */
-.primary-btn { 
-    background: var(--primary); 
-    color: white; 
-    border: none; 
+/* --- DUGMAD --- */
+.action-btn-primary {
+    width: 100%;
     height: 65px;
-    width: 100%; 
-    font-weight: 900; 
-    text-transform: uppercase; 
+    background: var(--red);
+    border: none;
+    color: white;
+    font-weight: 900;
+    text-transform: uppercase;
     letter-spacing: 2px;
     cursor: pointer;
-    box-shadow: 0 8px 0 var(--primary-dark);
-    transition: all 0.1s;
-    margin-bottom: 10px;
+    box-shadow: 0 6px 0 var(--dark-red);
+    transition: 0.1s;
 }
 
-.primary-btn:active {
+.action-btn-primary:active {
     transform: translateY(4px);
-    box-shadow: 0 4px 0 var(--primary-dark);
+    box-shadow: 0 2px 0 var(--dark-red);
 }
 
-/* GRAFIČKI DIVIDER "ILI" */
-.heavy-divider {
-    display: flex;
-    align-items: center;
-    margin: 35px 0;
-}
-
-.heavy-divider .line {
-    flex: 1;
-    height: 2px;
-    background: #1a1a1a;
-}
-
-.or-text {
-    padding: 0 20px;
-    font-weight: 900;
-    color: #222;
-    font-size: 0.9rem;
-    letter-spacing: 2px;
-}
-
-.secondary-btn { 
-    background: transparent;
-    border: 2px solid #1a1a1a;
-    color: white;
-    height: 60px;
+.action-btn-secondary {
     width: 100%;
+    height: 60px;
+    background: transparent;
+    border: 2px solid var(--border);
+    color: white;
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.secondary-btn:hover {
-    border-color: #333;
-    background: rgba(255,255,255,0.02);
+.action-btn-secondary:hover { border-color: var(--red); background: rgba(255,0,0,0.05); }
+
+/* --- DIVIDER --- */
+.separator {
+    display: flex;
+    align-items: center;
+    margin: 40px 0;
 }
 
-.rules-link {
+.separator .bar { flex: 1; height: 1px; background: #1a1a1a; }
+
+.separator-text {
+    padding: 0 15px;
+    font-size: 0.7rem;
+    color: #222;
+    font-weight: 900;
+    letter-spacing: 3px;
+}
+
+.rules-trigger {
+    width: 100%;
     background: none;
     border: none;
-    color: #444;
-    width: 100%;
-    margin-top: 25px;
+    color: #333;
+    margin-top: 30px;
     font-weight: 900;
     font-size: 0.7rem;
     letter-spacing: 2px;
@@ -145,50 +154,47 @@ body { background: var(--bg-gradient); min-height: 100vh; color: white; display:
     text-transform: uppercase;
 }
 
-.rules-link:hover { color: var(--primary); }
+.rules-trigger:hover { color: var(--red); }
 
-/* --- TVOJ BREND (SIGNATURE) --- */
-.brand-footer {
+/* --- MARKO VELJOVIC BRANDING --- */
+.master-brand {
     margin-top: 80px;
     text-align: center;
     width: 100%;
-    max-width: 420px;
 }
 
 .brand-line {
-    width: 40px;
-    height: 3px;
-    background: var(--primary);
-    margin: 0 auto 20px;
+    width: 60px;
+    height: 4px;
+    background: var(--red);
+    margin: 0 auto 25px;
 }
 
-.brand-content {
+.brand-wrap {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 5px;
 }
 
-.brand-prefix {
-    font-size: 0.55rem;
+.brand-sub {
+    font-size: 0.6rem;
     color: #333;
-    letter-spacing: 5px;
-    margin-bottom: 8px;
+    letter-spacing: 6px;
     font-weight: 900;
 }
 
-.brand-name {
-    font-size: 1.4rem;
+.brand-title {
+    font-size: 1.8rem;
     font-weight: 900;
     color: #fff;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    text-shadow: 0 0 20px rgba(255,255,255,0.1);
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px rgba(255,255,255,0.05);
 }
 
-.brand-year {
-    font-size: 0.6rem;
-    color: #222;
+.brand-loc {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--red);
+    opacity: 0.5;
     margin-top: 10px;
-    letter-spacing: 4px;
-    font-weight: 900;
 }
