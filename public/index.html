@@ -1,40 +1,40 @@
 <div id="home" class="screen">
-    <h1 class="logo-main">MAFIJA</h1>
+    <div class="header-area">
+        <h1 class="logo-main">MAFIJA</h1>
+    </div>
     
     <div class="main-card">
-        <!-- IME SEKCIJA -->
-        <div class="input-group">
-            <label class="premium-label">OPERATIVAC</label>
-            <input type="text" id="playerName" class="main-input" placeholder="UNESI SVOJE IME">
+        <!-- IME -->
+        <div class="input-section">
+            <span class="glitch-label">KODNO IME</span>
+            <input type="text" id="playerName" class="mafia-input" placeholder="UNESI IME...">
+            <button id="createBtn" class="action-btn-primary">KREIRAJ SOBU</button>
         </div>
 
-        <button id="createBtn" class="primary-btn">OSNUJU PORODICU</button>
-
-        <!-- NOVI GRAFIČKI DIVIDER -->
-        <div class="heavy-divider">
-            <div class="line"></div>
-            <span class="or-text">ILI</span>
-            <div class="line"></div>
+        <!-- GRAFIČKI DIVIDER -->
+        <div class="separator">
+            <div class="bar"></div>
+            <span class="separator-text">KONTAKT</span>
+            <div class="bar"></div>
         </div>
 
-        <!-- KOD SEKCIJA -->
-        <div class="input-group">
-            <label class="premium-label">PRISTUPNI KOD</label>
-            <input type="text" id="roomInput" class="main-input" placeholder="PRIDRUŽI SE EKIPI">
+        <!-- KOD -->
+        <div class="input-section">
+            <span class="glitch-label">IDENTIFIKACIJA</span>
+            <input type="text" id="roomInput" class="mafia-input" placeholder="UNESI KOD...">
+            <button id="joinBtn" class="action-btn-secondary">PRIDRUŽI SE</button>
         </div>
-
-        <button id="joinBtn" class="secondary-btn">UĐI U SOBU</button>
         
-        <button onclick="toggleRules()" class="rules-link">PROČITAJ DOSIJE (UPUTSTVO)</button>
+        <button onclick="toggleRules()" class="rules-trigger">PRAVILA</button>
     </div>
 
-    <!-- BREND KOJI IZGLEDA MOĆNO -->
-    <div class="brand-footer">
+    <!-- TVOJ BREND -->
+    <footer class="master-brand">
         <div class="brand-line"></div>
-        <div class="brand-content">
-            <span class="brand-prefix">DESIGNED & DEVELOPED BY</span>
-            <h2 class="brand-name">MARKO VELJOVIC</h2>
-            <span class="brand-year">MMXXVI</span>
+        <div class="brand-wrap">
+            <span class="brand-sub">CREATED BY</span>
+            <h2 class="brand-title">MARKO VELJOVIC</h2>
+            <span class="brand-loc">EST. 2026</span>
         </div>
-    </div>
+    </footer>
 </div>
