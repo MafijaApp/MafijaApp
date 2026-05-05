@@ -2,6 +2,15 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+const path = require('path');
+
+// OVO REŠAVA GREŠKU: Govori serveru da su tvoji fajlovi (index.html, style.css, client.js) u "public" folderu
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Ruta za početnu stranicu
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 let rooms = {};
 
@@ -22,52 +31,46 @@ io.on('connection', (socket) => {
         }
     });
 
-    // GLAVNA LOGIKA ZA DODELU ULOGA
+    // PRIORITETNA PODELA ULOGA
     socket.on('startGame', ({ roomID, config }) => {
         const room = rooms[roomID];
         if (!room || room.players.length < 2) return;
 
-        // 1. Izdvajamo igrače bez Naratora (Narator je index 0)
+        // Narator (index 0) ne dobija ulogu
         let playersToAssign = [...room.players.slice(1)]; 
-        
-        // Mešamo igrače da podela ne bude uvek ista
         playersToAssign = playersToAssign.sort(() => Math.random() - 0.5);
 
         let roles = [];
-
-        // 2. PRVI PRIORITET: Doktor i Policajac (Podrazumevani)
+        // Prioritet 1: Obavezni Doktor i Policajac
         roles.push("Doktor");
         roles.push("Policajac");
 
-        // 3. DRUGI PRIORITET: Mafija
+        // Prioritet 2: Mafija
         for (let i = 0; i < config.mafija; i++) {
             roles.push("Mafija");
         }
 
-        // 4. TREĆI PRIORITET: Dama (ako je selektovana)
+        // Prioritet 3: Dama
         if (config.dama > 0) {
             roles.push("Dama");
         }
 
-        // 5. OSTATAK: Građani
+        // Ostatak: Građani
         while (roles.length < playersToAssign.length) {
             roles.push("Građanin");
         }
 
-        // Emitovanje uloga samo igračima (Narator ne dobija emit)
+        // Slanje uloga igračima
         const gameSummary = playersToAssign.map((player, index) => {
             const role = roles[index];
             io.to(player.id).emit('yourRole', { role: role });
             return { name: player.name, role: role };
         });
 
-        // Naratoru (index 0) šaljemo pregled svih uloga da može da vodi igru
+        // Slanje liste Naratoru
         io.to(room.players[0].id).emit('hostViewRoles', gameSummary);
-    });
-
-    socket.on('disconnect', () => {
-        // Logika za brisanje sobe/igrača po potrebi
     });
 });
 
-http.listen(3000, () => console.log('Server na portu 3000'));
+const PORT = process.env.PORT || 3000;
+http.listen(PORT, () => console.log(`Server radi na portu ${PORT}`));
