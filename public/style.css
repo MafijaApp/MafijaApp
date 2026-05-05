@@ -1,108 +1,121 @@
-/* OSNOVNA PODEŠAVANJA */
 :root {
-    --primary: #ff4d4d;
-    --primary-hover: #ff1a1a;
-    --bg-dark: #0a0a0a;
-    --card-bg: #141414;
-    --text-main: #ffffff;
-    --text-dim: #a0a0a0;
-    --border: #222;
+    --primary: #ff0000;
+    --primary-dark: #800000;
+    --bg-dark: #050505;
+    --card-bg: #0c0c0c;
+    --text: #ffffff;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Montserrat', sans-serif;
 }
 
 body {
-    background-color: var(--bg-dark);
-    background-image: radial-gradient(circle at center, #1a0a0a 0%, #0a0a0a 100%);
-    color: var(--text-main);
-    font-family: 'Montserrat', sans-serif;
+    background: radial-gradient(circle at center, #1a0000 0%, var(--bg-dark) 100%);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-x: hidden;
+    padding: 20px;
 }
 
 /* KONTROLA EKRANA */
 .screen {
     width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    margin-top: 50px;
+    max-width: 450px;
+    display: none;
 }
 
-/* LOGO I TEXT */
 .logo-main {
-    font-size: 3rem;
-    font-weight: 900;
-    text-align: center;
+    font-size: 3.5rem;
     color: var(--primary);
+    text-align: center;
+    margin: 60px 0 30px;
+    font-weight: 900;
     letter-spacing: 5px;
-    margin-bottom: 30px;
-    text-shadow: 0 0 20px rgba(255, 77, 77, 0.3);
-}
-
-.styled-label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-dim);
-    margin-bottom: 8px;
-    letter-spacing: 1px;
 }
 
 /* KARTICE */
 .main-card, .settings-card {
     background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     padding: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
 }
 
-/* INPUTI I DUGMAD */
+/* INPUTI I LABELI */
+.styled-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: #444;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
 .main-input {
     width: 100%;
     padding: 15px;
-    background: #000;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    background: #080808;
+    border: 1px solid #1a1a1a;
     color: white;
-    font-size: 1rem;
+    border-radius: 8px;
     margin-bottom: 20px;
     text-align: center;
+    font-size: 1rem;
 }
 
+/* DUGMAD */
 .primary-btn, .secondary-btn, .start-btn {
     width: 100%;
-    padding: 15px;
+    padding: 18px;
     border: none;
     border-radius: 8px;
     font-weight: 900;
     cursor: pointer;
-    transition: 0.3s;
     text-transform: uppercase;
+    margin: 10px 0;
+    transition: 0.2s;
 }
 
 .primary-btn, .start-btn {
     background: var(--primary);
     color: white;
-    margin-bottom: 10px;
+    box-shadow: 0 4px 0 var(--primary-dark);
 }
-
-.primary-btn:hover { background: var(--primary-hover); }
 
 .secondary-btn {
     background: transparent;
-    border: 1px solid #444;
-    color: var(--text-dim);
+    border: 1px solid #333;
+    color: #666;
 }
 
-.secondary-btn:hover { border-color: var(--primary); color: white; }
+.secondary-btn:hover {
+    border-color: var(--primary);
+    color: white;
+}
+
+/* LISTA IGRAČA (STARA VERZIJA) */
+#playerList {
+    margin-top: 20px;
+    list-style: none;
+    width: 100%;
+}
+
+#playerList li {
+    background: #0a0a0a;
+    border: 1px solid #151515;
+    padding: 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 700;
+}
 
 /* DIVIDER */
 .divider-container {
@@ -110,78 +123,31 @@ body {
     align-items: center;
     margin: 20px 0;
 }
-.divider-line { flex: 1; height: 1px; background: var(--border); }
-.divider-text { padding: 0 10px; font-size: 0.7rem; color: #444; font-weight: 900; }
+.divider-line { flex: 1; height: 1px; background: #222; }
+.divider-text { padding: 0 10px; font-size: 0.7rem; color: #333; font-weight: 900; }
 
-/* GRID ZA IGRAČE (BOXOVI) */
-#playerList {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 12px;
-    margin-top: 20px;
-    list-style: none;
-}
-
-.player-li {
-    background: #000;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 15px 5px;
-    text-align: center;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    animation: fadeIn 0.3s ease;
-}
-
-/* HOST DISPLEJ */
-.host-container {
-    margin-top: 25px;
-    padding: 15px;
-    background: rgba(255, 77, 77, 0.05);
-    border-radius: 12px;
-    text-align: center;
-    border: 1px dashed var(--primary);
-}
-
-.host-badge { font-size: 0.6rem; font-weight: 900; color: var(--primary); margin-bottom: 5px; }
-.host-name { font-size: 1.2rem; font-weight: 900; }
-
-/* STEPPER (Komande za + i -) */
-.control-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.stepper { display: flex; align-items: center; background: #000; border-radius: 8px; }
-.stepper button { width: 35px; height: 35px; background: none; border: none; color: var(--primary); font-size: 1.2rem; cursor: pointer; }
-.stepper input { width: 40px; border: none; background: none; color: white; text-align: center; font-weight: 900; }
-
-/* REVEAL KARTICA */
-.role-card {
-    background: #111;
-    border: 2px solid var(--primary);
-    border-radius: 20px;
-    padding: 40px 20px;
-    text-align: center;
-    box-shadow: 0 0 40px rgba(255, 77, 77, 0.2);
-}
-
-.role-card h1 { font-size: 2.5rem; margin-bottom: 10px; color: var(--primary); }
-
-/* STICKY HEADER */
+/* HEADER */
 .sticky-header {
     position: fixed;
-    top: 0; width: 100%;
+    top: 0;
+    width: 100%;
     background: #000;
-    padding: 10px;
+    padding: 12px;
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 900;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid #222;
     z-index: 100;
 }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* HOST VIEW */
+.highlight-host {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px dashed var(--primary);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.host-badge { font-size: 0.7rem; color: var(--primary); font-weight: 900; }
+.host-name { font-size: 1.4rem; font-weight: 900; }
