@@ -13,21 +13,23 @@ app.get('/', (req, res) => {
 let rooms = {};
 
 io.on('connection', (socket) => {
+    // Kreiranje sobe
     socket.on('createRoom', () => {
         const roomID = Math.random().toString(36).substring(2, 6).toUpperCase();
         rooms[roomID] = { players: [] };
         socket.emit('roomCreated', roomID);
     });
 
+    // Pridruživanje
     socket.on('joinRoom', ({ roomID, name }) => {
         if (rooms[roomID]) {
             rooms[roomID].players.push({ id: socket.id, name });
             socket.join(roomID);
             
-            // Šaljemo potvrdu klijentu da je uspešno ušao
+            // POTVRDA klijentu da je ušao
             socket.emit('roomJoined', roomID); 
             
-            // Osvežavamo listu igrača svima u sobi
+            // Osvežavanje liste svima u sobi
             io.to(roomID).emit('updatePlayers', rooms[roomID].players.map(p => p.name));
         } else {
             socket.emit('errorMsg', 'Soba ne postoji!');
@@ -47,13 +49,17 @@ io.on('connection', (socket) => {
 
         while (roles.length < playersToAssign.length) roles.push("Građanin");
 
-        playersToAssign.forEach((player, index) => {
+        const gameSummary = playersToAssign.map((player, index) => {
             const role = roles[index];
             io.to(player.id).emit('yourRole', { role: role });
+            return { name: player.name, role: role };
         });
 
-        const summary = playersToAssign.map((p, i) => ({ name: p.name, role: roles[i] }));
-        io.to(room.players[0].id).emit('hostViewRoles', summary);
+        io.to(room.players[0].id).emit('hostViewRoles', gameSummary);
+    });
+
+    socket.on('disconnect', () => {
+        // Ovde bi mogla ići logika za brisanje igrača iz sobe kad izađe
     });
 });
 
