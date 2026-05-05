@@ -1,95 +1,73 @@
 const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const path = require('path');
-
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
-
-app.use(express.static(path.join(__dirname, 'public')));
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 let rooms = {};
 
 io.on('connection', (socket) => {
-    // Kreiranje nove sobe
+    // Kreiranje sobe
     socket.on('createRoom', () => {
-        const roomID = Math.random().toString(36).substring(2, 7).toUpperCase();
-        rooms[roomID] = { host: socket.id, players: [] };
-        socket.join(roomID);
-        socket.roomID = roomID;
+        const roomID = Math.random().toString(36).substring(2, 6).toUpperCase();
+        rooms[roomID] = { players: [] };
         socket.emit('roomCreated', roomID);
     });
 
-    // Ulazak u sobu
+    // Pridruživanje (Narator je uvek prvi na indeksu 0)
     socket.on('joinRoom', ({ roomID, name }) => {
-        const id = roomID.trim().toUpperCase();
-        if (rooms[id]) {
-            // Osiguravamo da isti soket ne bude dupliran u nizu
-            rooms[id].players = rooms[id].players.filter(p => p.id !== socket.id);
-            rooms[id].players.push({ id: socket.id, name: name });
-            
-            socket.join(id);
-            socket.roomID = id;
-            
-            socket.emit('joinSuccess');
-            io.to(id).emit('updatePlayers', rooms[id].players.map(p => p.name));
-        } else {
-            socket.emit('error', 'Soba ne postoji!');
+        if (rooms[roomID]) {
+            rooms[roomID].players.push({ id: socket.id, name });
+            socket.join(roomID);
+            io.to(roomID).emit('updatePlayers', rooms[roomID].players.map(p => p.name));
         }
     });
 
-    // Startovanje igre sa ulogama
+    // GLAVNA LOGIKA ZA DODELU ULOGA
     socket.on('startGame', ({ roomID, config }) => {
-        const id = roomID.toUpperCase();
-        if (!rooms[id]) return;
+        const room = rooms[roomID];
+        if (!room || room.players.length < 2) return;
 
-        let players = rooms[id].players;
+        // 1. Izdvajamo igrače bez Naratora (Narator je index 0)
+        let playersToAssign = [...room.players.slice(1)]; 
+        
+        // Mešamo igrače da podela ne bude uvek ista
+        playersToAssign = playersToAssign.sort(() => Math.random() - 0.5);
+
         let roles = [];
 
-        // Dodavanje uloga na osnovu konfiguracije hosta
-        if (config.mafija) for (let i = 0; i < config.mafija; i++) roles.push('Mafija');
-        if (config.dama) for (let i = 0; i < config.dama; i++) roles.push('Dama');
-        
-        // Fiksne uloge
-        roles.push('Doktor');
-        roles.push('Policajac');
+        // 2. PRVI PRIORITET: Doktor i Policajac (Podrazumevani)
+        roles.push("Doktor");
+        roles.push("Policajac");
 
-        // Ostali igrači postaju građani
-        while (roles.length < players.length) {
-            roles.push('Gradjanin');
+        // 3. DRUGI PRIORITET: Mafija
+        for (let i = 0; i < config.mafija; i++) {
+            roles.push("Mafija");
         }
 
-        // Mešanje uloga nasumično
-        roles.sort(() => Math.random() - 0.5);
+        // 4. TREĆI PRIORITET: Dama (ako je selektovana)
+        if (config.dama > 0) {
+            roles.push("Dama");
+        }
 
-        // Slanje uloga svakom igraču ponaosob
-        players.forEach((p, i) => {
-            io.to(p.id).emit('yourRole', { role: roles[i] });
+        // 5. OSTATAK: Građani
+        while (roles.length < playersToAssign.length) {
+            roles.push("Građanin");
+        }
+
+        // Emitovanje uloga samo igračima (Narator ne dobija emit)
+        const gameSummary = playersToAssign.map((player, index) => {
+            const role = roles[index];
+            io.to(player.id).emit('yourRole', { role: role });
+            return { name: player.name, role: role };
         });
 
-        // Hostu šaljemo pregled svih uloga (da bi znao ko je ko)
-        let hostSummary = players.map((p, i) => ({ name: p.name, role: roles[i] }));
-        io.to(rooms[id].host).emit('hostViewRoles', hostSummary);
+        // Naratoru (index 0) šaljemo pregled svih uloga da može da vodi igru
+        io.to(room.players[0].id).emit('hostViewRoles', gameSummary);
     });
 
-    // Diskonekcija
     socket.on('disconnect', () => {
-        const id = socket.roomID;
-        if (id && rooms[id]) {
-            rooms[id].players = rooms[id].players.filter(p => p.id !== socket.id);
-            io.to(id).emit('updatePlayers', rooms[id].players.map(p => p.name));
-
-            // Ako je host izašao, gasimo sobu
-            if (socket.id === rooms[id].host) {
-                io.to(id).emit('forceToHome');
-                delete rooms[id];
-            }
-        }
+        // Logika za brisanje sobe/igrača po potrebi
     });
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server pokrenut na portu ${PORT}`);
-});
+http.listen(3000, () => console.log('Server na portu 3000'));
