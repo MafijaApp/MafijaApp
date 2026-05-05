@@ -5,6 +5,7 @@
     --dama-pink: rgba(255, 20, 147, 0.25);
     --doktor-green: rgba(50, 205, 50, 0.25);
     --policajac-blue: rgba(30, 144, 255, 0.25);
+    --gradjanin-gray: rgba(100, 100, 100, 0.2); /* Novi gradijent */
     --card-bg: #0c0c0c;
     --input-bg: #151515;
     --radius: 12px;
@@ -31,7 +32,6 @@ body { background: var(--bg-gradient); min-height: 100vh; color: white; padding:
     margin-bottom: 20px;
 }
 
-/* POSEBAN BOX ZA HOSTA */
 .host-container {
     background: rgba(255, 255, 255, 0.03);
     border: 1px dashed rgba(255, 0, 0, 0.4);
@@ -39,14 +39,12 @@ body { background: var(--bg-gradient); min-height: 100vh; color: white; padding:
     margin-bottom: 25px; text-align: center;
 }
 
-/* GRAFIČKI LABELI */
 .styled-label {
     font-size: 0.75rem; font-weight: 900; color: var(--primary);
     text-transform: uppercase; letter-spacing: 3px; display: block; margin-bottom: 12px;
     text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
 }
 
-/* INPUTI */
 input[type="text"] { 
     width: 100%; padding: 22px; background: var(--input-bg); 
     border: 1px solid #222; border-radius: var(--radius); color: white; 
@@ -55,14 +53,13 @@ input[type="text"] {
 }
 input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(255,0,0,0.1); }
 
-/* DUGMAD */
 .primary-btn, .start-btn { 
     background: linear-gradient(45deg, #ff0000, #990000); 
     color: white; border: none; padding: 22px; width: 100%; 
     border-radius: var(--radius); font-weight: 900; cursor: pointer; 
     text-transform: uppercase; letter-spacing: 1px;
 }
-.start-btn.locked { background: #222; color: #555; cursor: not-allowed; }
+.start-btn.locked { background: #222; color: #555; cursor: not-allowed; border: 1px solid #333; }
 
 .secondary-btn { background: #111; color: white; border: 2px solid #333; padding: 20px; width: 100%; border-radius: var(--radius); font-weight: 900; cursor: pointer; }
 
@@ -73,7 +70,6 @@ input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 15px rg
 }
 .regen-btn-styled:hover { background: var(--primary); color: white; }
 
-/* SEPARATOR */
 .divider-container.extra-large { margin: 40px 0; display: flex; align-items: center; }
 .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, rgba(255, 0, 0, 0.3), transparent); }
 .divider-text { margin: 0 20px; font-size: 0.9rem; color: #444; font-weight: 900; letter-spacing: 4px; }
@@ -84,13 +80,13 @@ input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 15px rg
 .role-dama { background: radial-gradient(circle, var(--dama-pink) 0%, transparent 100%); border-color: #ff1493; box-shadow: 0 0 30px rgba(255,20,147,0.2); }
 .role-doktor { background: radial-gradient(circle, var(--doktor-green) 0%, transparent 100%); border-color: #32cd32; box-shadow: 0 0 30px rgba(50,205,50,0.2); }
 .role-policajac { background: radial-gradient(circle, var(--policajac-blue) 0%, transparent 100%); border-color: #1e90ff; box-shadow: 0 0 30px rgba(30,144,255,0.2); }
+.role-gradjanin { background: radial-gradient(circle, var(--gradjanin-gray) 0%, transparent 100%); border-color: #888; box-shadow: 0 0 30px rgba(255,255,255,0.05); }
 
 /* STEPPER */
 .control-row { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 18px; border-radius: var(--radius); margin-bottom: 12px; border: 1px solid #222; }
 .stepper button { width: 45px; height: 45px; border: none; background: #1a1a1a; color: white; border-radius: 10px; font-size: 1.5rem; cursor: pointer; }
 .stepper input { width: 40px; border: none; background: transparent; color: var(--primary); text-align: center; font-size: 1.5rem; font-weight: 900; }
 
-/* LISTA IGRAČA */
 .player-li { 
     background: #0e0e0e; padding: 16px; border-radius: 10px; 
     margin-bottom: 8px; border: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; 
@@ -99,69 +95,15 @@ input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 15px rg
 .exit-btn-bottom {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
     background: rgba(0,0,0,0.8); color: #444; border: 1px solid #222; padding: 15px 30px;
-}
-/* --- PREMIUM SIGNATURE STIL --- */
-.signature {
-    margin: 40px auto 20px;
-    text-align: center;
-    position: relative;
-    padding: 15px;
-    max-width: 200px;
+    border-radius: 50px; font-weight: 800; cursor: pointer;
 }
 
-/* Suptilna linija iznad imena */
-.signature::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 25%;
-    width: 50%;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--primary), transparent);
-    opacity: 0.5;
-}
+/* PREMIUM SIGNATURE */
+.signature { margin: 40px auto 20px; text-align: center; position: relative; padding: 15px; max-width: 200px; }
+.signature::before { content: ''; position: absolute; top: 0; left: 25%; width: 50%; height: 1px; background: linear-gradient(to right, transparent, var(--primary), transparent); opacity: 0.5; }
+.signature span { font-size: 0.6rem; letter-spacing: 5px; font-weight: 400; color: #444; display: block; margin-bottom: 8px; text-transform: uppercase; }
+.signature p { font-size: 0.85rem; font-weight: 900; color: #fff; letter-spacing: 2px; text-transform: uppercase; transition: all 0.4s ease; cursor: default; position: relative; }
+.signature p:hover { color: var(--primary); text-shadow: 0 0 15px rgba(255, 0, 0, 0.6); transform: scale(1.05); }
+.signature::after { content: '●'; font-size: 6px; color: var(--primary); display: block; margin-top: 10px; opacity: 0.3; animation: pulseGlow 2s infinite; }
 
-.signature span {
-    font-size: 0.6rem;
-    letter-spacing: 5px;
-    font-weight: 400;
-    color: #444;
-    display: block;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-}
-
-.signature p {
-    font-size: 0.85rem;
-    font-weight: 900;
-    color: #fff;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: all 0.4s ease;
-    cursor: default;
-    position: relative;
-}
-
-/* Efekat sjaja na tvoje ime */
-.signature p:hover {
-    color: var(--primary);
-    text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-    transform: scale(1.05);
-}
-
-/* Mala tačkica ispod imena za balans */
-.signature::after {
-    content: '●';
-    font-size: 6px;
-    color: var(--primary);
-    display: block;
-    margin-top: 10px;
-    opacity: 0.3;
-    animation: pulseGlow 2s infinite;
-}
-
-@keyframes pulseGlow {
-    0% { opacity: 0.2; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.2); }
-    100% { opacity: 0.2; transform: scale(1); }
-}
+@keyframes pulseGlow { 0% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.2); } 100% { opacity: 0.2; transform: scale(1); } }
