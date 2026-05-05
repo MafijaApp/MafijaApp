@@ -99,33 +99,69 @@ input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 15px rg
 .exit-btn-bottom {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
     background: rgba(0,0,0,0.8); color: #444; border: 1px solid #222; padding: 15px 30px;
-    /* --- SIGNATURE STIL --- */
+}
+/* --- PREMIUM SIGNATURE STIL --- */
 .signature {
-    margin-top: 30px; /* Malo veći razmak od kartice */
+    margin: 40px auto 20px;
     text-align: center;
-    opacity: 0.5;
-    transition: opacity 0.3s;
-    padding-bottom: 20px;
+    position: relative;
+    padding: 15px;
+    max-width: 200px;
 }
 
-.signature:hover {
-    opacity: 1;
+/* Suptilna linija iznad imena */
+.signature::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 50%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--primary), transparent);
+    opacity: 0.5;
 }
 
 .signature span {
     font-size: 0.6rem;
-    letter-spacing: 4px;
-    font-weight: 700;
-    color: #666;
+    letter-spacing: 5px;
+    font-weight: 400;
+    color: #444;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
 }
 
 .signature p {
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 900;
-    color: var(--primary); /* Crvena boja iz tvojih podešavanja */
-    letter-spacing: 1.5px;
+    color: #fff;
+    letter-spacing: 2px;
     text-transform: uppercase;
-}border-radius: 50px; font-weight: 800; font-size: 0.8rem; cursor: pointer;
+    transition: all 0.4s ease;
+    cursor: default;
+    position: relative;
+}
+
+/* Efekat sjaja na tvoje ime */
+.signature p:hover {
+    color: var(--primary);
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+    transform: scale(1.05);
+}
+
+/* Mala tačkica ispod imena za balans */
+.signature::after {
+    content: '●';
+    font-size: 6px;
+    color: var(--primary);
+    display: block;
+    margin-top: 10px;
+    opacity: 0.3;
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+    100% { opacity: 0.2; transform: scale(1); }
 }
