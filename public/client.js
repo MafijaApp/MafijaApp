@@ -13,18 +13,17 @@ socket.on('updatePlayers', (list) => {
     currentPlayers = list;
     const playerListUI = document.getElementById('playerList');
     
-    // Prikazujemo listu (prvi je uvek Narator)
+    // Prikaz igrača bez Naratora u listi
     playerListUI.innerHTML = list.slice(1).map(name => `<li class="player-li">${name}</li>`).join('');
     
-    // Ažuriraj brojač i proveri da li ima dovoljno igrača
     if (isHost) updateStartButton();
 });
 
 function updateStartButton() {
     const mafija = parseInt(document.getElementById('mafija').value);
     const dama = parseInt(document.getElementById('dama').value);
-    const required = 1 + 1 + mafija + dama; // Doktor + Policajac + ostalo
-    const available = currentPlayers.length - 1; // Bez Naratora
+    const required = 1 + 1 + mafija + dama; // Doktor + Policajac + Mafija + Dama
+    const available = currentPlayers.length - 1; // Bez naratora
 
     const btn = document.getElementById('startGameBtn');
     if (available >= required) {
@@ -38,9 +37,8 @@ function updateStartButton() {
     }
 }
 
-// PRIKAZ KARTICE
+// PRIKAZ KARTICE SA GRAĐANINOM
 socket.on('yourRole', ({ role }) => {
-    // Ako si host, tebi server nije ni poslao ovo, ali za svaki slučaj:
     if (isHost) return;
 
     showScreen('reveal');
