@@ -1,31 +1,98 @@
 :root {
     --primary: #ff0000;
     --bg: #050505;
-    --card: #0c0c0c;
+    --card: rgba(12, 12, 12, 0.95);
+    --border: rgba(255, 255, 255, 0.1);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
 
-body { background: var(--bg); color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+body { 
+    background: var(--bg); 
+    color: white; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    min-height: 100vh;
+}
 
-.screen { width: 100%; max-width: 400px; display: none; margin-top: 50px; }
-#home { display: block; } /* Da se vidi početni ekran */
+/* TRANSPARENTNA LINIJA NA SREDINI */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; bottom: 0; left: 50%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(255,0,0,0.2), transparent);
+    z-index: -1;
+}
 
-.logo-main { font-size: 3rem; color: var(--primary); text-align: center; margin-bottom: 30px; font-weight: 900; }
+.screen { width: 100%; max-width: 450px; display: none; padding: 20px; }
+#home { display: block; }
 
-.main-card, .settings-card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #222; }
+.logo-main { 
+    font-size: 4rem; 
+    color: var(--primary); 
+    text-align: center; 
+    margin: 80px 0 40px; 
+    font-weight: 900; 
+    letter-spacing: 10px;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+}
 
-.main-input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: white; margin-bottom: 15px; text-align: center; border-radius: 8px; }
+.main-card, .settings-card { 
+    background: var(--card); 
+    padding: 30px; 
+    border-radius: 4px; 
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+}
 
-button { width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; margin: 5px 0; }
+.main-input { 
+    width: 100%; 
+    padding: 15px; 
+    background: transparent; 
+    border: 1px solid var(--border); 
+    color: white; 
+    margin-bottom: 20px; 
+    text-align: center; 
+    font-size: 1.1rem;
+    outline: none;
+}
 
-.primary-btn, .start-btn { background: var(--primary); color: white; }
-.secondary-btn { background: transparent; border: 1px solid #444; color: #aaa; }
-.locked { opacity: 0.5; cursor: not-allowed; }
+.main-input:focus { border-color: var(--primary); }
 
-#playerList { list-style: none; margin-top: 20px; }
-#playerList li { background: #111; padding: 15px; margin-bottom: 5px; border-radius: 8px; border: 1px solid #222; text-align: center; }
+button { 
+    width: 100%; 
+    padding: 18px; 
+    border: none; 
+    font-weight: 900; 
+    cursor: pointer; 
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+    transition: 0.3s;
+}
 
-.sticky-header { position: fixed; top: 0; width: 100%; background: #000; padding: 10px; text-align: center; border-bottom: 1px solid #222; z-index: 100; }
-.host-badge { color: var(--primary); font-size: 0.7rem; font-weight: 900; }
-.host-name { font-size: 1.5rem; font-weight: 900; margin-bottom: 10px; }
+.primary-btn, .start-btn { background: var(--primary); color: white; margin-bottom: 10px; }
+.secondary-btn { background: transparent; border: 1px solid var(--border); color: #666; }
+.secondary-btn:hover { color: white; border-color: white; }
+
+#playerList { list-style: none; margin-top: 30px; width: 100%; }
+#playerList li { 
+    padding: 20px; 
+    border-bottom: 1px solid var(--border); 
+    text-align: center; 
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.sticky-header { 
+    position: fixed; 
+    top: 0; width: 100%; 
+    background: rgba(0,0,0,0.8); 
+    padding: 15px; 
+    text-align: center; 
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(5px);
+    z-index: 100;
+}
