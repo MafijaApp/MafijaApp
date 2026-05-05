@@ -1,58 +1,187 @@
-/* KONTEJNER ZA LISTU */
-#playerList {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 15px;
-    padding: 0;
-    list-style: none;
-    width: 100%;
-    margin-top: 20px;
+/* OSNOVNA PODEŠAVANJA */
+:root {
+    --primary: #ff4d4d;
+    --primary-hover: #ff1a1a;
+    --bg-dark: #0a0a0a;
+    --card-bg: #141414;
+    --text-main: #ffffff;
+    --text-dim: #a0a0a0;
+    --border: #222;
 }
 
-/* POJEDINAČNI BOX ZA IGRAČA */
-.player-li {
-    background: #080808;
-    border: 1px solid #1a1a1a;
-    border-radius: 10px;
-    padding: 15px 10px;
-    text-align: center;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at center, #1a0a0a 0%, #0a0a0a 100%);
+    color: var(--text-main);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: all 0.3s ease;
-    animation: fadeIn 0.4s ease-out forwards;
+    overflow-x: hidden;
 }
 
-.player-li:hover {
-    border-color: var(--primary);
-    background: rgba(255, 0, 0, 0.05);
-    transform: translateY(-3px);
+/* KONTROLA EKRANA */
+.screen {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    margin-top: 50px;
 }
 
-/* MALA IKONICA/AVATAR KRUG */
-.player-li::before {
-    content: "";
-    width: 40px;
-    height: 40px;
-    background: #151515;
-    border: 2px solid #222;
-    border-radius: 50%;
-    margin-bottom: 10px;
+/* LOGO I TEXT */
+.logo-main {
+    font-size: 3rem;
+    font-weight: 900;
+    text-align: center;
+    color: var(--primary);
+    letter-spacing: 5px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(255, 77, 77, 0.3);
+}
+
+.styled-label {
     display: block;
-}
-
-/* IME IGRAČA U BOXU */
-.player-name-text {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    color: #eee;
-    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
     letter-spacing: 1px;
-    word-break: break-word;
 }
 
-/* ANIMACIJA POJAVLJIVANJA */
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+/* KARTICE */
+.main-card, .settings-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
+
+/* INPUTI I DUGMAD */
+.main-input {
+    width: 100%;
+    padding: 15px;
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.primary-btn, .secondary-btn, .start-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.primary-btn, .start-btn {
+    background: var(--primary);
+    color: white;
+    margin-bottom: 10px;
+}
+
+.primary-btn:hover { background: var(--primary-hover); }
+
+.secondary-btn {
+    background: transparent;
+    border: 1px solid #444;
+    color: var(--text-dim);
+}
+
+.secondary-btn:hover { border-color: var(--primary); color: white; }
+
+/* DIVIDER */
+.divider-container {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+.divider-line { flex: 1; height: 1px; background: var(--border); }
+.divider-text { padding: 0 10px; font-size: 0.7rem; color: #444; font-weight: 900; }
+
+/* GRID ZA IGRAČE (BOXOVI) */
+#playerList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+    list-style: none;
+}
+
+.player-li {
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 15px 5px;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    animation: fadeIn 0.3s ease;
+}
+
+/* HOST DISPLEJ */
+.host-container {
+    margin-top: 25px;
+    padding: 15px;
+    background: rgba(255, 77, 77, 0.05);
+    border-radius: 12px;
+    text-align: center;
+    border: 1px dashed var(--primary);
+}
+
+.host-badge { font-size: 0.6rem; font-weight: 900; color: var(--primary); margin-bottom: 5px; }
+.host-name { font-size: 1.2rem; font-weight: 900; }
+
+/* STEPPER (Komande za + i -) */
+.control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.stepper { display: flex; align-items: center; background: #000; border-radius: 8px; }
+.stepper button { width: 35px; height: 35px; background: none; border: none; color: var(--primary); font-size: 1.2rem; cursor: pointer; }
+.stepper input { width: 40px; border: none; background: none; color: white; text-align: center; font-weight: 900; }
+
+/* REVEAL KARTICA */
+.role-card {
+    background: #111;
+    border: 2px solid var(--primary);
+    border-radius: 20px;
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(255, 77, 77, 0.2);
+}
+
+.role-card h1 { font-size: 2.5rem; margin-bottom: 10px; color: var(--primary); }
+
+/* STICKY HEADER */
+.sticky-header {
+    position: fixed;
+    top: 0; width: 100%;
+    background: #000;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 900;
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
