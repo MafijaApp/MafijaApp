@@ -41,8 +41,8 @@ socket.on('updatePlayers', (list) => {
     currentPlayers = list;
     document.getElementById('hostDisplay').innerHTML = `
         <div class="host-badge">HOST / NARATOR</div>
-        <div class="host-name">${list[0]}</div>`;
-    document.getElementById('playerList').innerHTML = list.slice(1).map(p => `<li class="player-li">${p}</li>`).join('');
+        <div style="font-size:1.4rem; font-weight:900;">${list[0]}</div>`;
+    document.getElementById('playerList').innerHTML = list.slice(1).map(p => `<li class="player-li"><span>${p}</span></li>`).join('');
     if (isHost) updateStartButton();
 });
 
@@ -54,7 +54,7 @@ function updateStartButton() {
     const btn = document.getElementById('startGameBtn');
     btn.disabled = avail < req;
     btn.className = avail < req ? "start-btn locked" : "start-btn";
-    btn.innerText = avail < req ? `FALI JOŠ ${req - avail}` : "PODELI ULOGE";
+    btn.innerText = avail < req ? `FALI JOŠ ${req - avail} IGRAČA` : "PODELI ULOGE";
 }
 
 document.getElementById('startGameBtn').onclick = () => {
@@ -70,9 +70,9 @@ socket.on('yourRole', ({ role }) => {
     const r = role.toLowerCase().replace('đ', 'd');
     document.getElementById('cardContainer').innerHTML = `
         <div class="role-card role-${r}">
-            <p class="styled-label">TVOJA ULOGA</p>
+            <p class="styled-label" style="opacity:0.5;">TVOJA ULOGA</p>
             <h1>${role.toUpperCase()}</h1>
-            <p>Slušaj naratora i igraj pošteno.</p>
+            <p style="margin-top:20px; font-size:0.8rem; opacity:0.6;">Prati naratora i igraj pošteno.</p>
         </div>`;
 });
 
