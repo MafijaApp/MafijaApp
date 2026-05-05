@@ -131,7 +131,93 @@ input:focus { border-color: var(--primary); background: #0f0000; }
     font-size: 0.9rem; letter-spacing: 1px; display: flex; align-items: center;
 }
 .player-list-styled li::before { content: "•"; color: var(--primary); margin-right: 15px; font-size: 1.5rem; }
+/* --- REMONT UPUTSTVA (RULES MODAL) --- */
+.rules-modal { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0, 0, 0, 0.92); 
+    backdrop-filter: blur(10px); /* Zamagljuje pozadinu za premium look */
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 1000; 
+    padding: 20px; 
+    animation: fadeIn 0.3s ease;
+}
 
+.rules-content { 
+    background: linear-gradient(145deg, #121212, #080808); 
+    padding: 40px; 
+    border-radius: 20px; 
+    border: 1px solid rgba(255, 0, 0, 0.3); 
+    max-width: 450px; 
+    width: 100%;
+    text-align: center; 
+    box-shadow: 0 0 50px rgba(0, 0, 0, 1), 0 0 20px rgba(255, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Crvena linija na vrhu modala */
+.rules-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary);
+    box-shadow: 0 0 15px var(--primary);
+}
+
+.rules-content h3 { 
+    color: var(--primary); 
+    font-weight: 900; 
+    font-size: 1.8rem;
+    margin-bottom: 25px; 
+    letter-spacing: 4px; 
+    text-transform: uppercase;
+}
+
+.rules-content p { 
+    line-height: 1.8; 
+    color: #eee; 
+    font-size: 0.95rem; 
+    margin-bottom: 30px; 
+    text-align: left; /* Bolja čitljivost teksta */
+}
+
+/* Isticanje uloga u tekstu */
+.rules-content strong {
+    color: var(--primary);
+    border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+    padding-bottom: 2px;
+}
+
+.close-rules { 
+    background: transparent; 
+    color: white; 
+    border: 1px solid #333; 
+    padding: 15px 40px; 
+    border-radius: 8px; 
+    font-weight: 900; 
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer; 
+    transition: 0.3s;
+}
+
+.close-rules:hover { 
+    background: white; 
+    color: black; 
+    border-color: white;
+}
+
+/* Animacija za pojavljivanje */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
 /* SIGNATURE */
 .signature { margin-top: 60px; text-align: center; padding-bottom: 40px; }
 .sig-line { width: 40px; height: 3px; background: var(--primary); margin: 0 auto 15px; box-shadow: 0 0 10px var(--primary); }
