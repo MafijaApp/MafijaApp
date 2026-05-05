@@ -16,37 +16,40 @@
     <div id="home" class="screen">
         <h1 class="logo-main">MAFIJA</h1>
         <div class="main-card">
-            <label class="styled-label">IME</label>
-            <input type="text" id="playerName" placeholder="Tvoje ime...">
+            <label class="styled-label">VAŠE IME</label>
+            <input type="text" id="playerName" placeholder="Npr. Marko">
             <button id="createBtn" class="primary-btn">KREIRAJ SOBU</button>
             <div class="divider-container extra-large"><span class="divider-text">ILI</span></div>
             <label class="styled-label">KOD SOBE</label>
             <input type="text" id="roomInput" placeholder="Npr. AX82">
             <button id="joinBtn" class="secondary-btn">UĐI U SOBU</button>
-            <button onclick="toggleRules()" class="rules-btn">UPUTSTVO ZA IGRU</button>
+            <button onclick="toggleRules()" class="rules-btn-styled">UPUTSTVO ZA IGRU</button>
         </div>
         <div class="signature"><span>CREATED BY</span><p>Marko Veljovic</p></div>
     </div>
 
     <div id="hostScreen" class="screen" style="display:none;">
         <div class="settings-card">
-            <h3 class="styled-label" style="text-align:center;">PODEŠAVANJE</h3>
+            <h3 class="styled-label" style="text-align:center; margin-bottom:20px;">PODEŠAVANJA</h3>
+            
             <div class="control-row">
-                <span>MAFIJA</span>
+                <span class="role-name-label">MAFIJA</span>
                 <div class="stepper">
-                    <button onclick="changeVal('mafija', -1)">−</button>
+                    <button type="button" onclick="changeVal('mafija', -1)">−</button>
                     <input type="number" id="mafija" value="1" readonly>
-                    <button onclick="changeVal('mafija', 1)">+</button>
+                    <button type="button" onclick="changeVal('mafija', 1)">+</button>
                 </div>
             </div>
+
             <div class="control-row">
-                <span>DAMA</span>
+                <span class="role-name-label">DAMA</span>
                 <div class="stepper">
-                    <button onclick="changeVal('dama', -1)">−</button>
+                    <button type="button" onclick="changeVal('dama', -1)">−</button>
                     <input type="number" id="dama" value="0" readonly>
-                    <button onclick="changeVal('dama', 1)">+</button>
+                    <button type="button" onclick="changeVal('dama', 1)">+</button>
                 </div>
             </div>
+
             <div class="important-note">PODRAZUMEVA SE: 1 DOKTOR + 1 POLICAJAC</div>
             <button id="startGameBtn" class="start-btn locked" disabled>ČEKAMO IGRAČE...</button>
         </div>
@@ -60,8 +63,11 @@
 
     <div id="rulesModal" class="rules-modal" style="display:none;">
         <div class="rules-content">
-            <h3>PRAVILA</h3>
-            <p><strong>Narator:</strong> Vodi igru. <strong>Mafija:</strong> Ubija. <strong>Doktor:</strong> Spasava. <strong>Policajac:</strong> Proverava. <strong>Građanin:</strong> Glasa.</p>
+            <h3>PRAVILA IGRE</h3>
+            <p><strong>Narator:</strong> Host koji vodi igru. Ne dobija kartu.</p>
+            <p><strong>Mafija:</strong> Ubija jednu osobu svake noći.</p>
+            <p><strong>Doktor:</strong> Spasava jednu osobu svake noći.</p>
+            <p><strong>Policajac:</strong> Proverava ulogu igrača.</p>
             <button onclick="toggleRules()" class="close-rules">ZATVORI</button>
         </div>
     </div>
