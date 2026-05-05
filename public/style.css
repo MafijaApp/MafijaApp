@@ -10,20 +10,12 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
 body { background: var(--bg-gradient); min-height: 100vh; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; }
 
-/* STICKY HEADER - KOD SOBE */
+/* STICKY HEADER */
 .sticky-header { 
     position: fixed; top: 0; left: 0; width: 100%; background: rgba(10, 0, 0, 0.98); 
     border-bottom: 2px solid var(--primary); padding: 15px; text-align: center; 
-    z-index: 100; font-weight: 900; letter-spacing: 2px; font-size: 0.9rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 100; font-weight: 900; letter-spacing: 2px;
 }
-
-.regen-btn-styled {
-    background: transparent; color: var(--primary); border: 1px solid var(--primary);
-    padding: 4px 12px; border-radius: 4px; font-size: 0.65rem; font-weight: 900;
-    cursor: pointer; margin-left: 15px; transition: 0.2s;
-}
-.regen-btn-styled:hover { background: var(--primary); color: white; }
 
 /* LOGO */
 .logo-main { 
@@ -34,7 +26,7 @@ body { background: var(--bg-gradient); min-height: 100vh; color: white; padding:
 
 .screen { width: 100%; max-width: 400px; margin-top: 40px; }
 
-/* KARTICE - DUBINA I SJAJ */
+/* KARTICE */
 .main-card, .settings-card { 
     background: var(--card-bg); 
     border: 1px solid rgba(255, 255, 255, 0.05); 
@@ -44,7 +36,7 @@ body { background: var(--bg-gradient); min-height: 100vh; color: white; padding:
     margin-bottom: 25px;
 }
 
-/* INPUTI NA POČETNOJ */
+/* INPUTI */
 .styled-label {
     display: block; font-size: 0.75rem; font-weight: 900; color: var(--primary);
     letter-spacing: 3px; margin-bottom: 12px; text-transform: uppercase;
@@ -58,97 +50,101 @@ input[type="text"] {
     box-shadow: inset 0 4px 10px rgba(0,0,0,0.7);
 }
 
-input:focus { border-color: var(--primary); background: #0f0000; }
-
-/* DUGMAD */
+/* DUGMAD - GLAVNA */
 .primary-btn, .start-btn { 
     background: var(--primary); color: white; border: none; padding: 20px; 
     width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; 
     text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;
     box-shadow: 0 5px 0 var(--primary-dark);
 }
-.primary-btn:active, .start-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--primary-dark); }
-
-.start-btn.locked { 
-    background: #151515; color: #333; box-shadow: none; cursor: not-allowed; 
-    border: 1px solid #222; transform: none;
-}
+.start-btn.locked { background: #151515; color: #333; box-shadow: none; cursor: not-allowed; border: 1px solid #222; }
 
 .secondary-btn { 
     background: transparent; color: white; border: 1px solid #222; 
     padding: 18px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 900;
 }
 
-/* DRUGA STRANA - KONFIGURACIJA */
+/* --- NOVO DUGME ZA UPUTSTVO (POČETNA STRANA) --- */
+.rules-btn {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #666;
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.rules-btn:hover {
+    color: #fff;
+    border-color: var(--primary);
+    background: rgba(255, 0, 0, 0.05);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+}
+
+.rules-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    transition: 0.5s;
+}
+
+.rules-btn:hover::after {
+    left: 100%;
+}
+
+/* KONFIGURACIJA STEPPERI */
 .control-row { 
     display: flex; justify-content: space-between; align-items: center; 
     margin-bottom: 15px; padding: 15px 20px; background: #080808; 
     border-radius: 10px; border: 1px solid #1a1a1a;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
 }
-
-.control-row span { font-weight: 900; font-size: 0.85rem; letter-spacing: 1px; color: #eee; }
-
 .stepper { display: flex; align-items: center; background: #000; border-radius: 8px; padding: 4px; border: 1px solid #222; }
-
 .stepper button { 
     width: 38px; height: 38px; background: #111; border: 1px solid #222; 
-    color: var(--primary); font-size: 1.4rem; font-weight: 900; cursor: pointer; 
-    border-radius: 6px; transition: 0.2s; display: flex; align-items: center; justify-content: center;
-}
-.stepper button:hover { background: var(--primary); color: white; border-color: var(--primary); }
-
-.stepper input { 
-    width: 45px; text-align: center; background: transparent; border: none; 
-    color: white; font-size: 1.3rem; font-weight: 900; pointer-events: none; margin: 0 !important;
+    color: var(--primary); font-size: 1.4rem; font-weight: 900; cursor: pointer; border-radius: 6px;
 }
 
-/* NOTE ISPOD PODEŠAVANJA */
-.important-note { 
-    background: rgba(255, 0, 0, 0.03); border: 1px dashed rgba(255, 0, 0, 0.2);
-    padding: 15px; border-radius: 8px; text-align: center; margin: 20px 0;
-}
-.important-note p { font-size: 0.55rem; color: #555; letter-spacing: 2px; margin-bottom: 5px; font-weight: 900; }
-.important-note span { font-size: 0.75rem; color: #999; font-weight: 700; }
-
-/* LOBBY / PLAYER LIST */
+/* LOBBY / HOST DISPLAY */
 .highlight-host { 
     background: #000; border: 2px solid var(--primary); padding: 35px 20px; 
     border-radius: var(--radius); text-align: center; position: relative; margin-top: 40px;
-    box-shadow: 0 0 30px rgba(255,0,0,0.15);
 }
 .host-badge { 
     position: absolute; top: -14px; left: 50%; transform: translateX(-50%); 
-    background: var(--primary); padding: 5px 18px; font-size: 0.7rem; font-weight: 900; 
-    border-radius: 4px; letter-spacing: 2px; box-shadow: 0 5px 15px rgba(255,0,0,0.3);
+    background: var(--primary); padding: 5px 18px; font-size: 0.7rem; font-weight: 900; border-radius: 4px;
 }
-.host-name { font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: #fff; }
-
-.player-list-styled { list-style: none; margin-top: 20px; width: 100%; }
-.player-list-styled li { 
-    background: rgba(255,255,255,0.03); margin-bottom: 8px; padding: 15px; 
-    border-radius: 8px; border-left: 3px solid var(--primary); font-weight: 700;
-    font-size: 0.9rem; letter-spacing: 1px; display: flex; align-items: center;
-}
-.player-list-styled li::before { content: "•"; color: var(--primary); margin-right: 15px; font-size: 1.5rem; }
+.host-name { font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; }
 
 /* SIGNATURE */
 .signature { margin-top: 60px; text-align: center; padding-bottom: 40px; }
 .sig-line { width: 40px; height: 3px; background: var(--primary); margin: 0 auto 15px; box-shadow: 0 0 10px var(--primary); }
 .signature span { font-size: 0.6rem; color: #444; letter-spacing: 5px; display: block; font-weight: 900; }
-.signature p { font-weight: 900; font-size: 1.3rem; color: #fff; text-transform: uppercase; margin-top: 8px; letter-spacing: 2px; }
+.signature p { font-weight: 900; font-size: 1.3rem; color: #fff; text-transform: uppercase; margin-top: 8px; }
 
 /* DIVIDER */
 .divider-container { display: flex; align-items: center; margin: 35px 0; }
 .divider-line { flex: 1; height: 1px; background: #1a1a1a; }
 .divider-text { padding: 0 20px; color: #333; font-weight: 900; font-size: 0.8rem; letter-spacing: 3px; }
 
-/* RULES MODAL */
-.rules-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+/* MODAL / UPUTSTVO */
+.rules-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); display: flex; align-items: center; justify-content: center; z-index: 1000; }
 .rules-content { 
     background: #0a0a0a; padding: 35px; border-radius: 15px; border: 1px solid var(--primary); 
-    max-width: 400px; text-align: center; box-shadow: 0 0 50px rgba(255,0,0,0.2);
+    max-width: 400px; text-align: center; position: relative;
 }
-.rules-content h3 { color: var(--primary); font-weight: 900; margin-bottom: 20px; letter-spacing: 2px; }
-.rules-content p { line-height: 1.6; color: #ccc; font-size: 0.9rem; margin-bottom: 25px; }
-.close-rules { background: #222; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-weight: 900; cursor: pointer; }
+.close-rules { 
+    background: #222; color: white; border: none; padding: 12px 30px; 
+    border-radius: 6px; font-weight: 900; cursor: pointer; transition: 0.2s;
+}
+.close-rules:hover { background: var(--primary); }
