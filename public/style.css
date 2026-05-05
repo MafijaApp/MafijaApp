@@ -1,55 +1,58 @@
-:root {
-    --bg-gradient: radial-gradient(circle at center, #1a0000 0%, #050505 100%);
-    --primary: #ff0000;
-    --primary-dark: #800000;
-    --card-bg: #0c0c0c;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-body { background: var(--bg-gradient); min-height: 100vh; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-
-.screen { width: 100%; max-width: 450px; }
-.logo-main { font-size: 3.5rem; color: var(--primary); text-align: center; margin: 80px 0 30px; font-weight: 900; }
-
-.main-card, .settings-card { 
-    background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); 
-    padding: 25px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-}
-
-/* NOVI GRID ZA BOXOVE IGRAČA */
+/* KONTEJNER ZA LISTU */
 #playerList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 12px;
-    margin-top: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 15px;
+    padding: 0;
     list-style: none;
+    width: 100%;
+    margin-top: 20px;
 }
 
+/* POJEDINAČNI BOX ZA IGRAČA */
 .player-li {
     background: #080808;
     border: 1px solid #1a1a1a;
     border-radius: 10px;
-    padding: 15px 5px;
+    padding: 15px 10px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.player-li:hover {
+    border-color: var(--primary);
+    background: rgba(255, 0, 0, 0.05);
+    transform: translateY(-3px);
+}
+
+/* MALA IKONICA/AVATAR KRUG */
+.player-li::before {
+    content: "";
+    width: 40px;
+    height: 40px;
+    background: #151515;
+    border: 2px solid #222;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* IME IGRAČA U BOXU */
+.player-name-text {
+    font-size: 0.85rem;
     font-weight: 700;
+    color: #eee;
     text-transform: uppercase;
-    font-size: 0.75rem;
     letter-spacing: 1px;
-    transition: 0.3s;
-    animation: fadeIn 0.4s ease-out;
+    word-break: break-word;
 }
 
-.player-li:hover { border-color: var(--primary); transform: translateY(-3px); }
-
-/* OSTALI ELEMENTI */
-.primary-btn, .secondary-btn, .start-btn { 
-    width: 100%; padding: 18px; border: none; border-radius: 8px; font-weight: 900; 
-    cursor: pointer; text-transform: uppercase; margin: 10px 0; 
+/* ANIMACIJA POJAVLJIVANJA */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
 }
-.primary-btn, .start-btn { background: var(--primary); color: white; box-shadow: 0 4px 0 var(--primary-dark); }
-.secondary-btn { background: transparent; border: 1px solid #333; color: #666; }
-.secondary-btn:hover { border-color: var(--primary); color: white; }
-
-.main-input { width: 100%; padding: 15px; background: #080808; border: 1px solid #1a1a1a; color: white; border-radius: 8px; margin: 10px 0; text-align: center; }
-
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
