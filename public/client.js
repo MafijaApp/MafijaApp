@@ -12,20 +12,17 @@ function changeVal(id, delta) {
     }
 }
 
-// Potvrda izlaska
 function confirmExit() {
-    if (confirm("Da li si siguran da želiš da napustiš igru? Sav progres će biti izgubljen.")) {
-        location.reload();
-    }
+    if (confirm("Da li želiš da napustiš igru?")) location.reload();
 }
 
 function regenerateRoomCode() {
-    if (isHost && confirm("Generisati novi kod? Stari kôd više neće važiti.")) socket.emit('createRoom');
+    if (isHost && confirm("Novi kod?")) socket.emit('createRoom');
 }
 
 document.getElementById('createBtn').onclick = () => {
     myName = document.getElementById('playerName').value.trim();
-    if (!myName) return alert("Unesi svoje ime!");
+    if (!myName) return alert("Ime!");
     isHost = true;
     socket.emit('createRoom');
 };
@@ -45,7 +42,7 @@ document.getElementById('joinBtn').onclick = () => {
     const room = document.getElementById('roomInput').value.toUpperCase().trim();
     if (myName && room) {
         currentRoomID = room;
-        isHost = false; // Pridruženi član nikad nije Host
+        isHost = false;
         socket.emit('joinRoom', { roomID: room, name: myName });
     }
 };
@@ -61,52 +58,34 @@ let currentPlayersList = [];
 socket.on('updatePlayers', (list) => {
     currentPlayersList = list;
     const ul = document.getElementById('playerList');
-    // Filtriramo listu da ne prikazujemo Hosta u listi običnih igrača ako želiš, 
-    // ali ovde ga ostavljamo sa tagom radi preglednosti.
-    ul.innerHTML = list.map((p, i) => `<li class="player-li">${p} ${i===0?'<span class="is-host-tag">HOST (NARATOR)</span>':''}</li>`).join('');
+    ul.innerHTML = list.map((p, i) => `<li class="player-li">${p} ${i===0?'<span class="is-host-tag">HOST</span>':''}</li>`).join('');
     checkPlayerCount();
 });
 
 function checkPlayerCount() {
     if (!isHost) return;
-    
-    // Računamo koliko uloga treba da podelimo (Mafija + Dama + Doktor + Policajac)
-    const totalRolesNeeded = parseInt(document.getElementById('mafija').value) + 
-                             parseInt(document.getElementById('dama').value) + 2;
-    
-    // Broj igrača bez hosta
-    const activePlayersCount = currentPlayersList.length - 1; 
-    
+    const totalRoles = parseInt(document.getElementById('mafija').value) + parseInt(document.getElementById('dama').value) + 2;
+    const activePlayers = currentPlayersList.length - 1; 
     const btn = document.getElementById('startGameBtn');
-    const diff = totalRolesNeeded - activePlayersCount;
+    const diff = totalRoles - activePlayers;
 
     if (diff <= 0) {
-        btn.disabled = false; 
-        btn.classList.remove('locked'); 
-        btn.innerText = "PODELI ULOGE IGRAČIMA";
+        btn.disabled = false; btn.classList.remove('locked'); btn.innerText = "PODELI ULOGE";
     } else {
-        btn.disabled = true; 
-        btn.classList.add('locked'); 
-        btn.innerText = `POTREBNO JOŠ ${diff} IGRAČA`;
+        btn.disabled = true; btn.classList.add('locked'); btn.innerText = `POTREBNO JOŠ ${diff}`;
     }
 }
 
 document.getElementById('startGameBtn').onclick = () => {
     socket.emit('startGame', { 
         roomID: currentRoomID, 
-        config: { 
-            mafija: parseInt(document.getElementById('mafija').value), 
-            dama: parseInt(document.getElementById('dama').value), 
-            doktor: 1, 
-            policajac: 1 
-        } 
+        config: { mafija: parseInt(document.getElementById('mafija').value), dama: parseInt(document.getElementById('dama').value), doktor: 1, policajac: 1 } 
     });
 };
 
 socket.on('hostViewRoles', (data) => {
     document.getElementById('setupArea').style.display = 'none';
-    document.getElementById('listTitle').innerText = "NARATOR PANEL (SVE ULOGE)";
-    // Host vidi sve, ali nema svoju ulogu
+    document.getElementById('listTitle').innerText = "NARATOR PANEL";
     document.getElementById('playerList').innerHTML = data.map(p => `
         <li class="player-li">
             <span><strong>${p.name}</strong> - ${p.role}</span>
@@ -115,18 +94,25 @@ socket.on('hostViewRoles', (data) => {
 });
 
 function kickPlayer(id) {
-    if(confirm("Izbaci/Ubij ovog igrača?")) socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
+    if(confirm("Izbaci igrača?")) socket.emit('kickPlayer', { roomID: currentRoomID, playerID: id });
 }
 
 socket.on('yourRole', ({ role }) => {
-    // Samo ako NIJE host, prikazuje mu se karta
     if (!isHost) {
         showScreen('reveal');
+        let roleClass = "role-mafija";
+        let roleName = role;
+        
+        if (role.toLowerCase() === "dama") roleClass = "role-dama";
+        if (role.toLowerCase() === "doktor") roleClass = "role-doktor";
+        if (role.toLowerCase() === "policajac") roleClass = "role-policajac";
+        if (role.toLowerCase() === "građanin") roleClass = ""; // Možeš dodati i za građanina
+
         document.getElementById('cardContainer').innerHTML = `
-            <div style="padding:50px 20px; border:2px solid red; border-radius:20px; text-align:center; background:rgba(255,0,0,0.05); box-shadow: 0 0 30px rgba(255,0,0,0.2);">
-                <p style="opacity:0.5; font-size:0.8rem; letter-spacing:3px;">TVOJA ULOGA JE</p>
-                <h1 style="font-size:3.5rem; color:red; font-weight:900; margin: 20px 0;">${role.toUpperCase()}</h1>
-                <p style="font-size:0.9rem; color:#666;">Ćuti i čekaj instrukcije Naratora.</p>
+            <div class="role-card ${roleClass}">
+                <p style="opacity:0.5; font-size:0.8rem; letter-spacing:3px; color:white;">TVOJA ULOGA</p>
+                <h1 style="font-size:3.5rem; font-weight:900; margin: 20px 0; color:white;">${roleName.toUpperCase()}</h1>
+                <p style="font-size:0.9rem; color:rgba(255,255,255,0.6);">Slušaj Naratora.</p>
             </div>`;
     }
 });
