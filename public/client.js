@@ -2,7 +2,6 @@ const socket = io();
 let isHost = false;
 let myName = "";
 let currentRoomID = "";
-let currentPlayers = [];
 
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
@@ -34,14 +33,14 @@ socket.on('roomJoined', (id) => {
 });
 
 socket.on('updatePlayers', (list) => {
-    currentPlayers = list;
-    document.getElementById('hostDisplay').innerHTML = `Host: ${list[0]}`;
+    document.getElementById('hostDisplay').innerHTML = `<div class="host-badge">HOST</div><div class="host-name">${list[0]}</div>`;
     document.getElementById('playerList').innerHTML = list.slice(1).map(p => `<li>${p}</li>`).join('');
     
     if (isHost) {
         const btn = document.getElementById('startGameBtn');
         btn.disabled = false;
         btn.innerText = "PODELI ULOGE";
+        btn.classList.remove('locked');
     }
 });
 
@@ -57,9 +56,12 @@ document.getElementById('startGameBtn').onclick = () => {
 
 socket.on('yourRole', ({ role }) => {
     showScreen('reveal');
-    document.getElementById('cardContainer').innerHTML = `<h1>Tvoja uloga: ${role}</h1>`;
+    document.getElementById('cardContainer').innerHTML = `<h1>TVOJA ULOGA: ${role.toUpperCase()}</h1>`;
 });
 
 socket.on('hostViewRoles', (summary) => {
-    document.getElementById('playerList').innerHTML = summary.map(s => `<li>${s.name}: ${s.role}</li>`).join('');
+    document.getElementById('playerList').innerHTML = summary.map(s => `<li>${s.name}: <b>${s.role}</b></li>`).join('');
+    document.getElementById('startGameBtn').style.display = 'none';
 });
+
+socket.on('errorMsg', (msg) => alert(msg));
