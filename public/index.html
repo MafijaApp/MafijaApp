@@ -38,6 +38,7 @@
     </div>
 
     <div id="hostScreen" class="screen" style="display:none;">
+        <!-- PODEŠAVANJA -->
         <div id="setupArea" class="settings-card">
             <div style="text-align: right;">
                 <button id="regenCodeBtn" class="regen-btn-styled" style="display:none;" onclick="regenerateRoomCode()">NOVI KOD</button>
@@ -61,12 +62,17 @@
                     </div>
                 </div>
             </div>
-            <div class="important-note">HOST JE NARATOR I NE DOBIJA ULOGU.</div>
-            <button id="startGameBtn" class="start-btn locked" disabled>PROVERA IGRAČA...</button>
+            <div class="important-note">NARATOR VODI IGRU I NE DOBIJA ULOGU.</div>
+            <button id="startGameBtn" class="start-btn locked" disabled>ČEKAMO IGRAČE...</button>
         </div>
 
+        <!-- LISTA IGRAČA -->
         <div class="players-section">
-            <h3 id="listTitle" class="styled-label" style="margin-bottom:15px;">IGRAČI (BEZ HOSTA):</h3>
+            <div id="hostDisplay" class="host-container">
+                <!-- Ovde ide Host -->
+            </div>
+            
+            <label class="styled-label">IGRAČI U SOBI</label>
             <ul id="playerList"></ul>
         </div>
     </div>
