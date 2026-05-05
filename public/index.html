@@ -2,92 +2,58 @@
 <html lang="sr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mafija Online</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="stickyRoomHeader" class="sticky-header" style="display:none;">
-        KOD SOBE: <span id="topRoomCode">----</span>
-    </div>
-
     <div id="home" class="screen">
-        <div class="logo-container">
-            <h1 class="logo-main">MAFIJA</h1>
-        </div>
+        <h1 class="logo-main">MAFIJA</h1>
         <div class="main-card">
-            <div class="field-wrapper">
-                <label class="styled-label">VASE IME</label>
-                <input type="text" id="playerName" placeholder="Npr. Marko">
-            </div>
-            <button id="createBtn" class="primary-btn">KREIRAJ KAO HOST</button>
+            <label class="styled-label">IME</label>
+            <input type="text" id="playerName" placeholder="Tvoje ime...">
+            <button id="createBtn" class="primary-btn">KREIRAJ SOBU</button>
             
             <div class="divider-container extra-large">
-                <span class="divider-line"></span>
                 <span class="divider-text">ILI</span>
-                <span class="divider-line"></span>
             </div>
             
-            <div class="field-wrapper">
-                <label class="styled-label">KOD SOBE</label>
-                <input type="text" id="roomInput" placeholder="Npr. AX82">
-            </div>
-            <button id="joinBtn" class="secondary-btn">UĐI KAO IGRAČ</button>
+            <label class="styled-label">KOD SOBE</label>
+            <input type="text" id="roomInput" placeholder="Npr. AX82">
+            <button id="joinBtn" class="secondary-btn">UĐI U SOBU</button>
         </div>
-
-        <!-- TVOJ POTPIS ISPOD KARTICE -->
-        <div class="signature">
-            <span>CREATED BY</span>
-            <p>Marko Veljovic</p>
-        </div>
+        <div class="signature"><span>CREATED BY</span><p>Marko Veljovic</p></div>
     </div>
 
     <div id="hostScreen" class="screen" style="display:none;">
-        <!-- PODEŠAVANJA -->
-        <div id="setupArea" class="settings-card">
-            <div style="text-align: right;">
-                <button id="regenCodeBtn" class="regen-btn-styled" style="display:none;" onclick="regenerateRoomCode()">NOVI KOD</button>
-            </div>
-            <h3 class="card-subtitle">PODEŠAVANJE ULOGA</h3>
-            <div class="stepper-group">
-                <div class="control-row">
-                    <span class="role-name">MAFIJA</span>
-                    <div class="stepper">
-                        <button type="button" onclick="changeVal('mafija', -1)">−</button>
-                        <input type="number" id="mafija" value="1" min="1" max="10" readonly>
-                        <button type="button" onclick="changeVal('mafija', 1)">+</button>
-                    </div>
-                </div>
-                <div class="control-row">
-                    <span class="role-name">DAMA</span>
-                    <div class="stepper">
-                        <button type="button" onclick="changeVal('dama', -1)">−</button>
-                        <input type="number" id="dama" value="0" min="0" max="1" readonly>
-                        <button type="button" onclick="changeVal('dama', 1)">+</button>
-                    </div>
+        <div class="settings-card">
+            <h3 class="styled-label">PODEŠAVANJE ULOGA</h3>
+            <div class="control-row">
+                <span>MAFIJA</span>
+                <div class="stepper">
+                    <button onclick="changeVal('mafija', -1)">−</button>
+                    <input type="number" id="mafija" value="1" readonly>
+                    <button onclick="changeVal('mafija', 1)">+</button>
                 </div>
             </div>
-            <div class="important-note">NARATOR VODI IGRU I NE DOBIJA ULOGU.</div>
+            <div class="control-row">
+                <span>DAMA</span>
+                <div class="stepper">
+                    <button onclick="changeVal('dama', -1)">−</button>
+                    <input type="number" id="dama" value="0" readonly>
+                    <button onclick="changeVal('dama', 1)">+</button>
+                </div>
+            </div>
             <button id="startGameBtn" class="start-btn locked" disabled>ČEKAMO IGRAČE...</button>
         </div>
-
-        <!-- LISTA IGRAČA -->
-        <div class="players-section">
-            <div id="hostDisplay" class="host-container">
-                <!-- Ovde ide Host -->
-            </div>
-            
-            <label class="styled-label">IGRAČI U SOBI</label>
-            <ul id="playerList"></ul>
-        </div>
+        <div id="hostDisplay" class="host-container"></div>
+        <ul id="playerList"></ul>
     </div>
 
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer"></div>
     </div>
-
-    <button id="globalExitBtn" class="exit-btn-bottom" style="display:none;" onclick="confirmExit()">NAPUSTI IGRU</button>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
