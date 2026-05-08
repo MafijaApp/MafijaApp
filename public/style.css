@@ -87,7 +87,7 @@ input[type="text"] {
 /* REVEAL KARTICE */
 .reveal-card { text-align: center; padding: 60px 20px !important; border: none !important; }
 .policajac { background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%) !important; box-shadow: 0 0 40px rgba(37, 99, 235, 0.4); }
-.doktor { background: linear-gradient(135deg, #064e3b 0%, #10b981 100%) !important; box-shadow: 0 0 40px rgba(16, 185, 129, 0.4); }
+.doktor { background: linear-gradient(135deg, #064e3b 0%, #1dcf0d 100%) !important; box-shadow: 0 0 40px rgba(16, 185, 129, 0.4); }
 .mafija { background: linear-gradient(135deg, #450a0a 0%, #dc2626 100%) !important; box-shadow: 0 0 40px rgba(220, 38, 38, 0.4); }
 .dama { background: linear-gradient(135deg, #701a75 0%, #db2777 100%) !important; box-shadow: 0 0 40px rgba(219, 39, 119, 0.4); }
 .gradjanin { background: linear-gradient(135deg, #374151 0%, #6b7280 100%) !important; box-shadow: 0 0 40px rgba(107, 114, 128, 0.4); }
