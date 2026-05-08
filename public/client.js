@@ -66,7 +66,6 @@ socket.on('updatePlayers', (list) => {
         <div class="host-badge">HOST / NARATOR</div>
         <div style="font-size:1.6rem; font-weight:900;">${hostName}</div>`;
     
-    // Lista igrača - samo Host vidi Kick (X) dugme pored drugih igrača
     const otherPlayers = list.slice(1);
     document.getElementById('playerList').innerHTML = otherPlayers.map(p => `
         <li class="player-li">
@@ -90,13 +89,16 @@ socket.on('kicked', () => {
 
 socket.on('yourRole', ({ role }) => {
     showScreen('reveal');
-    const r = role.toLowerCase().replace('đ', 'd').replace('ž', 'z');
+    
+    const roleClass = role.toLowerCase()
+        .replace('đ', 'd').replace('ž', 'z').replace('č', 'c').replace('ć', 'c');
+
     document.getElementById('cardContainer').innerHTML = `
-        <div class="main-card" style="border:2px solid var(--primary); text-align:center; padding:50px 20px;">
-            <p class="styled-label">TVOJA ULOGA</p>
-            <h1 style="font-size:3rem; margin:20px 0;">${role.toUpperCase()}</h1>
-            <p style="color:#666; margin-bottom:30px;">Slušaj naratora i ne otkrivaj karticu!</p>
-            <button onclick="location.reload()" class="secondary-btn">NAPUSTI IGRU</button>
+        <div class="main-card reveal-card ${roleClass}">
+            <p class="styled-label role-label">TVOJA ULOGA</p>
+            <h1 class="role-title">${role.toUpperCase()}</h1>
+            <p class="role-desc">Slušaj naratora i ne otkrivaj karticu!</p>
+            <button onclick="location.reload()" class="secondary-btn exit-btn">NAPUSTI IGRU</button>
         </div>`;
 });
 
@@ -105,13 +107,12 @@ socket.on('hostViewRoles', (summary) => {
     let listHtml = summary.map(s => `
         <li class="player-li">
             <span>${s.name}</span>
-            <span style="color:var(--primary)">${s.role.toUpperCase()}</span>
+            <span style="color:var(--primary); font-weight:900;">${s.role.toUpperCase()}</span>
         </li>`).join('');
     
     document.getElementById('playerList').innerHTML = `
         <h3 class="styled-label" style="text-align:center; margin-bottom:20px;">PODELJENE ULOGE</h3>
         ${listHtml}
-        <button onclick="location.reload()" class="secondary-btn" style="margin-top:20px;">ZAVRŠI IGRU</button>
     `;
 });
 
