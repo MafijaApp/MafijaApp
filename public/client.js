@@ -120,7 +120,7 @@ socket.on('hostViewRoles', (summary) => {
     document.getElementById('playerList').innerHTML = `
         <h3 class="styled-label" style="text-align:center; margin-bottom:20px;">PODELJENE ULOGE</h3>
         ${listHtml}
-        <button onclick="location.reload()" class="secondary-btn" style="margin-top:20px;">NAPUSTI SOBU</button>
+        
     `;
 });
 
