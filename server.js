@@ -60,9 +60,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        // Opciono: Očisti sobu ako host izađe
+        // Logika za brisanje praznih soba se može dodati ovde
     });
 });
 
 const PORT = process.env.PORT || 3000;
-http.listen(PORT, () => console.log(`Server na portu ${PORT}`));
+http.listen(PORT, () => console.log(`Server pokrenut na portu ${PORT}`));
