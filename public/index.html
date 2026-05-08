@@ -17,7 +17,7 @@
         <h1 class="logo-main">MAFIJA</h1>
         <div class="main-card">
             <label class="styled-label">IME</label>
-            <input type="text" id="playerName" class="main-input" placeholder="Tvoje ime...">
+            <input type="text" id="playerName" placeholder="Tvoje ime...">
             <button id="createBtn" class="primary-btn">KREIRAJ SOBU</button>
             
             <div class="divider-container">
@@ -27,8 +27,10 @@
             </div>
 
             <label class="styled-label">KOD SOBE</label>
-            <input type="text" id="roomInput" class="main-input" placeholder="Npr. AX82">
+            <input type="text" id="roomInput" placeholder="Npr. AX82">
             <button id="joinBtn" class="secondary-btn">UĐI U SOBU</button>
+            
+            <!-- DUGME KOJE JE FALILO -->
             <button onclick="toggleRules()" class="rules-btn">UPUTSTVO ZA IGRU</button>
         </div>
         <div class="signature">
@@ -38,7 +40,6 @@
         </div>
     </div>
 
-    <!-- Ostatak ekrana ostaje isti kao u tvom kodu -->
     <div id="hostScreen" class="screen" style="display:none;">
         <div class="settings-card">
             <h3 class="styled-label" style="text-align:center;">PODEŠAVANJE</h3>
@@ -58,22 +59,31 @@
                     <button onclick="changeVal('dama', 1)">+</button>
                 </div>
             </div>
-            <div class="important-note">PODRAZUMEVA SE: 1 DOKTOR + 1 POLICAJAC</div>
-            <button id="startGameBtn" class="start-btn locked" disabled>ČEKAMO IGRAČE...</button>
+            <div class="important-note">UKLJUČENI: 1 DOKTOR + 1 POLICAJAC</div>
+            <button id="startGameBtn" class="start-btn locked" disabled>FALI IGRAČA</button>
         </div>
-        <div id="hostDisplay" class="host-container highlight-host"></div>
+
+        <div id="hostDisplay" class="highlight-host"></div>
         <ul id="playerList"></ul>
+        
+        <!-- DUGME ZA IZLAZ IZ LOBIJA -->
+        <button onclick="location.reload()" class="secondary-btn" style="margin-top: 20px;">NAPUSTI SOBU</button>
     </div>
 
     <div id="reveal" class="screen" style="display:none;">
         <div id="cardContainer"></div>
     </div>
 
-    <div id="rulesModal" class="rules-modal" style="display:none;">
+    <!-- MODAL ZA PRAVILA -->
+    <div id="rulesModal" class="rules-modal">
         <div class="rules-content">
-            <h3>PRAVILA</h3>
-            <p><strong>Narator:</strong> Vodi igru. <strong>Mafija:</strong> Ubija. <strong>Doktor:</strong> Spasava. <strong>Policajac:</strong> Proverava. <strong>Građanin:</strong> Glasa.</p>
-            <button onclick="toggleRules()" class="close-rules">ZATVORI</button>
+            <h3>PRAVILA IGRE</h3>
+            <p><strong>NARATOR:</strong> Glavni administrator koji vodi priču i zna sve uloge.</p>
+            <p><strong>MAFIJA:</strong> Svake noći bira jednu žrtvu koju želi da eliminiše.</p>
+            <p><strong>DOKTOR:</strong> Svake noći bira jednu osobu koju želi da izleči/spasi.</p>
+            <p><strong>POLICAJAC:</strong> Svake noći proverava jednu osobu (narator mu klima glavom ako je mafija).</p>
+            <p><strong>GRAĐANI:</strong> Pokušavaju da otkriju ko je mafija i glasaju danju.</p>
+            <button onclick="toggleRules()" class="close-rules">RAZUMEM</button>
         </div>
     </div>
 
