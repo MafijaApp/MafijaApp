@@ -14,13 +14,15 @@ window.toggleRules = () => {
     m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'flex' : 'none';
 };
 
+// Funkcija za promenu broja uloga - dozvoljeno samo HOSTU
 window.changeVal = (id, delta) => {
+    if (!isHost) return; 
     const el = document.getElementById(id);
     let val = parseInt(el.value) + delta;
     if (id === 'mafija') val = Math.max(1, Math.min(2, val));
     if (id === 'dama') val = Math.max(0, Math.min(1, val));
     el.value = val; 
-    if (isHost) updateStartButton(); 
+    updateStartButton(); 
 };
 
 document.getElementById('createBtn').onclick = () => {
@@ -55,6 +57,12 @@ socket.on('roomJoined', (id) => {
     currentRoomID = id;
     document.getElementById('topRoomCode').innerText = id;
     document.getElementById('stickyRoomHeader').style.display = 'block';
+    
+    // Sakrivanje podešavanja za obične igrače
+    if (!isHost) {
+        document.getElementById('settingsCard').style.display = 'none';
+    }
+    
     showScreen('hostScreen');
 });
 
@@ -89,7 +97,6 @@ socket.on('kicked', () => {
 
 socket.on('yourRole', ({ role }) => {
     showScreen('reveal');
-    
     const roleClass = role.toLowerCase()
         .replace('đ', 'd').replace('ž', 'z').replace('č', 'c').replace('ć', 'c');
 
@@ -97,13 +104,13 @@ socket.on('yourRole', ({ role }) => {
         <div class="main-card reveal-card ${roleClass}">
             <p class="styled-label role-label">TVOJA ULOGA</p>
             <h1 class="role-title">${role.toUpperCase()}</h1>
-            <p class="role-desc">Slušaj naratora i ne otkrivaj karticu!</p>
+            <p class="role-desc">Slušaj naratora i ne otkrivaj karticu drugima!</p>
             <button onclick="location.reload()" class="secondary-btn exit-btn">NAPUSTI IGRU</button>
         </div>`;
 });
 
 socket.on('hostViewRoles', (summary) => {
-    document.querySelector('.settings-card').style.display = 'none';
+    document.getElementById('settingsCard').style.display = 'none';
     let listHtml = summary.map(s => `
         <li class="player-li">
             <span>${s.name}</span>
@@ -113,10 +120,12 @@ socket.on('hostViewRoles', (summary) => {
     document.getElementById('playerList').innerHTML = `
         <h3 class="styled-label" style="text-align:center; margin-bottom:20px;">PODELJENE ULOGE</h3>
         ${listHtml}
+        <button onclick="location.reload()" class="secondary-btn" style="margin-top:20px;">NAPUSTI SOBU</button>
     `;
 });
 
 function updateStartButton() {
+    if (!isHost) return;
     const m = parseInt(document.getElementById('mafija').value);
     const d = parseInt(document.getElementById('dama').value);
     const req = m + d + 2; 
