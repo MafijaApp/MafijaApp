@@ -6,10 +6,6 @@ const path = require('path');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 let rooms = {};
 
 io.on('connection', (socket) => {
@@ -21,12 +17,25 @@ io.on('connection', (socket) => {
 
     socket.on('joinRoom', ({ roomID, name }) => {
         if (rooms[roomID]) {
-            rooms[roomID].players.push({ id: socket.id, name });
+            rooms[roomID].players.push({ id: socket.id, name: name });
             socket.join(roomID);
-            socket.emit('roomJoined', roomID); 
+            socket.emit('roomJoined', roomID);
             io.to(roomID).emit('updatePlayers', rooms[roomID].players.map(p => p.name));
         } else {
             socket.emit('errorMsg', 'Soba ne postoji!');
+        }
+    });
+
+    socket.on('kickPlayer', ({ roomID, targetName }) => {
+        const room = rooms[roomID];
+        if (room) {
+            const pIdx = room.players.findIndex(p => p.name === targetName);
+            if (pIdx !== -1) {
+                const targetSocketId = room.players[pIdx].id;
+                io.to(targetSocketId).emit('kicked');
+                room.players.splice(pIdx, 1);
+                io.to(roomID).emit('updatePlayers', room.players.map(p => p.name));
+            }
         }
     });
 
@@ -35,11 +44,11 @@ io.on('connection', (socket) => {
         if (!room || room.players.length < 2) return;
 
         let playersToAssign = [...room.players.slice(1)]; 
-        playersToAssign = playersToAssign.sort(() => Math.random() - 0.5);
+        playersToAssign.sort(() => Math.random() - 0.5);
 
         let roles = ["Doktor", "Policajac"];
         for (let i = 0; i < config.mafija; i++) roles.push("Mafija");
-        if (config.dama > 0) roles.push("Dama");
+        for (let i = 0; i < config.dama; i++) roles.push("Dama");
         while (roles.length < playersToAssign.length) roles.push("Građanin");
 
         playersToAssign.forEach((player, index) => {
@@ -49,7 +58,11 @@ io.on('connection', (socket) => {
         const summary = playersToAssign.map((p, i) => ({ name: p.name, role: roles[i] }));
         io.to(room.players[0].id).emit('hostViewRoles', summary);
     });
+
+    socket.on('disconnect', () => {
+        // Opciono: Očisti sobu ako host izađe
+    });
 });
 
 const PORT = process.env.PORT || 3000;
-http.listen(PORT, () => console.log(`Server radi na portu ${PORT}`));
+http.listen(PORT, () => console.log(`Server na portu ${PORT}`));
